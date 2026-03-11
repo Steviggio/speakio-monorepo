@@ -16,6 +16,7 @@ import { CreateRoadmapDto } from './dto/create-roadmap.dto';
 import { AddStepDto, AddSubStepDto, UpdateVocabularyDto } from './dto/add-step.dto';
 import { UpdateRoadmapDto } from './dto/update-roadmap.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
+import { UpdateSubStepDto } from './dto/update-substep.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ParseObjectIdPipe } from '../pipes/parse-objectid.pipe';
 
@@ -106,6 +107,40 @@ export class RoadmapsController {
     @Body() body: AddSubStepDto,
   ) {
     return this.roadmapsService.addSubStep(id, parseInt(stepIndex, 10), body, req.user.userId);
+  }
+
+  @Patch(':id/steps/:stepIndex/substeps/:subStepIndex')
+  @UseGuards(JwtAuthGuard)
+  updateSubStep(
+    @Request() req: any,
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Param('stepIndex') stepIndex: string,
+    @Param('subStepIndex') subStepIndex: string,
+    @Body() updateDto: UpdateSubStepDto
+  ) {
+    return this.roadmapsService.updateSubStep(
+      id,
+      parseInt(stepIndex, 10),
+      parseInt(subStepIndex, 10),
+      req.user.userId,
+      updateDto
+    );
+  }
+
+  @Delete(':id/steps/:stepIndex/substeps/:subStepIndex')
+  @UseGuards(JwtAuthGuard)
+  removeSubStep(
+    @Request() req: any,
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Param('stepIndex') stepIndex: string,
+    @Param('subStepIndex') subStepIndex: string,
+  ) {
+    return this.roadmapsService.removeSubStep(
+      id,
+      parseInt(stepIndex, 10),
+      parseInt(subStepIndex, 10),
+      req.user.userId
+    );
   }
 
   @Patch(':id/steps/:stepIndex/substeps/:subStepIndex/toggle')

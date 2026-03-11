@@ -7,6 +7,7 @@ import { CreateAnkiExportDto } from './dto/anki-export.dto';
 import { AddStepDto, AddSubStepDto, UpdateVocabularyDto } from './dto/add-step.dto';
 import { UpdateRoadmapDto } from './dto/update-roadmap.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
+import { UpdateSubStepDto } from './dto/update-substep.dto';
 
 @Injectable()
 export class RoadmapsService {
@@ -143,6 +144,64 @@ export class RoadmapsService {
       vocabularies: dto.vocabularies || [],
       completed: false
     } as any);
+
+    roadmap.markModified('steps');
+    await roadmap.save();
+    return roadmap.populate('owner', 'username avatarUrl');
+  }
+
+  async updateSubStep(
+    id: string,
+    stepIndex: number,
+    subStepIndex: number,
+    userId: string,
+    updateDto: UpdateSubStepDto
+  ): Promise<RoadmapDocument> {
+    const roadmap = await this.roadmapModel.findById(id).exec();
+    if (!roadmap) throw new NotFoundException('Roadmap not found');
+    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
+    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) throw new NotFoundException('Step not found');
+
+    const step = roadmap.steps[stepIndex];
+    if (!step.subSteps || subStepIndex < 0 || subStepIndex >= step.subSteps.length) {
+      throw new NotFoundException('SubStep not found');
+    }
+
+    const subStep = step.subSteps[subStepIndex];
+    if (updateDto.title !== undefined) subStep.title = updateDto.title;
+    if (updateDto.description !== undefined) subStep.description = updateDto.description;
+
+    if (updateDto.deadline !== undefined) {
+      subStep.deadline = updateDto.deadline ? new Date(updateDto.deadline) : undefined;
+    }
+
+    if (updateDto.completed !== undefined) {
+      subStep.completed = updateDto.completed;
+      subStep.completedAt = subStep.completed ? new Date() : undefined;
+    }
+
+    roadmap.markModified('steps');
+    await roadmap.save();
+    return roadmap.populate('owner', 'username avatarUrl');
+  }
+
+  async removeSubStep(
+    id: string,
+    stepIndex: number,
+    subStepIndex: number,
+    userId: string
+  ): Promise<RoadmapDocument> {
+    const roadmap = await this.roadmapModel.findById(id).exec();
+    if (!roadmap) throw new NotFoundException('Roadmap not found');
+    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
+    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) throw new NotFoundException('Step not found');
+
+    const step = roadmap.steps[stepIndex];
+    if (!step.subSteps || subStepIndex < 0 || subStepIndex >= step.subSteps.length) {
+      throw new NotFoundException('SubStep not found');
+    }
+
+    step.subSteps.splice(subStepIndex, 1);
 
     roadmap.markModified('steps');
     await roadmap.save();
