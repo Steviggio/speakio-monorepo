@@ -2,8 +2,8 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { apiGetResources } from '@/lib/api/resources';
 import { useTranslation } from '@/lib/i18n';
 import { ResourceType, Pricing } from '@repo/types';

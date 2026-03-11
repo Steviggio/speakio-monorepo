@@ -4,8 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { apiGetMyRoadmaps, apiCreateRoadmap, apiDeleteRoadmap } from '@/lib/api/roadmaps';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useTranslation } from '@/lib/i18n';
 
 interface RoadmapItem {
@@ -14,7 +14,7 @@ interface RoadmapItem {
 }
 
 export default function RoadmapsPage() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { t } = useTranslation();
   const [roadmaps, setRoadmaps] = useState<RoadmapItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -56,6 +56,19 @@ export default function RoadmapsPage() {
   };
 
   const getProgress = (steps: { completed: boolean }[]) => steps.length === 0 ? 0 : Math.round((steps.filter((s) => s.completed).length / steps.length) * 100);
+
+  if (isLoading || authLoading) return (
+    <div className="max-w-4xl mx-auto py-16 px-4">
+      <div className="space-y-3">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="animate-pulse rounded-lg border border-[var(--color-border)] bg-white p-5">
+            <div className="h-4 bg-[var(--color-bg-hover)] rounded w-1/2 mb-3" />
+            <div className="h-2 bg-[var(--color-bg-hover)] rounded w-full" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 
   if (!user) return (
     <div className="max-w-4xl mx-auto py-16 px-4 text-center">

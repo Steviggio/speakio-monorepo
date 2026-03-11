@@ -6,14 +6,15 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { 
   apiGetRoadmap, apiToggleStep, apiAddStep, apiExportAnki,
-  apiAddSubStep, apiToggleSubStep, apiUpdateStepVocabularies, apiUpdateSubStepVocabularies,
+  apiAddSubStep, apiToggleSubStep, apiUpdateSubStep, apiRemoveSubStep,
+  apiUpdateStepVocabularies, apiUpdateSubStepVocabularies,
   apiUpdateRoadmap, apiUpdateStep
 } from '@/lib/api/roadmaps';
 import { useTranslation } from '@/lib/i18n';
-import { Input } from '@/components/ui/Input';
-import { Calendar as CalendarUI } from '@/components/ui/Calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/Popover';
-import { ChevronDown, ChevronRight, Plus, Calendar, BookOpen, Clock } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Calendar as CalendarUI } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { ChevronDown, ChevronRight, Plus, Calendar, BookOpen, Clock, Pencil, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
@@ -37,7 +38,7 @@ interface RoadmapDetail {
 export default function RoadmapDetailPage() {
   const params = useParams();
   const id = params?.id as string;
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const { t } = useTranslation();
   const [roadmap, setRoadmap] = useState<RoadmapDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,6 +50,12 @@ export default function RoadmapDetailPage() {
   // Forms state
   const [newSubStepTarget, setNewSubStepTarget] = useState<number | null>(null);
   const [newSubStepTitle, setNewSubStepTitle] = useState('');
+  const [editSubStepTarget, setEditSubStepTarget] = useState<{ step: number, subStep: number } | null>(null);
+  const [editSubStepTitle, setEditSubStepTitle] = useState('');
+  
+  // Popover States
+  const [globalCalendarOpen, setGlobalCalendarOpen] = useState(false);
+  const [stepCalendarOpen, setStepCalendarOpen] = useState<number | null>(null);
   
   const [newVocabTarget, setNewVocabTarget] = useState<{ step: number, subStep?: number } | null>(null);
   const [newVocabFront, setNewVocabFront] = useState('');
@@ -92,6 +99,23 @@ export default function RoadmapDetailPage() {
       const newExpanded = new Set(expandedSteps);
       newExpanded.add(stepIndex);
       setExpandedSteps(newExpanded);
+    } catch { /* */ }
+  };
+
+  const handleEditSubStep = async (stepIndex: number, subStepIndex: number) => {
+    if (!editSubStepTitle.trim()) return;
+    try {
+      const updated = await apiUpdateSubStep(id, stepIndex, subStepIndex, { title: editSubStepTitle.trim() });
+      setRoadmap(updated);
+      setEditSubStepTarget(null);
+    } catch { /* */ }
+  };
+
+  const handleDeleteSubStep = async (stepIndex: number, subStepIndex: number) => {
+    if (!confirm('Are you sure you want to delete this sub-task?')) return;
+    try {
+      const updated = await apiRemoveSubStep(id, stepIndex, subStepIndex);
+      setRoadmap(updated);
     } catch { /* */ }
   };
 
@@ -169,7 +193,7 @@ export default function RoadmapDetailPage() {
     }
   };
 
-  if (isLoading) return (
+  if (isLoading || authLoading) return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       <div className="animate-pulse">
         <div className="h-6 bg-[var(--color-bg-hover)] rounded w-2/3 mb-4" />
@@ -213,18 +237,19 @@ export default function RoadmapDetailPage() {
             {isOwner && (
               <div className="mt-3 flex items-center gap-2 text-sm">
                 <span className="text-[var(--color-text-secondary)] font-medium">Objectif Final :</span>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <button className="flex items-center gap-2 px-3 py-1.5 text-xs text-left border rounded bg-white text-[var(--color-text)] hover:border-[var(--color-brand)] transition-colors">
-                      <Calendar size={14} className="text-[var(--color-text-muted)]" />
-                      <span>{roadmap.deadline ? format(new Date(roadmap.deadline), 'PPP', { locale: fr }) : 'Sélectionner une date...'}</span>
-                    </button>
+                <Popover open={globalCalendarOpen} onOpenChange={setGlobalCalendarOpen}>
+                  <PopoverTrigger className="flex items-center gap-2 px-3 py-1.5 text-xs text-left border rounded bg-white text-[var(--color-text)] hover:border-[var(--color-brand)] transition-colors">
+                    <Calendar size={14} className="text-[var(--color-text-muted)]" />
+                    <span>{roadmap.deadline ? format(new Date(roadmap.deadline), 'PPP', { locale: fr }) : 'Sélectionner une date...'}</span>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0 z-[100]" align="start">
                     <CalendarUI
                       mode="single"
                       selected={roadmap.deadline ? new Date(roadmap.deadline) : undefined}
-                      onSelect={handleUpdateRoadmapDeadline}
+                      onSelect={(date) => {
+                        handleUpdateRoadmapDeadline(date);
+                        setGlobalCalendarOpen(false);
+                      }}
                       initialFocus
                       locale={fr}
                     />
@@ -306,19 +331,20 @@ export default function RoadmapDetailPage() {
                     {/* Editable Deadline for Step */}
                     {isOwner ? (
                       <div onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <button className="flex items-center gap-1.5 bg-black/[0.03] px-2 py-1 rounded cursor-pointer hover:bg-black/[0.06] transition-colors">
-                              <Calendar size={12} />
-                              <span>{step.deadline ? format(new Date(step.deadline), 'PP', { locale: fr }) : 'Ajouter deadline'}</span>
-                            </button>
+                        <Popover open={stepCalendarOpen === stepIndex} onOpenChange={(open) => setStepCalendarOpen(open ? stepIndex : null)}>
+                          <PopoverTrigger className="flex items-center gap-1.5 bg-black/[0.03] px-2 py-1 rounded cursor-pointer hover:bg-black/[0.06] transition-colors">
+                            <Calendar size={12} />
+                            <span>{step.deadline ? format(new Date(step.deadline), 'PP', { locale: fr }) : 'Ajouter deadline'}</span>
                           </PopoverTrigger>
                           <PopoverContent className="w-auto p-0 z-[100]" align="start" onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
                             <div onClick={(e) => e.stopPropagation()}>
                               <CalendarUI
                                 mode="single"
                                 selected={step.deadline ? new Date(step.deadline) : undefined}
-                                onSelect={(date) => handleUpdateStepDeadline(stepIndex, date)}
+                                onSelect={(date) => {
+                                  handleUpdateStepDeadline(stepIndex, date);
+                                  setStepCalendarOpen(null);
+                                }}
                                 initialFocus
                                 locale={fr}
                               />
@@ -370,7 +396,27 @@ export default function RoadmapDetailPage() {
                               </div>
                             )}
                             <div className="flex-1">
-                              <p className={`text-sm ${subStep.completed ? 'text-[var(--color-text-muted)] line-through' : 'text-[var(--color-text)]'}`}>{subStep.title}</p>
+                              {isOwner && editSubStepTarget?.step === stepIndex && editSubStepTarget?.subStep === subIdx ? (
+                                <div className="flex items-center gap-2 animate-in fade-in slide-in-from-top-1 w-full max-w-[80%] pr-4">
+                                  <Input autoFocus value={editSubStepTitle} onChange={(e) => setEditSubStepTitle(e.target.value)} placeholder="Sub-task title..." className="h-7 text-sm" onKeyDown={(e) => e.key === 'Enter' && handleEditSubStep(stepIndex, subIdx)} />
+                                  <button onClick={() => handleEditSubStep(stepIndex, subIdx)} disabled={!editSubStepTitle.trim()} className="px-3 py-1 bg-[var(--color-brand)] text-white text-[10px] font-medium rounded transition-colors disabled:opacity-40">Save</button>
+                                  <button onClick={() => setEditSubStepTarget(null)} className="px-3 py-1 bg-transparent hover:bg-black/5 text-[var(--color-text-secondary)] text-[10px] font-medium rounded transition-colors">Cancel</button>
+                                </div>
+                              ) : (
+                                <div className="flex items-start justify-between group">
+                                  <p className={`text-sm ${subStep.completed ? 'text-[var(--color-text-muted)] line-through' : 'text-[var(--color-text)]'}`}>{subStep.title}</p>
+                                  {isOwner && (
+                                    <div className="flex flex-shrink-0 items-center gap-1 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity ml-2 pointer-events-auto">
+                                      <button onClick={() => { setEditSubStepTarget({ step: stepIndex, subStep: subIdx }); setEditSubStepTitle(subStep.title); }} className="text-[var(--color-text-muted)] hover:text-[var(--color-brand)] p-1 rounded-md transition-colors">
+                                        <Pencil size={12} />
+                                      </button>
+                                      <button onClick={() => handleDeleteSubStep(stepIndex, subIdx)} className="text-[var(--color-text-muted)] hover:text-red-500 p-1 rounded-md transition-colors">
+                                        <Trash2 size={12} />
+                                      </button>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
                             </div>
                           </div>
                         );
