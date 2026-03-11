@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { apiGetPosts } from '@/lib/api/posts';
 import { useTranslation } from '@/lib/i18n';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 interface PostItem {
   _id: string; title: string; slug: string; content: string;

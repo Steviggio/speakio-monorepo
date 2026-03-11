@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { apiGetPost, apiDeletePost } from '@/lib/api/posts';
 import { useAuth } from '@/lib/hooks/useAuth';
 import CommentSection from '@/components/CommentSection';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { useTranslation } from '@/lib/i18n';
 
 interface PostDetail {

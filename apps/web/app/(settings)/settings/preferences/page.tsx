@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useTranslation } from '@/lib/i18n';
-import { Card } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 const interfaceLanguages = [
   { code: 'en', label: 'English' },

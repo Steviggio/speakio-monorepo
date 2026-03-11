@@ -42,13 +42,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = (token: string, userData: User) => {
 
-    Cookies.set('access_token', token, { expires: 7, secure: process.env.NODE_ENV === 'production', sameSite: 'lax' });
+    Cookies.set('access_token', token, { expires: 7, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
     apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(userData);
   };
 
   const logout = () => {
-    Cookies.remove('access_token');
+    Cookies.remove('access_token', { path: '/' });
     delete apiClient.defaults.headers.common['Authorization'];
     setUser(null);
   };

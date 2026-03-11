@@ -63,6 +63,21 @@ export const apiToggleSubStep = async (roadmapId: string, stepIndex: number, sub
   return response.data;
 };
 
+export const apiUpdateSubStep = async (
+  roadmapId: string,
+  stepIndex: number,
+  subStepIndex: number,
+  data: { title?: string; description?: string; deadline?: string; completed?: boolean }
+) => {
+  const response = await apiClient.patch(`/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}`, data);
+  return response.data;
+};
+
+export const apiRemoveSubStep = async (roadmapId: string, stepIndex: number, subStepIndex: number) => {
+  const response = await apiClient.delete(`/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}`);
+  return response.data;
+};
+
 export const apiUpdateStepVocabularies = async (roadmapId: string, stepIndex: number, vocabularies: any[]) => {
   const response = await apiClient.post(`/roadmaps/${roadmapId}/steps/${stepIndex}/vocabularies`, { vocabularies });
   return response.data;

@@ -1,5 +1,5 @@
 import { Heart } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
+import { Card } from '@/components/ui/card';
 import { Resource } from '@repo/types';
 import { useTranslation } from '@/lib/i18n';
 

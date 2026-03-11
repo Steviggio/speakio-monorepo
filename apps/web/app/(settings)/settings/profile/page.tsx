@@ -6,9 +6,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { apiUpdateProfile, apiUploadAvatar } from '@/lib/api/users';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { LanguageCode } from '@repo/types';
 import { useTranslation } from '@/lib/i18n';
 
