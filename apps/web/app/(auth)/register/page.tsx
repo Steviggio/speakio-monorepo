@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Card } from '@/components/ui/Card';
-import { Input } from '@/components/ui/Input';
-import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
@@ -27,7 +27,10 @@ export default function RegisterPage() {
     try {
       const response = await apiRegister({ email, username, password });
       login(response.access_token, response.user);
-      router.push('/dashboard');
+      router.refresh();
+      const params = new URLSearchParams(window.location.search);
+      const callbackUrl = params.get('callbackUrl');
+      router.push(callbackUrl ? decodeURI(callbackUrl) : '/dashboard');
     } catch (err) {
       const e = err as any;
       setError(e.response?.data?.message || t('auth.registerFailed'));
