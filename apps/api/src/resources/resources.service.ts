@@ -84,24 +84,25 @@ export class ResourcesService {
     id: string,
     updateDto: UpdateResourceDto,
     userId: string,
+    userRole?: string,
   ): Promise<ResourceDocument> {
     const resource = await this.resourceModel.findById(id).exec();
     if (!resource) {
       throw new NotFoundException('Resource not found');
     }
-    if (resource.submittedBy.toString() !== userId) {
+    if (resource.submittedBy.toString() !== userId && userRole !== 'ADMIN') {
       throw new ForbiddenException('Not authorized to update this resource');
     }
     Object.assign(resource, updateDto);
     return resource.save();
   }
 
-  async remove(id: string, userId: string): Promise<{ deleted: boolean }> {
+  async remove(id: string, userId: string, userRole?: string): Promise<{ deleted: boolean }> {
     const resource = await this.resourceModel.findById(id).exec();
     if (!resource) {
       throw new NotFoundException('Resource not found');
     }
-    if (resource.submittedBy.toString() !== userId) {
+    if (resource.submittedBy.toString() !== userId && userRole !== 'ADMIN') {
       throw new ForbiddenException('Not authorized to delete this resource');
     }
     await resource.deleteOne();

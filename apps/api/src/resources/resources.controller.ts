@@ -44,12 +44,12 @@ export class ResourcesController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() updateDto: UpdateResourceDto,
   ) {
-    return this.resourcesService.update(id, updateDto, req.user.userId);
+    return this.resourcesService.update(id, updateDto, req.user.userId, req.user.role);
   }
 
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   remove(@Request() req: any, @Param('id', ParseObjectIdPipe) id: string) {
-    return this.resourcesService.remove(id, req.user.userId);
+    return this.resourcesService.remove(id, req.user.userId, req.user.role);
   }
 }
