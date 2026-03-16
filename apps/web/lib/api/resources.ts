@@ -16,6 +16,12 @@ export const apiCreateResource = async (data: any) => {
   return response.data;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const apiUpdateResource = async (id: string, data: any) => {
+  const response = await apiClient.patch(`/resources/${id}`, data);
+  return response.data;
+};
+
 export const apiVote = async (resourceId: string, type: 'positive' | 'negative') => {
   const response = await apiClient.post('/votes', { resourceId, type });
   return response.data;
