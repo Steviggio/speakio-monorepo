@@ -110,6 +110,16 @@ export default function Navbar() {
                       {t('nav.myProfile')}
                     </Link>
 
+                    {user.role === 'ADMIN' && (
+                      <Link href="/admin/resources"
+                        onClick={() => setDropdownOpen(false)}
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--color-brand)] hover:opacity-80 transition-colors bg-[var(--color-brand)]/5"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 3h10v2H2V3zm0 4h10v2H2V7zm0 4h10v2H2v-2z" fill="currentColor" /></svg>
+                        Gestion des ressources
+                      </Link>
+                    )}
+
                     <Link href="/settings/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)] transition-colors"
@@ -172,6 +182,9 @@ export default function Navbar() {
                   <Link href="/write" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-md text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)]">{t('nav.write')}</Link>
                   <Link href="/dashboard" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-md text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)]">{t('nav.dashboard')}</Link>
                   <Link href={`/profile/${(user as any)._id}`} onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-md text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)]">{t('nav.myProfile')}</Link>
+                  {user.role === 'ADMIN' && (
+                    <Link href="/admin/resources" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-md text-sm text-[var(--color-brand)] font-medium bg-[var(--color-brand)]/5">Gestion des ressources</Link>
+                  )}
                   <Link href="/settings/profile" onClick={() => setMobileOpen(false)} className="block px-3 py-2 rounded-md text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)]">{t('nav.settings')}</Link>
                   <button onClick={() => { logout(); setMobileOpen(false); }} className="w-full text-left px-3 py-2 rounded-md text-sm text-red-500 hover:bg-red-50">{t('nav.logout')}</button>
                 </>
