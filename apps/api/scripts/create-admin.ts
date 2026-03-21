@@ -1,7 +1,8 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/speakio';
+const MONGODB_URI =
+  process.env.MONGODB_URI || 'mongodb://localhost:27017/speakio';
 
 async function createAdmin() {
   try {
@@ -17,7 +18,9 @@ async function createAdmin() {
 
     const existingAdmin = await usersCollection.findOne({ email });
     if (existingAdmin) {
-      console.log('Admin user already exists. Updating role to ADMIN just in case...');
+      console.log(
+        'Admin user already exists. Updating role to ADMIN just in case...',
+      );
       await usersCollection.updateOne({ email }, { $set: { role: 'ADMIN' } });
       console.log('Done.');
       process.exit(0);
@@ -36,13 +39,12 @@ async function createAdmin() {
       favoriteResources: [],
       createdAt: new Date(),
       updatedAt: new Date(),
-      __v: 0
+      __v: 0,
     });
 
     console.log('Admin user created successfully!');
     console.log(`Email: ${email}`);
     console.log(`Password: ${password}`);
-
   } catch (error) {
     console.error('Error creating admin user:', error);
   } finally {
