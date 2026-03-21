@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useTranslation } from '@/lib/i18n';
-import { apiGetResources } from '@/lib/api/resources';
-import { ResourceType, Pricing } from '@repo/types';
+import { useQuery } from '@tanstack/react-query';
+import { apiGetResources, type ResourceItem } from '@/lib/api/resources';
+import { type ResourceType, type Pricing, RESOURCE_TYPES, PRICING_VALUES } from '@repo/types';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -14,37 +15,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 
-// Types definition for the list response
-interface ResourceItem {
-  _id: string;
-  title: string;
-  description: string;
-  url: string;
-  type: string;
-  language: string;
-  tags: string[];
-  pricing: string;
-  positiveVotes: number;
-  negativeVotes: number;
-}
-
-const types = Object.values(ResourceType);
-const pricing = Object.values(Pricing);
+const types = Object.values(RESOURCE_TYPES);
+const pricing = Object.values(PRICING_VALUES);
 
 export default function AdminResourcesPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  const [resources, setResources] = useState<ResourceItem[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  
   // Filters
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [pricingFilter, setPricingFilter] = useState('');
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
   // Authorization check
   useEffect(() => {
@@ -53,30 +36,22 @@ export default function AdminResourcesPage() {
     }
   }, [user, router]);
 
-  const fetchResources = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const limit = 20;
-      const params: Record<string, string> = { page: String(page), limit: String(limit) };
-      if (search) params.search = search;
-      if (typeFilter) params.type = typeFilter;
-      if (pricingFilter) params.pricing = pricingFilter;
-      
-      const data = await apiGetResources(params);
-      setResources(data.data || data);
-      setTotalPages(data.meta?.totalPages ?? data.totalPages ?? 1);
-    } catch (error) {
-      console.error('Failed to fetch resources', error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [page, search, typeFilter, pricingFilter]);
+  const queryParams: Record<string, string> = {
+    page: String(page),
+    limit: '20',
+    ...(search && { search }),
+    ...(typeFilter && { type: typeFilter }),
+    ...(pricingFilter && { pricing: pricingFilter }),
+  };
 
-  useEffect(() => {
-    if (user?.role === 'ADMIN') {
-      fetchResources();
-    }
-  }, [fetchResources, user]);
+  const { data: resourcesData, isLoading } = useQuery({
+    queryKey: ['admin-resources', queryParams],
+    queryFn: () => apiGetResources(queryParams),
+    enabled: user?.role === 'ADMIN',
+  });
+
+  const resources = resourcesData?.data || [];
+  const totalPages = resourcesData?.meta?.totalPages ?? 1;
 
   if (!user || user.role !== 'ADMIN') {
     return null; // Will redirect in useEffect
@@ -106,7 +81,7 @@ export default function AdminResourcesPage() {
               className="pl-9 h-10 w-full"
             />
           </div>
-          
+
           <div className="flex gap-4 w-full md:w-auto">
             <Select value={typeFilter} onValueChange={(val) => { setTypeFilter(val === 'all' ? '' : (val || '')); setPage(1); }}>
               <SelectTrigger className="w-full md:w-[180px] h-10">
@@ -155,8 +130,8 @@ export default function AdminResourcesPage() {
         ) : (
           <div className="divide-y divide-[var(--color-border-light)] max-h-[600px] overflow-y-auto">
             {resources.map((r) => (
-              <Link 
-                key={r._id} 
+              <Link
+                key={r._id}
                 href={`/admin/resources/${r._id}`}
                 className="flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-[var(--color-bg-hover)] transition-colors gap-4"
               >
@@ -168,8 +143,13 @@ export default function AdminResourcesPage() {
                     <span className="uppercase">{r.language}</span>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
+                  {r.quality?.normalizationStatus && (
+                    <Badge variant="outline" className={`text-xs ${r.quality.normalizationStatus === 'COMPLETED' ? 'border-green-200 bg-green-50 text-green-700' : 'border-amber-200 bg-amber-50 text-amber-700'}`}>
+                      {r.quality.normalizationStatus}
+                    </Badge>
+                  )}
                   <Badge variant="outline" className="text-xs bg-white">{t(`resources.types.${r.type}`)}</Badge>
                   <Badge variant="secondary" className="text-xs">{t(`resources.pricing.${r.pricing}`)}</Badge>
                 </div>
@@ -182,10 +162,10 @@ export default function AdminResourcesPage() {
       {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 mt-6">
-          <Button 
-            variant="outline" 
-            size="sm" 
-            disabled={page <= 1} 
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page <= 1}
             onClick={() => setPage(page - 1)}
           >
             Précédent
@@ -193,10 +173,10 @@ export default function AdminResourcesPage() {
           <span className="text-sm font-medium text-[var(--color-text-secondary)]">
             Page {page} sur {totalPages}
           </span>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            disabled={page >= totalPages} 
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={page >= totalPages}
             onClick={() => setPage(page + 1)}
           >
             Suivant

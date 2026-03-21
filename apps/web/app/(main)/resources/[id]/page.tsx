@@ -1,69 +1,73 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { apiGetResource, apiVote, apiGetMyVote } from '@/lib/api/resources';
 import { apiToggleFavorite, apiGetFavorites } from '@/lib/api/social';
 import { useAuth } from '@/lib/hooks/useAuth';
 import CommentSection from '@/components/CommentSection';
 import { useTranslation } from '@/lib/i18n';
 
-interface ResourceDetail {
-  _id: string; title: string; description: string; url: string; type: string;
-  language: string; tags: string[]; pricing: string; positiveVotes: number;
-  negativeVotes: number; submittedBy: { username: string } | null; createdAt: string;
-}
-
 export default function ResourceDetailPage() {
   const params = useParams();
   const id = params?.id as string;
   const { user } = useAuth();
   const { t } = useTranslation();
-  const [resource, setResource] = useState<ResourceDetail | null>(null);
-  const [myVote, setMyVote] = useState<string | null>(null);
-  const [isFavorited, setIsFavorited] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [voteLoading, setVoteLoading] = useState(false);
-  const [favLoading, setFavLoading] = useState(false);
+  const queryClient = useQueryClient();
 
-  const fetchResource = useCallback(async () => {
-    try { const data = await apiGetResource(id); setResource(data); } catch { /* */ }
-    finally { setIsLoading(false); }
-  }, [id]);
+  const { data: resource, isLoading } = useQuery({
+    queryKey: ['resource', id],
+    queryFn: () => apiGetResource(id),
+  });
 
-  const fetchMyVote = useCallback(async () => {
-    if (!user) return;
-    try { const data = await apiGetMyVote(id); setMyVote(data?.type || null); } catch { /* */ }
-  }, [id, user]);
+  const { data: myVoteData } = useQuery({
+    queryKey: ['myVote', id],
+    queryFn: () => apiGetMyVote(id),
+    enabled: !!user,
+  });
+  const myVote = myVoteData?.type || null;
 
-  const fetchFavoriteStatus = useCallback(async () => {
-    if (!user) return;
-    try {
+  const { data: isFavoritedData } = useQuery({
+    queryKey: ['favoriteStatus', id],
+    queryFn: async () => {
       const favs = await apiGetFavorites();
       const favIds = (favs || []).map((f: any) => typeof f === 'string' ? f : f._id);
-      setIsFavorited(favIds.includes(id));
-    } catch { /* */ }
-  }, [id, user]);
+      return favIds.includes(id);
+    },
+    enabled: !!user,
+  });
+  const isFavorited = isFavoritedData || false;
 
-  useEffect(() => { fetchResource(); fetchMyVote(); fetchFavoriteStatus(); }, [fetchResource, fetchMyVote, fetchFavoriteStatus]);
+  const voteMutation = useMutation({
+    mutationFn: (type: 'positive' | 'negative') => apiVote(id, type),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['resource', id] });
+      queryClient.invalidateQueries({ queryKey: ['myVote', id] });
+    },
+    onError: () => toast.error(t('resources.errorBoundary') || 'Une erreur est survenue.'),
+  });
 
-  const handleVote = async (type: 'positive' | 'negative') => {
-    if (!user || voteLoading) return;
-    setVoteLoading(true);
-    try { await apiVote(id, type); await fetchResource(); await fetchMyVote(); } catch { /* */ }
-    finally { setVoteLoading(false); }
+  const favoriteMutation = useMutation({
+    mutationFn: () => apiToggleFavorite(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favoriteStatus', id] }),
+    onError: () => toast.error(t('resources.errorBoundary') || 'Une erreur est survenue.'),
+  });
+
+  const handleVote = (type: 'positive' | 'negative') => {
+    if (!user || voteMutation.isPending) return;
+    voteMutation.mutate(type);
   };
 
-  const handleToggleFavorite = async () => {
-    if (!user || favLoading) return;
-    setFavLoading(true);
-    try {
-      const result = await apiToggleFavorite(id);
-      setIsFavorited(result.action === 'added');
-    } catch { /* */ }
-    finally { setFavLoading(false); }
+  const handleToggleFavorite = () => {
+    if (!user || favoriteMutation.isPending) return;
+    favoriteMutation.mutate();
   };
+
+  const favLoading = favoriteMutation.isPending;
+  const voteLoading = voteMutation.isPending;
 
   if (isLoading) return (
     <div className="max-w-3xl mx-auto py-8 px-4">
@@ -164,7 +168,7 @@ export default function ResourceDetailPage() {
             <span>{t('resources.submittedBy')}</span>
             <span className="text-[var(--color-text)] font-medium">{resource.submittedBy.username}</span>
             <span>·</span>
-            <span>{new Date(resource.createdAt).toLocaleDateString()}</span>
+            <span>{resource.createdAt}</span>
           </div>
         )}
       </div>

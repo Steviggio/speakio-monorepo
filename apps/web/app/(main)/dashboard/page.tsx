@@ -27,8 +27,8 @@ export default function DashboardPage() {
           apiGetFavorites().catch(() => []),
         ]);
         setStats(roadmapStats);
-        setPostCount(Array.isArray(posts) ? posts.length : posts?.data?.length || 0);
-        setFavCount(Array.isArray(favs) ? favs.length : 0);
+        setPostCount(posts?.length || 0);
+        setFavCount(favs?.length || 0);
       } catch { /* */ }
     };
     fetchData();

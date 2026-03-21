@@ -25,7 +25,7 @@ function ResetPasswordForm() {
     setIsLoading(true);
     setError('');
     try {
-      await apiResetPassword({ token, newPassword });
+      await apiResetPassword(token, newPassword);
       setSuccess(t('auth.passwordUpdated'));
       setTimeout(() => router.push('/login'), 2000);
     } catch (err) {

@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { apiGetResources } from '@/lib/api/resources';
 import { useTranslation } from '@/lib/i18n';
-import { ResourceType, Pricing } from '@repo/types';
+import { RESOURCE_TYPES, PRICING_VALUES } from '@repo/types';
 
 interface ResourceItem {
   _id: string;
@@ -21,8 +21,8 @@ interface ResourceItem {
   negativeVotes: number;
 }
 
-const types = Object.values(ResourceType);
-const pricing = Object.values(Pricing);
+const types = Object.values(RESOURCE_TYPES);
+const pricing = Object.values(PRICING_VALUES);
 
 export default function ResourcesPage() {
   const { t } = useTranslation();
@@ -51,8 +51,8 @@ export default function ResourcesPage() {
       if (typeFilter) params.type = typeFilter;
       if (pricingFilter) params.pricing = pricingFilter;
       const data = await apiGetResources(params);
-      setResources(data.data || data);
-      setTotalPages(data.meta?.totalPages ?? data.totalPages ?? 1);
+      setResources(data?.data || data);
+      setTotalPages(data.meta?.totalPages ?? 1);
     } catch { /* silent */ }
     finally { setIsLoading(false); }
   }, [page, search, typeFilter, pricingFilter]);

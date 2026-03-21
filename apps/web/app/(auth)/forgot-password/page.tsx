@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
     setError('');
     setSuccess('');
     try {
-      await apiForgotPassword({ email });
+      await apiForgotPassword(email);
       setSuccess(t('auth.resetSent'));
     } catch (err) {
       const e = err as any;

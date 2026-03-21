@@ -4,12 +4,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { apiGetComments, apiCreateComment, apiDeleteComment } from '@/lib/api/social';
 import { useTranslation } from '@/lib/i18n';
-
-interface CommentItem {
-  _id: string; content: string;
-  author: { _id: string; username: string } | null;
-  createdAt: string;
-}
+import { CommentItem } from '@/lib/api/social';
+// interface CommentItem {
+//   _id: string; content: string;
+//   author: { _id: string; username: string } | null;
+//   createdAt: string;
+// }
 
 interface CommentSectionProps { targetType: 'Resource' | 'Post'; targetId: string; }
 
@@ -22,7 +22,7 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const fetchComments = useCallback(async () => {
-    try { const data = await apiGetComments(targetType, targetId); setComments(data); }
+    try { const data = await apiGetComments(targetType, targetId); setComments(data || data); }
     catch { /* */ } finally { setIsLoading(false); }
   }, [targetType, targetId]);
 
@@ -89,7 +89,7 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
               <div className="flex items-center justify-between mb-1.5">
                 <div className="flex items-center gap-2 text-sm">
                   <div className="w-6 h-6 rounded-full bg-[var(--color-bg-hover)] flex items-center justify-center text-xs text-[var(--color-text-secondary)] font-semibold">
-                    {comment.author?.username[0]?.toUpperCase() || '?'}
+                    {comment.author?.username?.toUpperCase() || '?'}
                   </div>
                   <span className="font-medium text-[var(--color-text)]">{comment.author?.username || t('common.unknown')}</span>
                   <span className="text-xs text-[var(--color-text-muted)]">{new Date(comment.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</span>

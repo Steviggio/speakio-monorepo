@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { useTranslation } from '@/lib/i18n';
 import { apiGetResource, apiUpdateResource } from '@/lib/api/resources';
-import { ResourceType, Pricing } from '@repo/types';
+import { type ResourceType, type Pricing, RESOURCE_TYPES, PRICING_VALUES } from '@repo/types';
 
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -16,8 +16,8 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { toast } from 'sonner';
 
-const types = Object.values(ResourceType);
-const pricingOptions = Object.values(Pricing);
+const types = Object.values(RESOURCE_TYPES);
+const pricingOptions = Object.values(PRICING_VALUES);
 
 export default function AdminEditResourcePage({ params }: { params: { id: string } }) {
   const router = useRouter();
@@ -26,9 +26,9 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   const [initialData, setInitialData] = useState<any>(null);
-  
+
   // Form State
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -85,7 +85,7 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
 
   const handleSave = async () => {
     if (!hasChanges()) return;
-    
+
     setIsSaving(true);
     try {
       await apiUpdateResource(params.id, {
@@ -122,8 +122,8 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       <div className="mb-6 flex items-center gap-4">
-        <Link 
-          href="/admin/resources" 
+        <Link
+          href="/admin/resources"
           className="p-2 rounded-full hover:bg-[var(--color-bg-hover)] transition-colors text-[var(--color-text-secondary)]"
         >
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -143,25 +143,25 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
             Mettez à jour les détails de la ressource. Les modifications sont appliquées immédiatement après sauvegarde.
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent className="space-y-6 pt-6">
           <div className="space-y-2">
             <Label htmlFor="title">Titre</Label>
-            <Input 
-              id="title" 
-              value={title} 
-              onChange={(e) => setTitle(e.target.value)} 
+            <Input
+              id="title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
               placeholder="Nom de la ressource"
             />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="url">URL</Label>
-            <Input 
-              id="url" 
+            <Input
+              id="url"
               type="url"
-              value={url} 
-              onChange={(e) => setUrl(e.target.value)} 
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
               placeholder="https://..."
             />
           </div>
@@ -194,13 +194,13 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div className="space-y-2 md:col-span-2">
               <Label htmlFor="language">Code Langue (ISO 639-1)</Label>
-              <Input 
-                id="language" 
-                value={language} 
-                onChange={(e) => setLanguage(e.target.value)} 
+              <Input
+                id="language"
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
                 placeholder="Ex: en, fr, es..."
                 className="font-mono"
               />
@@ -209,31 +209,31 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
 
           <div className="space-y-2">
             <Label htmlFor="description">Description</Label>
-            <Textarea 
-              id="description" 
-              value={description} 
-              onChange={(e) => setDescription(e.target.value)} 
+            <Textarea
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               placeholder="Description détaillée de la ressource..."
               className="min-h-[120px] resize-y"
             />
           </div>
         </CardContent>
-        
+
         <CardFooter className="border-t border-[var(--color-border-light)] bg-gray-50/50 py-4 flex justify-between items-center">
           <span className="text-sm text-[var(--color-text-muted)]">
             Soumis par : {initialData?.submittedBy?.username || 'Système'}
           </span>
           <div className="flex gap-3">
-            <Button 
-              type="button" 
-              variant="outline" 
+            <Button
+              type="button"
+              variant="outline"
               onClick={() => router.push('/admin/resources')}
             >
               Annuler
             </Button>
-            <Button 
-              type="button" 
-              onClick={handleSave} 
+            <Button
+              type="button"
+              onClick={handleSave}
               disabled={!hasChanges() || isSaving}
               className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white"
             >
