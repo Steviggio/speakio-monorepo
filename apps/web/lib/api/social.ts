@@ -1,26 +1,68 @@
 import { apiClient } from './client';
+import { unwrapApiData } from './utils';
+import type { ResourceItem } from './resources';
 
-export const apiGetComments = async (targetType: 'Resource' | 'Post', targetId: string) => {
-  const response = await apiClient.get('/comments', { params: { targetType, targetId } });
-  return response.data;
+export type CommentTargetType = 'Resource' | 'Post';
+
+export type CommentItem = {
+  _id: string;
+  content: string;
+  targetType: CommentTargetType;
+  targetId: string;
+  createdAt: string;
+  updatedAt?: string;
+  author?: {
+    _id?: string;
+    username?: string;
+    avatarUrl?: string | null;
+  } | null;
 };
 
-export const apiCreateComment = async (targetType: 'Resource' | 'Post', targetId: string, content: string) => {
-  const response = await apiClient.post('/comments', { targetType, targetId, content });
-  return response.data;
-};
+export type ToggleFavoriteResponse =
+  | {
+    action: 'added' | 'removed';
+    resourceId?: string;
+  }
+  | Record<string, unknown>;
 
-export const apiDeleteComment = async (id: string) => {
+export async function apiGetComments(
+  targetType: CommentTargetType,
+  targetId: string,
+): Promise<CommentItem[]> {
+  const response = await apiClient.get('/comments', {
+    params: { targetType, targetId },
+  });
+  return unwrapApiData<CommentItem[]>(response.data);
+}
+
+export async function apiCreateComment(
+  targetType: CommentTargetType,
+  targetId: string,
+  content: string,
+): Promise<CommentItem> {
+  const response = await apiClient.post('/comments', {
+    targetType,
+    targetId,
+    content,
+  });
+  return unwrapApiData<CommentItem>(response.data);
+}
+
+export async function apiDeleteComment(
+  id: string,
+): Promise<{ deleted?: boolean } | Record<string, unknown>> {
   const response = await apiClient.delete(`/comments/${id}`);
-  return response.data;
-};
+  return unwrapApiData<{ deleted?: boolean } | Record<string, unknown>>(response.data);
+}
 
-export const apiToggleFavorite = async (resourceId: string) => {
+export async function apiToggleFavorite(
+  resourceId: string,
+): Promise<ToggleFavoriteResponse> {
   const response = await apiClient.post(`/favorites/${resourceId}`);
-  return response.data;
-};
+  return unwrapApiData<ToggleFavoriteResponse>(response.data);
+}
 
-export const apiGetFavorites = async () => {
+export async function apiGetFavorites(): Promise<ResourceItem[]> {
   const response = await apiClient.get('/favorites');
-  return response.data;
-};
+  return unwrapApiData<ResourceItem[]>(response.data);
+}

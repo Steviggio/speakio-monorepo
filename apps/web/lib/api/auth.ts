@@ -1,27 +1,47 @@
 import { apiClient } from './client';
+import { unwrapApiData } from './utils';
+import type { User } from '@repo/types';
 
-export const apiLogin = async (data: Record<string, string>) => {
+export type LoginResponse = {
+  access_token: string;
+  user: User;
+};
+
+export type RegisterPayload = {
+  email: string;
+  username: string;
+  password: string;
+};
+
+export type LoginPayload = {
+  email: string;
+  password: string;
+};
+
+export async function apiLogin(data: LoginPayload): Promise<LoginResponse> {
   const response = await apiClient.post('/auth/login', data);
-  return response.data;
-};
+  return unwrapApiData<LoginResponse>(response.data);
+}
 
-export const apiRegister = async (data: Record<string, string>) => {
+export async function apiRegister(data: RegisterPayload): Promise<LoginResponse> {
   const response = await apiClient.post('/auth/register', data);
-  return response.data;
-};
+  return unwrapApiData<LoginResponse>(response.data);
+}
 
-export const apiGetProfile = async () => {
-  // We'll update this once the users/me endpoint is implemented
-  const response = await apiClient.get('/users/me');
-  return response.data;
-};
+export async function apiGetProfile(): Promise<User> {
+  const response = await apiClient.get('/auth/profile');
+  return unwrapApiData<User>(response.data);
+}
 
-export const apiForgotPassword = async (data: Record<string, string>) => {
-  const response = await apiClient.post('/auth/forgot-password', data);
-  return response.data;
-};
+export async function apiForgotPassword(email: string): Promise<{ message?: string }> {
+  const response = await apiClient.post('/auth/forgot-password', { email });
+  return unwrapApiData<{ message?: string }>(response.data);
+}
 
-export const apiResetPassword = async (data: Record<string, string>) => {
-  const response = await apiClient.post('/auth/reset-password', data);
-  return response.data;
-};
+export async function apiResetPassword(token: string, newPassword: string): Promise<{ message?: string }> {
+  const response = await apiClient.post('/auth/reset-password', {
+    token,
+    newPassword,
+  });
+  return unwrapApiData<{ message?: string }>(response.data);
+}
