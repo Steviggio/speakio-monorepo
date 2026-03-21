@@ -23,7 +23,7 @@ export class CreatePostDto {
   @IsArray()
   @IsString({ each: true })
   @IsOptional()
-  tags?: string[];
+  tags: string[];
 
   @IsEnum(['draft', 'published'])
   @IsOptional()

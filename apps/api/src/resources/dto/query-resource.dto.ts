@@ -1,30 +1,73 @@
-import { IsOptional, IsEnum, IsString, IsInt, Min } from 'class-validator';
+import {
+  IsBooleanString,
+  IsIn,
+  IsInt,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import { Type } from 'class-transformer';
-import { ResourceType, Pricing } from '@repo/types';
-import { PaginationDto } from '../../common/dto/pagination.dto';
+import {
+  PRICING_VALUES,
+  RESOURCE_STATUSES,
+  RESOURCE_TYPES,
+  type Pricing,
+  type ResourceStatus,
+  type ResourceType,
+} from '@repo/types';
 
-export class QueryResourceDto extends PaginationDto {
-  @IsOptional()
-  @IsString()
-  search?: string;
-
+export class QueryResourcesDto {
   @IsOptional()
   @IsString()
   language?: string;
 
   @IsOptional()
-  @IsEnum(ResourceType)
+  @IsIn(RESOURCE_TYPES)
   type?: ResourceType;
 
   @IsOptional()
-  @IsEnum(Pricing)
+  @IsIn(PRICING_VALUES)
   pricing?: Pricing;
 
   @IsOptional()
-  @IsString()
-  tag?: string;
+  @IsIn(RESOURCE_STATUSES)
+  status?: ResourceStatus;
 
   @IsOptional()
   @IsString()
+  providerDomain?: string;
+
+  @IsOptional()
+  @IsString()
+  publisherSlug?: string;
+
+  @IsOptional()
+  @IsString()
+  seriesSlug?: string;
+
+  @IsOptional()
+  @IsString()
+  search?: string;
+
+  @IsOptional()
+  @IsIn(['newest', 'oldest', 'popular'])
   sort?: 'newest' | 'oldest' | 'popular';
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  page: number = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  @Max(100)
+  limit: number = 12;
+
+  @IsOptional()
+  @IsBooleanString()
+  includeArchived?: string;
 }
