@@ -22,12 +22,10 @@ export class TransformInterceptor<T>
   ): Observable<Response<T>> {
     return next.handle().pipe(
       map((res) => {
-        // If the service already returns data and meta (e.g., pagination), pass it through
         if (res && res.data !== undefined && res.meta !== undefined) {
           return res;
         }
 
-        // Clean up Mongoose internal fields if returning Documents directly
         let cleanedData = res;
         if (res && typeof res === 'object') {
           if (Array.isArray(res)) {
