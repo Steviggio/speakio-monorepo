@@ -12,7 +12,7 @@ export class Post {
   slug: string;
 
   @Prop({ required: true })
-  content: string; // Markdown content
+  content: string;
 
   @Prop({ type: Types.ObjectId, ref: 'User', required: true })
   author: Types.ObjectId;
@@ -32,5 +32,4 @@ export class Post {
 
 export const PostSchema = SchemaFactory.createForClass(Post);
 
-// Text index for search
 PostSchema.index({ title: 'text', content: 'text', tags: 'text' });

@@ -1,8 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
-export type ResourceImportBatchDocument =
-  HydratedDocument<ResourceImportBatch>;
+export type ResourceImportBatchDocument = HydratedDocument<ResourceImportBatch>;
 
 @Schema({ timestamps: true })
 export class ResourceImportBatch {

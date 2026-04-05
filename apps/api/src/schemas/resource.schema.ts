@@ -307,13 +307,17 @@ ResourceSchema.index({
   'series.name': 'text',
   'raw.title': 'text',
   'raw.description': 'text',
-  'enrichment.metaDescription': "text",
+  'enrichment.metaDescription': 'text',
   'enrichment.ogDescription': 'text',
 });
 
 ResourceSchema.index({ language: 1, type: 1, status: 1, isActive: 1 });
 ResourceSchema.index({ language: 1, pricing: 1, status: 1, isActive: 1 });
-ResourceSchema.index({ 'sourcePlatform.rootDomain': 1, status: 1, isActive: 1 });
+ResourceSchema.index({
+  'sourcePlatform.rootDomain': 1,
+  status: 1,
+  isActive: 1,
+});
 ResourceSchema.index({ 'sourcePlatform.domain': 1, status: 1, isActive: 1 });
 ResourceSchema.index({ 'publisher.slug': 1, status: 1, isActive: 1 });
 ResourceSchema.index({ 'series.slug': 1, status: 1, isActive: 1 });

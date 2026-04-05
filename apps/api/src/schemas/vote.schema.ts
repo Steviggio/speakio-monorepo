@@ -17,5 +17,4 @@ export class Vote {
 
 export const VoteSchema = SchemaFactory.createForClass(Vote);
 
-// Ensure one vote per user per resource
 VoteSchema.index({ user: 1, resource: 1 }, { unique: true });

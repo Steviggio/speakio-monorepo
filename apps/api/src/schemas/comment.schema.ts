@@ -11,7 +11,6 @@ export class Comment {
   @Prop({ required: true })
   content: string;
 
-  /** Polymorphic: 'Resource' or 'Post' */
   @Prop({ required: true, enum: ['Resource', 'Post'] })
   targetType: 'Resource' | 'Post';
 
@@ -21,5 +20,4 @@ export class Comment {
 
 export const CommentSchema = SchemaFactory.createForClass(Comment);
 
-// Index for efficient lookup by target
 CommentSchema.index({ targetType: 1, targetId: 1, createdAt: -1 });
