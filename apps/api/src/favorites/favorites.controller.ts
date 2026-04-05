@@ -14,7 +14,6 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
-  /** Toggle a favorite (add or remove) */
   @UseGuards(JwtAuthGuard)
   @Post(':resourceId')
   async toggleFavorite(
@@ -24,14 +23,12 @@ export class FavoritesController {
     return this.favoritesService.toggle(req.user.userId, resourceId);
   }
 
-  /** List user's favorite resources */
   @UseGuards(JwtAuthGuard)
   @Get()
   async listFavorites(@Request() req: any) {
     return this.favoritesService.listFavorites(req.user.userId);
   }
 
-  /** Remove a favorite */
   @UseGuards(JwtAuthGuard)
   @Delete(':resourceId')
   async removeFavorite(

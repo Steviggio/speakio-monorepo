@@ -7,7 +7,6 @@ import { User, UserDocument } from '../schemas/user.schema';
 export class FavoritesService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
-  /** Toggle favorite: add if not present, remove if already present */
   async toggle(userId: string, resourceId: string) {
     const user = await this.userModel.findById(userId).select('favoriteResources').exec();
     if (!user) throw new NotFoundException('User not found');
@@ -18,7 +17,6 @@ export class FavoritesService {
     );
 
     if (!isFavorited) {
-      // Use atomic $addToSet to avoid full document validation on .save()
       await this.userModel.findByIdAndUpdate(userId, {
         $addToSet: { favoriteResources: resObjId },
       }).exec();
@@ -31,7 +29,6 @@ export class FavoritesService {
     }
   }
 
-  /** List user's favorite resources with full resource data */
   async listFavorites(userId: string) {
     const user = await this.userModel
       .findById(userId)
