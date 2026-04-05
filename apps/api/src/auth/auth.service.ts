@@ -90,7 +90,6 @@ export class AuthService {
   async forgotPassword(email: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
-      // Don't leak whether user exists or not
       return {
         message:
           'If an account with that email exists, we sent a password reset link.',
@@ -98,7 +97,7 @@ export class AuthService {
     }
 
     const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
+    const resetPasswordExpires = new Date(Date.now() + 3600000);
 
     await this.usersService.update(user._id.toString(), {
       resetPasswordToken: resetToken,
@@ -117,7 +116,6 @@ export class AuthService {
   }
 
   async resetPassword(token: string, newPassword: string) {
-    // In a real app we would use findOne({ resetPasswordToken: token }) on usersService
     const user = await this.usersService['userModel'].findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: new Date() },

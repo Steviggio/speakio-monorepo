@@ -25,7 +25,6 @@ export class AuthController {
   @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Post('login')
   async login(@Body() body: LoginDto) {
-    // Basic explicit validation for prototype, usually handled by guards/DTOs
     const user = await this.authService.validateUser(body.email, body.password);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -42,13 +41,11 @@ export class AuthController {
   @Get('google')
   @UseGuards(GoogleAuthGuard)
   googleAuth() {
-    // Initiates the Google OAuth2 login flow
   }
 
   @Get('google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleAuthRedirect(@Request() req: any) {
-    // 'req.user' contains the Google profile from GoogleStrategy
     return this.authService.googleLogin(req.user);
   }
 
