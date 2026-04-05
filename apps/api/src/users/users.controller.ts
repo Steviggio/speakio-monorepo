@@ -23,7 +23,6 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-    // Return safe profile info without sensitive data
     const safeUser = user.toObject();
     delete safeUser.passwordHash;
     delete safeUser.resetPasswordToken;
