@@ -27,7 +27,6 @@ export class VotesService {
       .exec();
 
     if (!existing) {
-      // New vote
       await this.voteModel.create({
         user: userId,
         resource: resourceId,
@@ -39,14 +38,12 @@ export class VotesService {
     }
 
     if (existing.type === type) {
-      // Remove vote (toggle off)
       await existing.deleteOne();
       const field = type === 'positive' ? 'positiveVotes' : 'negativeVotes';
       await this.resourcesService.incrementVote(resourceId, field, -1);
       return { action: 'removed', type };
     }
 
-    // Switch vote
     const oldField =
       existing.type === 'positive' ? 'positiveVotes' : 'negativeVotes';
     const newField = type === 'positive' ? 'positiveVotes' : 'negativeVotes';
