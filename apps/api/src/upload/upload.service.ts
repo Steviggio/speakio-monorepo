@@ -38,7 +38,6 @@ export class UploadService {
 
     await fs.writeFile(filePath, file.buffer);
 
-    // Return relative URL path
     return `/uploads/avatars/${filename}`;
   }
 }

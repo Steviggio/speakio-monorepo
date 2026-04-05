@@ -24,7 +24,7 @@ export class UploadController {
   @UseInterceptors(
     FileInterceptor('file', {
       limits: {
-        fileSize: 5 * 1024 * 1024, // 5MB max
+        fileSize: 5 * 1024 * 1024,
         files: 1,
       },
       fileFilter: (req, file, cb) => {
@@ -45,7 +45,7 @@ export class UploadController {
         cb(null, true);
       },
     }),
-  ) // Key matches the form-data field
+  )
   async uploadAvatar(
     @Request() req: any,
     @UploadedFile() file: Express.Multer.File,

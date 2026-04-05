@@ -4,7 +4,7 @@ import { UploadService } from './upload.service';
 import { UsersModule } from '../users/users.module';
 
 @Module({
-  imports: [UsersModule], // Need users service to update the user record
+  imports: [UsersModule],
   controllers: [UploadController],
   providers: [UploadService],
 })
