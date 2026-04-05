@@ -265,7 +265,6 @@ export class RoadmapsService {
     return { deleted: true };
   }
 
-  /** Get user stats for the dashboard */
   async getUserStats(userId: string) {
     const roadmaps = await this.roadmapModel.find({ owner: userId }).exec();
     const totalRoadmaps = roadmaps.length;
@@ -277,7 +276,6 @@ export class RoadmapsService {
     return { totalRoadmaps, totalSteps, completedSteps };
   }
 
-  /** Export to Anki CSV format */
   async exportToAnkiCsv(id: string, userId: string): Promise<string> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
@@ -298,8 +296,6 @@ export class RoadmapsService {
       }
     }
 
-    // Basic CSV format: front,back
-    // Handling commas inside the values by wrapping them in double quotes
     return allVocabs
       .map((card) => {
         const escapeCsvString = (str: string) => `"${str.replace(/"/g, '""')}"`;
