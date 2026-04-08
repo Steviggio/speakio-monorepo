@@ -114,7 +114,7 @@ export default function ProfileSettingsPage() {
               <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full flex items-center justify-center text-xl font-bold uppercase text-[var(--color-text-muted)]">
-                {user.username.charAt(0)}
+                {user.username?.charAt(0) || user.email?.charAt(0) || '?'}
               </div>
             )}
             <div
