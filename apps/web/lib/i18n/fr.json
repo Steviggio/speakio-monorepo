@@ -100,6 +100,7 @@
         "subtitle": "Découvrez les meilleurs outils et matériels d'apprentissage.",
         "searchPlaceholder": "Rechercher des ressources...",
         "allTypes": "Tous les types",
+        "allLanguages": "Toutes les langues",
         "allPricing": "Tous les prix",
         "noResources": "Aucune ressource trouvée.",
         "previous": "Précédent",
@@ -273,11 +274,6 @@
         "privacy": "Politique de confidentialité",
         "terms": "Conditions d'utilisation",
         "legalNotice": "Mentions légales"
-    },
-    "common": {
-        "loading": "Chargement...",
-        "error": "Une erreur est survenue.",
-        "cancel": "Annuler"
     },
     "legal": {
         "privacy": {
