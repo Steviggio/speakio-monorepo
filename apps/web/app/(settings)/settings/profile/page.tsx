@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import Cookies from 'js-cookie';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { apiUpdateProfile, apiUploadAvatar } from '@/lib/api/users';
 import { Card } from '@/components/ui/card';
@@ -59,7 +60,7 @@ export default function ProfileSettingsPage() {
       }
       delete payload.learningLanguagesString;
       const updatedUser = await apiUpdateProfile(payload);
-      if (user) login(localStorage.getItem('token') || '', updatedUser);
+      if (user) login(Cookies.get('access_token') || '', updatedUser);
       setSuccessMsg(t('settings.profileUpdated'));
     } catch (err) {
 
@@ -79,7 +80,7 @@ export default function ProfileSettingsPage() {
       if (!file) return;
       const { avatarUrl } = await apiUploadAvatar(file);
       setAvatarPreview(avatarUrl);
-      if (user) login(localStorage.getItem('token') || '', { ...user, avatarUrl });
+      if (user) login(Cookies.get('access_token') || '', { ...user, avatarUrl });
     } catch (err) {
 
       const e = err as any;

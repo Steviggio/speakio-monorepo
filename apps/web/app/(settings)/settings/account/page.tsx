@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 import { useAuth } from '@/lib/hooks/useAuth';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -40,7 +41,7 @@ export default function AccountSettingsPage() {
     setEmailError('');
     try {
       const response = await apiClient.post('/auth/change-email', { newEmail });
-      if (user) login(response.data.access_token || '', { ...user, email: newEmail });
+      if (user) login(response.data.access_token || Cookies.get('access_token') || '', { ...user, email: newEmail });
       setEmailSuccess(t('settings.emailUpdated'));
       setNewEmail('');
     } catch (err: any) {
