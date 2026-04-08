@@ -6,16 +6,15 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from "@/lib/i18n"
 
-const { t } = useTranslation();
-
-const sidebarLinks = [
-  { href: '/settings/profile', label: t("settings:profile") },
-  { href: '/settings/account', label: t("settings:account") },
-  { href: '/settings/preferences', label: t("settings:preferences") },
-];
-
 export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { t } = useTranslation();
+
+  const sidebarLinks = [
+    { href: '/settings/profile', label: t("settings.profile") },
+    { href: '/settings/account', label: t("settings.account") },
+    { href: '/settings/preferences', label: t("settings.preferences") },
+  ];
 
   return (
     <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
