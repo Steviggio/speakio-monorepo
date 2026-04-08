@@ -138,7 +138,7 @@ export class ResourcesService {
         { $sort: { count: -1 } },
       ]),
       this.resourceModel.aggregate([
-        { $match: { ...match, language: { $exists: true, $ne: null, $ne: '' } } },
+        { $match: { ...match, language: { $exists: true, $nin: [null, ''] } } },
         { $group: { _id: '$language', count: { $sum: 1 } } },
         { $sort: { count: -1 } },
       ]),
