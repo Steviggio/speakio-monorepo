@@ -9,6 +9,7 @@ import { Post, PostDocument } from '../schemas/post.schema';
 import { PaginationDto } from '../common/dto/pagination.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { paginate } from '../common/helpers/paginate.helper';
 
 @Injectable()
 export class PostsService {
@@ -41,24 +42,10 @@ export class PostsService {
   }
 
   async findAllPublished(query: PaginationDto) {
-    const page = query.page ?? 1;
-    const limit = query.limit ?? 10;
-    const skip = (page - 1) * limit;
-    const [data, total] = await Promise.all([
-      this.postModel
-        .find({ status: 'published' })
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit)
-        .populate('author', 'username avatarUrl')
-        .exec(),
-      this.postModel.countDocuments({ status: 'published' }).exec(),
-    ]);
-
-    return {
-      data,
-      meta: { total, page, limit, totalPages: Math.ceil(total / limit) },
-    };
+    return paginate(this.postModel, { status: 'published' }, query, {
+      sort: { createdAt: -1 },
+      populate: { path: 'author', select: 'username avatarUrl' },
+    });
   }
 
   async findBySlug(slug: string): Promise<PostDocument> {
@@ -79,25 +66,24 @@ export class PostsService {
     return post;
   }
 
-  async findMyPosts(userId: string): Promise<PostDocument[]> {
-    return this.postModel
-      .find({ author: userId })
-      .sort({ updatedAt: -1 })
-      .exec();
+  async findMyPosts(userId: string, query: PaginationDto) {
+    return paginate(this.postModel, { author: userId }, query, {
+      sort: { updatedAt: -1 },
+    });
   }
 
   async update(
     id: string,
     updateDto: UpdatePostDto,
     userId: string,
+    userRole?: string,
   ): Promise<PostDocument> {
     const post = await this.postModel.findById(id).exec();
     if (!post) throw new NotFoundException('Post not found');
-    if (post.author.toString() !== userId) {
+    if (userRole !== 'ADMIN' && post.author.toString() !== userId) {
       throw new ForbiddenException('Not authorized to edit this post');
     }
 
-    // Regenerate slug if title changed
     if (updateDto.title && updateDto.title !== post.title) {
       Object.assign(post, updateDto, {
         slug: this.generateSlug(updateDto.title),
@@ -108,10 +94,14 @@ export class PostsService {
     return post.save();
   }
 
-  async remove(id: string, userId: string): Promise<{ deleted: boolean }> {
+  async remove(
+    id: string,
+    userId: string,
+    userRole?: string,
+  ): Promise<{ deleted: boolean }> {
     const post = await this.postModel.findById(id).exec();
     if (!post) throw new NotFoundException('Post not found');
-    if (post.author.toString() !== userId) {
+    if (userRole !== 'ADMIN' && post.author.toString() !== userId) {
       throw new ForbiddenException('Not authorized to delete this post');
     }
     await post.deleteOne();

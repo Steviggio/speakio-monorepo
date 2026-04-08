@@ -5,11 +5,6 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { apiGetComments, apiCreateComment, apiDeleteComment } from '@/lib/api/social';
 import { useTranslation } from '@/lib/i18n';
 import { CommentItem } from '@/lib/api/social';
-// interface CommentItem {
-//   _id: string; content: string;
-//   author: { _id: string; username: string } | null;
-//   createdAt: string;
-// }
 
 interface CommentSectionProps { targetType: 'Resource' | 'Post'; targetId: string; }
 

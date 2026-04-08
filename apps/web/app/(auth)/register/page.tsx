@@ -19,9 +19,14 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [consent, setConsent] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!consent) {
+      setError(t('auth.consentRequired'));
+      return;
+    }
     setIsLoading(true);
     setError('');
     try {
@@ -38,6 +43,8 @@ export default function RegisterPage() {
       setIsLoading(false);
     }
   };
+
+  const consentParts = t('auth.consentLabel').split(/\{privacy\}|\{terms\}/);
 
   return (
     <Card className="p-7">
@@ -56,6 +63,22 @@ export default function RegisterPage() {
         <Input label={t('auth.emailAddress')} type="email" placeholder="name@example.com" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} required />
         <Input label={t('auth.password')} type="password" placeholder="••••••••" value={password} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)} required />
 
+        <label className="flex items-start gap-2.5 pt-1 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={consent}
+            onChange={(e) => setConsent(e.target.checked)}
+            className="mt-0.5 w-4 h-4 rounded border-[var(--color-border)] text-[var(--color-brand)] focus:ring-[var(--color-brand)] accent-[var(--color-brand)]"
+          />
+          <span className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+            {consentParts[0]}
+            <Link href="/privacy" target="_blank" className="text-[var(--color-brand)] hover:underline font-medium">{t('auth.consentPrivacy')}</Link>
+            {consentParts[1]}
+            <Link href="/terms" target="_blank" className="text-[var(--color-brand)] hover:underline font-medium">{t('auth.consentTerms')}</Link>
+            {consentParts[2]}
+          </span>
+        </label>
+
         <div className="pt-1">
           <Button type="submit" className="w-full" isLoading={isLoading}>{t('auth.signup')}</Button>
         </div>
@@ -68,3 +91,4 @@ export default function RegisterPage() {
     </Card>
   );
 }
+

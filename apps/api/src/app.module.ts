@@ -19,7 +19,9 @@ import { RoadmapsModule } from './roadmaps/roadmaps.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { PrometheusModule } from './common/metrics/prometheus.module';
+import { MetricsInterceptor } from './common/metrics/prometheus.interceptor';
 @Module({
   imports: [
     ConfigModule,
@@ -40,6 +42,7 @@ import { APP_GUARD } from '@nestjs/core';
     PostsModule,
     CommentsModule,
     RoadmapsModule,
+    PrometheusModule,
     ServeStaticModule.forRoot({
       rootPath: join(process.cwd(), 'uploads'),
       serveRoot: '/uploads',
@@ -49,6 +52,7 @@ import { APP_GUARD } from '@nestjs/core';
   providers: [
     AppService,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_INTERCEPTOR, useClass: MetricsInterceptor },
   ],
 })
 export class AppModule { }

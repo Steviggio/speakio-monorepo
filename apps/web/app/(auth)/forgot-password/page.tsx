@@ -25,7 +25,7 @@ export default function ForgotPasswordPage() {
       setSuccess(t('auth.resetSent'));
     } catch (err) {
       const e = err as any;
-      setError(e.response?.data?.message || 'Failed to request reset');
+      setError(e.response?.data?.message || t('auth.requestResetFailed'));
     } finally {
       setIsLoading(false);
     }

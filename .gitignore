@@ -42,3 +42,5 @@ yarn-error.log*
 
 # Personal docs
 docs/*
+
+crawlee-test/*

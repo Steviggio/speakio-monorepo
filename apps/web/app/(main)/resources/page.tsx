@@ -66,7 +66,6 @@ export default function ResourcesPage() {
         <p className="text-[var(--color-text-secondary)] mt-1">{t('resources.subtitle')}</p>
       </div>
 
-      {/* Filters */}
       <div className="flex flex-col sm:flex-row gap-3 mb-6">
         <div className="flex-1"><Input
           type="text"
@@ -93,7 +92,6 @@ export default function ResourcesPage() {
         </select>
       </div>
 
-      {/* Grid */}
       {isLoading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -128,7 +126,6 @@ export default function ResourcesPage() {
         </div>
       )}
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
           <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => setPage(page - 1)}>

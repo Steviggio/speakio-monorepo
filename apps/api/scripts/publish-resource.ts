@@ -35,7 +35,6 @@ function parseArgs(argv: string[]): CliOptions {
 
 async function main() {
     const options = parseArgs(process.argv.slice(2));
-    // const { AppModule } = require('../src/app.module');
 
     const app = await NestFactory.createApplicationContext(AppModule, {
         logger: ['error', 'warn', 'log'],

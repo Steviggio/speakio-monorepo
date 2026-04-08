@@ -115,7 +115,6 @@ export default function ResourceDetailPage() {
             {t('resources.visitResource')}
           </a>
 
-          {/* Favorite button */}
           {user && (
             <button
               onClick={handleToggleFavorite}
@@ -148,7 +147,6 @@ export default function ResourceDetailPage() {
           </div>
         )}
 
-        {/* Votes */}
         <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-border-light)]">
           <button onClick={() => handleVote('positive')} disabled={!user || voteLoading}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm transition-colors ${myVote === 'positive' ? 'bg-green-50 border-green-200 text-green-700' : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]'

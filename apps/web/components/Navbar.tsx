@@ -35,12 +35,10 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-[var(--color-border)]">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <span className="text-xl font-bold text-[var(--color-text)] tracking-tight">speakio</span>
         </Link>
 
-        {/* Desktop links */}
         <div className="hidden md:flex items-center gap-0.5">
           {navLinks.map((link) => {
             const isActive = pathname?.startsWith(link.href);
@@ -57,11 +55,9 @@ export default function Navbar() {
           })}
         </div>
 
-        {/* Auth section */}
         <div className="hidden md:flex items-center gap-2">
           {user ? (
             <>
-              {/* Write button */}
               <Link href="/write"
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${pathname === '/write'
                     ? 'bg-[var(--color-bg-hover)] text-[var(--color-text)]'
@@ -80,7 +76,6 @@ export default function Navbar() {
                 {t('nav.dashboard')}
               </Link>
 
-              {/* User dropdown */}
               <div className="relative pl-3 ml-1 border-l border-[var(--color-border)]" ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -96,7 +91,6 @@ export default function Navbar() {
 
                 {dropdownOpen && (
                   <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-[var(--color-border)] rounded-lg shadow-lg py-1 z-50">
-                    {/* User info */}
                     <div className="px-3 py-2 border-b border-[var(--color-border-light)]">
                       <p className="text-sm font-medium text-[var(--color-text)] truncate">{user.username}</p>
                       <p className="text-xs text-[var(--color-text-muted)] truncate">{user.email}</p>
@@ -149,7 +143,6 @@ export default function Navbar() {
           )}
         </div>
 
-        {/* Mobile menu toggle */}
         <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors" aria-label="Toggle menu">
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
             {mobileOpen ? (
@@ -161,7 +154,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-[var(--color-border)] bg-white px-4 pb-4 pt-2">
           <div className="flex flex-col gap-0.5">

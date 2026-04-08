@@ -82,7 +82,6 @@ export default function AccountSettingsPage() {
       logout();
       router.push('/');
     } catch {
-      /* silent */
     }
   };
 
@@ -95,7 +94,6 @@ export default function AccountSettingsPage() {
         <p className="text-sm text-[var(--color-text-secondary)] mt-1">{t('settings.accountDesc')}</p>
       </div>
 
-      {/* Change Email */}
       <Card className="p-6">
         <h2 className="text-base font-semibold text-[var(--color-text)] mb-4">{t('settings.changeEmail')}</h2>
         {emailSuccess && <div className="p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm mb-4">{emailSuccess}</div>}
@@ -118,7 +116,6 @@ export default function AccountSettingsPage() {
         </form>
       </Card>
 
-      {/* Change Password */}
       <Card className="p-6">
         <h2 className="text-base font-semibold text-[var(--color-text)] mb-4">{t('settings.changePassword')}</h2>
         {passwordSuccess && <div className="p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm mb-4">{passwordSuccess}</div>}
@@ -156,7 +153,6 @@ export default function AccountSettingsPage() {
         </form>
       </Card>
 
-      {/* Delete Account */}
       <Card className="p-6 border-red-200">
         <h2 className="text-base font-semibold text-red-600 mb-1">{t('settings.dangerZone')}</h2>
         <p className="text-sm text-[var(--color-text-secondary)] mb-4">{t('settings.dangerDesc')}</p>

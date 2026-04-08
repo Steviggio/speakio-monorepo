@@ -61,7 +61,6 @@ export default function PreferencesSettingsPage() {
         </div>
       )}
 
-      {/* Display preferences */}
       <Card className="p-6">
         <h2 className="text-base font-semibold text-[var(--color-text)] mb-4">{t('settings.display')}</h2>
         <div className="space-y-4">
@@ -95,7 +94,6 @@ export default function PreferencesSettingsPage() {
         </div>
       </Card>
 
-      {/* Notifications */}
       <Card className="p-6">
         <h2 className="text-base font-semibold text-[var(--color-text)] mb-4">{t('settings.notifications')}</h2>
         <div className="flex items-center justify-between py-2">
@@ -112,7 +110,6 @@ export default function PreferencesSettingsPage() {
         </div>
       </Card>
 
-      {/* Save */}
       <div className="flex justify-end">
         <Button onClick={handleSave}>{t('settings.savePreferences')}</Button>
       </div>

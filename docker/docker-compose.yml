@@ -1,8 +1,10 @@
-# docker-compose.yml
-# Local development environment for Speakio
 
 services:
-  # MongoDB database
+
+  # ══════════════════════════════════════════════════════
+  #  CORE APPLICATION
+  # ══════════════════════════════════════════════════════
+
   mongo:
     image: mongo:7
     container_name: speakio-mongo
@@ -13,8 +15,22 @@ services:
       - mongo-data:/data/db
     environment:
       MONGO_INITDB_DATABASE: speakio
+    command: ["mongod", "--wiredTigerCacheSizeGB", "1.5"]
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 512M
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
 
-  # NestJS API
   api:
     build:
       context: ..
@@ -30,10 +46,19 @@ services:
       - PORT=${PORT:-3001}
     env_file:
       - ../.env
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
+    networks:
+      - backend
+      - frontend
 
-  # Next.js Frontend
   web:
     build:
       context: ..
@@ -44,12 +69,21 @@ services:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://api:3001}
+      - NEXT_PUBLIC_UMAMI_URL=${NEXT_PUBLIC_UMAMI_URL:-}
+      - NEXT_PUBLIC_UMAMI_WEBSITE_ID=${NEXT_PUBLIC_UMAMI_WEBSITE_ID:-}
     env_file:
       - ../.env
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 128M
     depends_on:
       - api
+    networks:
+      - frontend
 
-  # Nginx Reverse Proxy
   nginx:
     image: nginx:alpine
     container_name: speakio-nginx
@@ -58,9 +92,190 @@ services:
       - "80:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 16M
     depends_on:
       - api
       - web
+    networks:
+      - frontend
+      - monitoring
+      - analytics
+
+  # ══════════════════════════════════════════════════════
+  #  OBSERVABILITY
+  # ══════════════════════════════════════════════════════
+
+  prometheus:
+    image: prom/prometheus:v2.51.0
+    container_name: speakio-prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=15d"
+      - "--storage.tsdb.retention.size=5GB"
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+    depends_on:
+      - api
+    networks:
+      - monitoring
+      - backend
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    container_name: speakio-grafana
+    restart: unless-stopped
+    ports:
+      - "3002:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=***REMOVED***
+      - GF_SERVER_ROOT_URL=%(protocol)s://%(domain)s/grafana/
+      - GF_SERVER_SERVE_FROM_SUB_PATH=true
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    deploy:
+      resources:
+        limits:
+          memory: 192M
+        reservations:
+          memory: 64M
+    depends_on:
+      - prometheus
+    networks:
+      - monitoring
+
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:1.1
+    container_name: speakio-nginx-exporter
+    restart: unless-stopped
+    command:
+      - "--nginx.scrape-uri=http://nginx:80/nginx_status"
+    deploy:
+      resources:
+        limits:
+          memory: 32M
+        reservations:
+          memory: 8M
+    depends_on:
+      - nginx
+    networks:
+      - monitoring
+      - frontend
+
+  mongodb-exporter:
+    image: percona/mongodb_exporter:0.40
+    container_name: speakio-mongodb-exporter
+    restart: unless-stopped
+    environment:
+      - MONGODB_URI=mongodb://mongo:27017/speakio
+    command:
+      - "--mongodb.uri=mongodb://mongo:27017/speakio"
+      - "--collect-all"
+      - "--compatible-mode"
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+        reservations:
+          memory: 16M
+    depends_on:
+      mongo:
+        condition: service_healthy
+    networks:
+      - monitoring
+      - backend
+
+  # ══════════════════════════════════════════════════════
+  #  ANALYTICS (réseau isolé)
+  # ══════════════════════════════════════════════════════
+
+  umami-db:
+    image: postgres:15-alpine
+    container_name: speakio-umami-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: umami
+      POSTGRES_USER: umami
+      POSTGRES_PASSWORD: ***REMOVED***
+    volumes:
+      - umami-db-data:/var/lib/postgresql/data
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 64M
+    networks:
+      - analytics
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U umami"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  umami:
+    image: ghcr.io/umami-software/umami:postgresql-latest
+    container_name: speakio-umami
+    restart: unless-stopped
+    ports:
+      - "3003:3000"
+    environment:
+      DATABASE_URL: postgresql://umami:***REMOVED***@umami-db:5432/umami
+      APP_SECRET: ***REMOVED***
+      BASE_PATH: /umami
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+        reservations:
+          memory: 128M
+    depends_on:
+      umami-db:
+        condition: service_healthy
+    networks:
+      - analytics
+
+# ══════════════════════════════════════════════════════
+#  NETWORKS (isolation par couche)
+# ══════════════════════════════════════════════════════
+
+networks:
+  frontend:
+    driver: bridge
+    name: speakio-frontend
+  backend:
+    driver: bridge
+    name: speakio-backend
+  monitoring:
+    driver: bridge
+    name: speakio-monitoring
+  analytics:
+    driver: bridge
+    name: speakio-analytics
+
+# ══════════════════════════════════════════════════════
+#  VOLUMES
+# ══════════════════════════════════════════════════════
 
 volumes:
   mongo-data:
+  prometheus-data:
+  grafana-data:
+  umami-db-data:

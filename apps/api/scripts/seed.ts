@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27018/speakio';
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/speakio';
 
 const UserSchema = new mongoose.Schema({
   username: String,
@@ -44,7 +44,6 @@ async function seed() {
   const Resource = mongoose.models.Resource || mongoose.model('Resource', ResourceSchema);
   const Post = mongoose.models.Post || mongoose.model('Post', PostSchema);
 
-  // Create seed user
   let seedUser = await User.findOne({ username: 'seedbot' });
   if (!seedUser) {
     seedUser = await User.create({
@@ -58,7 +57,6 @@ async function seed() {
     console.log('Created seed user: seedbot');
   }
 
-  // Seed Resources
   const existingResources = await Resource.countDocuments();
   if (existingResources === 0) {
     const resources = [
@@ -84,7 +82,6 @@ async function seed() {
     console.log(`Resources already exist (${existingResources}), skipping`);
   }
 
-  // Seed Posts
   const existingPosts = await Post.countDocuments();
   if (existingPosts === 0) {
     const posts = [

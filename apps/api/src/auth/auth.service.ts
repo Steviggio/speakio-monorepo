@@ -1,14 +1,22 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    @InjectModel('Post') private postModel: Model<any>,
+    @InjectModel('Comment') private commentModel: Model<any>,
+    @InjectModel('Roadmap') private roadmapModel: Model<any>,
+    @InjectModel('Vote') private voteModel: Model<any>,
   ) {}
 
   async validateUser(email: string, pass: string): Promise<any> {
@@ -46,6 +54,8 @@ export class AuthService {
       email,
       username,
       passwordHash,
+      consentGivenAt: new Date(),
+      consentVersion: 'v1.0',
     });
 
     return this.login(user);
@@ -149,7 +159,48 @@ export class AuthService {
   }
 
   async deleteAccount(userId: string) {
-    await this.usersService.update(userId, { deletedAt: new Date() });
-    return { message: 'Account deleted successfully' };
+    const user = await this.usersService.findById(userId);
+    if (!user) {
+      return { message: 'Account deleted successfully' };
+    }
+
+    if (user.avatarUrl && user.avatarUrl.startsWith('/uploads/avatars/')) {
+      const filePath = path.join(process.cwd(), user.avatarUrl);
+      try {
+        await fs.unlink(filePath);
+      } catch {}
+    }
+
+    await this.commentModel.updateMany(
+      { author: userId },
+      { $set: { content: '[deleted]' } },
+    );
+
+    await this.postModel.updateMany(
+      { author: userId },
+      { $set: { content: '[deleted]', title: '[deleted]', status: 'deleted', tags: [] } },
+    );
+
+    await this.roadmapModel.deleteMany({ owner: userId });
+    await this.voteModel.deleteMany({ user: userId });
+
+    const anonymizedId = crypto.randomBytes(8).toString('hex');
+    await this.usersService.update(userId, {
+      email: `deleted_${anonymizedId}@anonymous.speakio`,
+      username: `deleted_${anonymizedId}`,
+      passwordHash: undefined,
+      googleId: undefined,
+      bio: undefined,
+      avatarUrl: undefined,
+      resetPasswordToken: undefined,
+      resetPasswordExpires: undefined,
+      favoriteResources: [],
+      learningLanguages: [],
+      consentGivenAt: undefined,
+      consentVersion: undefined,
+      deletedAt: new Date(),
+    });
+
+    return { message: 'Account and personal data deleted successfully' };
   }
 }

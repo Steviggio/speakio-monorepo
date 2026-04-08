@@ -21,7 +21,7 @@ function ResetPasswordForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!token) { setError('Invalid or missing reset token.'); return; }
+    if (!token) { setError(t('auth.invalidToken')); return; }
     setIsLoading(true);
     setError('');
     try {
@@ -30,7 +30,7 @@ function ResetPasswordForm() {
       setTimeout(() => router.push('/login'), 2000);
     } catch (err) {
       const e = err as any;
-      setError(e.response?.data?.message || 'Failed to update password');
+      setError(e.response?.data?.message || t('auth.updatePasswordFailed'));
     } finally {
       setIsLoading(false);
     }
@@ -39,8 +39,8 @@ function ResetPasswordForm() {
   if (!token && !error) {
     return (
       <Card className="p-7 text-center">
-        <p className="text-red-500 text-sm mb-3">Invalid or missing reset token.</p>
-        <Link href="/forgot-password" className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] text-sm">Request a new link</Link>
+        <p className="text-red-500 text-sm mb-3">{t('auth.invalidToken')}</p>
+        <Link href="/forgot-password" className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] text-sm">{t('auth.requestNewLink')}</Link>
       </Card>
     );
   }
@@ -70,8 +70,9 @@ function ResetPasswordForm() {
 }
 
 export default function ResetPasswordPage() {
+  const { t } = useTranslation();
   return (
-    <Suspense fallback={<Card className="p-7"><div className="text-center text-[var(--color-text-muted)]">Loading...</div></Card>}>
+    <Suspense fallback={<Card className="p-7"><div className="text-center text-[var(--color-text-muted)]">{t('common.loading')}</div></Card>}>
       <ResetPasswordForm />
     </Suspense>
   );

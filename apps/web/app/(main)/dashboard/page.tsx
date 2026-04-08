@@ -45,7 +45,6 @@ export default function DashboardPage() {
         <p className="text-[var(--color-text-secondary)] mt-1">{t('dashboard.overview')}</p>
       </div>
 
-      {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         {[
           { label: t('dashboard.roadmaps'), value: stats?.totalRoadmaps ?? '—', color: 'text-[var(--color-brand)]' },
@@ -60,7 +59,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Progress bar */}
       {stats && stats.totalSteps > 0 && (
         <div className="rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-sm mb-8">
           <div className="flex items-center justify-between mb-2">
@@ -73,7 +71,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Quick links */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {[
           { href: '/roadmaps', title: t('dashboard.myRoadmaps'), desc: t('dashboard.myRoadmapsDesc') },

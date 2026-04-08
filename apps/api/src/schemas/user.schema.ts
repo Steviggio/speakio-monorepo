@@ -43,6 +43,12 @@ export class User {
   resetPasswordExpires?: Date;
 
   @Prop({ required: false })
+  consentGivenAt?: Date;
+
+  @Prop({ required: false })
+  consentVersion?: string;
+
+  @Prop({ required: false })
   deletedAt?: Date;
 }
 

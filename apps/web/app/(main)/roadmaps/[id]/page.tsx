@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/lib/hooks/useAuth';
-import { 
+import {
   apiGetRoadmap, apiToggleStep, apiAddStep, apiExportAnki,
   apiAddSubStep, apiToggleSubStep, apiUpdateSubStep, apiRemoveSubStep,
   apiUpdateStepVocabularies, apiUpdateSubStepVocabularies,
@@ -17,7 +17,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ChevronDown, ChevronRight, Plus, Calendar, BookOpen, Clock, Pencil, Trash2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
-
 
 
 interface VocabularyItem { front: string; back: string; }
@@ -46,17 +45,15 @@ export default function RoadmapDetailPage() {
   const [newStepTitle, setNewStepTitle] = useState('');
   const [toggling, setToggling] = useState<{ step: number, subStep?: number } | null>(null);
   const [expandedSteps, setExpandedSteps] = useState<Set<number>>(new Set());
-  
-  // Forms state
+
   const [newSubStepTarget, setNewSubStepTarget] = useState<number | null>(null);
   const [newSubStepTitle, setNewSubStepTitle] = useState('');
   const [editSubStepTarget, setEditSubStepTarget] = useState<{ step: number, subStep: number } | null>(null);
   const [editSubStepTitle, setEditSubStepTitle] = useState('');
-  
-  // Popover States
+
   const [globalCalendarOpen, setGlobalCalendarOpen] = useState(false);
   const [stepCalendarOpen, setStepCalendarOpen] = useState<number | null>(null);
-  
+
   const [newVocabTarget, setNewVocabTarget] = useState<{ step: number, subStep?: number } | null>(null);
   const [newVocabFront, setNewVocabFront] = useState('');
   const [newVocabBack, setNewVocabBack] = useState('');
@@ -95,7 +92,6 @@ export default function RoadmapDetailPage() {
       setRoadmap(updated);
       setNewSubStepTitle('');
       setNewSubStepTarget(null);
-      // Auto-expand the step to show the new sub-step
       const newExpanded = new Set(expandedSteps);
       newExpanded.add(stepIndex);
       setExpandedSteps(newExpanded);
@@ -121,8 +117,7 @@ export default function RoadmapDetailPage() {
 
   const handleAddVocabulary = async (stepIndex: number, subStepIndex?: number) => {
     if (!newVocabFront.trim() || !newVocabBack.trim() || !roadmap) return;
-    
-    // Get existing vocabularies based on where we are adding this
+
     let existingVocabs: VocabularyItem[] = [];
     if (subStepIndex !== undefined) {
       const step = roadmap.steps[stepIndex];
@@ -132,7 +127,7 @@ export default function RoadmapDetailPage() {
     } else {
       existingVocabs = roadmap.steps[stepIndex]?.vocabularies || [];
     }
-    
+
     const newVocabList = [...existingVocabs, { front: newVocabFront.trim(), back: newVocabBack.trim() }];
 
     try {
@@ -145,7 +140,6 @@ export default function RoadmapDetailPage() {
       setRoadmap(updated);
       setNewVocabFront('');
       setNewVocabBack('');
-      // We don't close the target because the user might want to add multiple words rapidly
     } catch { /* */ }
   };
 
@@ -178,7 +172,6 @@ export default function RoadmapDetailPage() {
     try {
       const blob = await apiExportAnki(id);
 
-      // Create a temporary link to download the blob
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
@@ -213,7 +206,6 @@ export default function RoadmapDetailPage() {
   const progress = roadmap.steps.length > 0 ? Math.round((completedCount / roadmap.steps.length) * 100) : 0;
   const isOwner = user && roadmap.owner && (user as any)._id === (typeof roadmap.owner === 'string' ? roadmap.owner : roadmap.owner._id);
 
-  // Calculate days since creation
   const createdDate = new Date(roadmap.createdAt);
   const now = new Date();
   const diffTime = Math.abs(now.getTime() - createdDate.getTime());
@@ -250,7 +242,7 @@ export default function RoadmapDetailPage() {
                         handleUpdateRoadmapDeadline(date);
                         setGlobalCalendarOpen(false);
                       }}
-                      initialFocus
+                      autoFocus
                       locale={fr}
                     />
                   </PopoverContent>
@@ -258,7 +250,6 @@ export default function RoadmapDetailPage() {
               </div>
             )}
           </div>
-          {/* Anki Export Button */}
           {roadmap.steps.length > 0 && (
             <button
               onClick={handleExportAnki}
@@ -282,7 +273,6 @@ export default function RoadmapDetailPage() {
         </div>
       </div>
 
-      {/* Progress */}
       <div className="mb-6">
         <div className="flex items-center justify-between text-sm mb-1.5">
           <span className="text-[var(--color-text-secondary)]">Progress</span>
@@ -293,7 +283,6 @@ export default function RoadmapDetailPage() {
         </div>
       </div>
 
-      {/* Steps */}
       <div className="space-y-3 mb-6">
         {roadmap.steps.map((step, stepIndex) => {
           const isExpanded = expandedSteps.has(stepIndex);
@@ -301,9 +290,8 @@ export default function RoadmapDetailPage() {
 
           return (
             <div key={stepIndex} className={`rounded-lg border transition-colors overflow-hidden ${step.completed ? 'border-green-200 bg-green-50/30' : 'border-[var(--color-border)] bg-white'}`}>
-              
-              {/* Step Header (Clickable Accordion) */}
-              <div 
+
+              <div
                 className={`p-3.5 flex items-start gap-3 cursor-pointer hover:bg-black/[0.02] ${isExpanded && !step.completed ? 'bg-black/[0.01] border-b border-[var(--color-border)]' : ''}`}
                 onClick={() => toggleExpand(stepIndex)}
               >
@@ -321,14 +309,12 @@ export default function RoadmapDetailPage() {
                     </div>
                   )}
                 </div>
-                
+
                 <div className="flex-1 min-w-0">
                   <p className={`text-base font-medium ${step.completed ? 'text-[var(--color-text-muted)] line-through' : 'text-[var(--color-text)]'}`}>{step.title}</p>
                   {step.description && <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{step.description}</p>}
-                  
-                  {/* Meta info row */}
+
                   <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-[var(--color-text-muted)]">
-                    {/* Editable Deadline for Step */}
                     {isOwner ? (
                       <div onClick={(e) => e.stopPropagation()} onPointerDown={(e) => e.stopPropagation()}>
                         <Popover open={stepCalendarOpen === stepIndex} onOpenChange={(open) => setStepCalendarOpen(open ? stepIndex : null)}>
@@ -368,14 +354,12 @@ export default function RoadmapDetailPage() {
                 </div>
               </div>
 
-              {/* Step Expanded Content */}
               {isExpanded && (
                 <div className="p-4 bg-black/[0.01]">
-                  
-                  {/* Sub-steps Section */}
+
                   <div className="mb-5">
                     <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-3">Sub-tasks</h4>
-                    
+
                     {(!step.subSteps || step.subSteps.length === 0) && (
                       <p className="text-sm text-[var(--color-text-muted)] mb-3 italic">No sub-tasks yet.</p>
                     )}
@@ -434,10 +418,9 @@ export default function RoadmapDetailPage() {
                     )}
                   </div>
 
-                  {/* Vocabulary Section */}
                   <div>
                     <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-3 flex items-center gap-1.5"><BookOpen size={14} /> Vocabulary</h4>
-                    
+
                     {(!step.vocabularies || step.vocabularies.length === 0) && (
                       <p className="text-sm text-[var(--color-text-muted)] mb-3 italic">No vocabulary words saved.</p>
                     )}

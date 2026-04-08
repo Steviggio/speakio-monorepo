@@ -21,40 +21,34 @@ import { ParseObjectIdPipe } from '../pipes/parse-objectid.pipe';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  /** Public: list published posts */
   @Get()
   findAll(@Query() query: PaginationDto) {
     return this.postsService.findAllPublished(query);
   }
 
-  /** Public: get single post by slug */
   @Get('by-slug/:slug')
   findBySlug(@Param('slug') slug: string) {
     return this.postsService.findBySlug(slug);
   }
 
-  /** Protected: list my posts (drafts + published) */
   @Get('mine')
   @UseGuards(JwtAuthGuard)
-  findMyPosts(@Request() req: any) {
-    return this.postsService.findMyPosts(req.user.userId);
+  findMyPosts(@Request() req: any, @Query() query: PaginationDto) {
+    return this.postsService.findMyPosts(req.user.userId, query);
   }
 
-  /** Protected: get single post by id (for editing) */
   @Get(':id')
   @UseGuards(JwtAuthGuard)
   findOne(@Request() req: any, @Param('id', ParseObjectIdPipe) id: string) {
     return this.postsService.findById(id);
   }
 
-  /** Protected: create a new post */
   @Post()
   @UseGuards(JwtAuthGuard)
   create(@Request() req: any, @Body() createDto: CreatePostDto) {
     return this.postsService.create(createDto, req.user.userId);
   }
 
-  /** Protected: update a post */
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   update(
@@ -62,13 +56,12 @@ export class PostsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() updateDto: UpdatePostDto,
   ) {
-    return this.postsService.update(id, updateDto, req.user.userId);
+    return this.postsService.update(id, updateDto, req.user.userId, req.user.role);
   }
 
-  /** Protected: delete a post */
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   remove(@Request() req: any, @Param('id', ParseObjectIdPipe) id: string) {
-    return this.postsService.remove(id, req.user.userId);
+    return this.postsService.remove(id, req.user.userId, req.user.role);
   }
 }

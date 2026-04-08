@@ -9,13 +9,16 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 import { ParseObjectIdPipe } from '../pipes/parse-objectid.pipe';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { ImportResourcesDto } from './dto/import-resources.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourcesService } from './resources.service';
 
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('ADMIN')
 @Controller('admin/resources')
 export class ResourcesAdminController {
   constructor(private readonly resourcesService: ResourcesService) { }

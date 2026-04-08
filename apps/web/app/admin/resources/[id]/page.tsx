@@ -29,7 +29,6 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
 
   const [initialData, setInitialData] = useState<any>(null);
 
-  // Form State
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [url, setUrl] = useState('');
@@ -37,7 +36,6 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
   const [language, setLanguage] = useState('');
   const [pricing, setPricing] = useState<string>('');
 
-  // Authorization check
   useEffect(() => {
     if (user && user.role !== 'ADMIN') {
       router.push('/');
@@ -58,12 +56,12 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
       setPricing(data.pricing || '');
     } catch (error) {
       console.error('Failed to load resource', error);
-      toast.error('Erreur lors du chargement de la ressource');
+      toast.error(t('admin.resources.loadError'));
       router.push('/admin/resources');
     } finally {
       setIsLoading(false);
     }
-  }, [params.id, router]);
+  }, [params.id, router, t]);
 
   useEffect(() => {
     if (user?.role === 'ADMIN') {
@@ -96,11 +94,11 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
         language,
         pricing
       });
-      toast.success('Ressource mise à jour avec succès');
+      toast.success(t('admin.resources.updateSuccess'));
       router.push('/admin/resources');
     } catch (error) {
       console.error('Failed to update resource', error);
-      toast.error('Erreur lors de la mise à jour de la ressource');
+      toast.error(t('admin.resources.updateError'));
     } finally {
       setIsSaving(false);
     }
@@ -131,32 +129,32 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
           </svg>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text)]">Modifier la ressource</h1>
+          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text)]">{t('admin.resources.editResource')}</h1>
           <p className="text-[var(--color-text-secondary)] text-sm mt-1">{initialData?._id}</p>
         </div>
       </div>
 
       <Card className="border border-[var(--color-border)] shadow-sm">
         <CardHeader className="border-b border-[var(--color-border-light)] bg-gray-50/50">
-          <CardTitle>Informations principales</CardTitle>
+          <CardTitle>{t('admin.resources.mainInfo')}</CardTitle>
           <CardDescription>
-            Mettez à jour les détails de la ressource. Les modifications sont appliquées immédiatement après sauvegarde.
+            {t('admin.resources.editDescription')}
           </CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6 pt-6">
           <div className="space-y-2">
-            <Label htmlFor="title">Titre</Label>
+            <Label htmlFor="title">{t('common.title')}</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Nom de la ressource"
+              placeholder={t('admin.resources.namePlaceholder')}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="url">URL</Label>
+            <Label htmlFor="url">{t('common.url')}</Label>
             <Input
               id="url"
               type="url"
@@ -168,10 +166,10 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="type">Type de ressource</Label>
+              <Label htmlFor="type">{t('admin.resources.resourceType')}</Label>
               <Select value={type} onValueChange={(val) => setType(val || '')}>
                 <SelectTrigger id="type">
-                  <SelectValue placeholder="Sélectionner un type" />
+                  <SelectValue placeholder={t('admin.resources.selectType')} />
                 </SelectTrigger>
                 <SelectContent>
                   {types.map((k) => (
@@ -182,10 +180,10 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="pricing">Modèle tarifaire</Label>
+              <Label htmlFor="pricing">{t('admin.resources.pricingModel')}</Label>
               <Select value={pricing} onValueChange={(val) => setPricing(val || '')}>
                 <SelectTrigger id="pricing">
-                  <SelectValue placeholder="Sélectionner un modèle" />
+                  <SelectValue placeholder={t('admin.resources.selectModel')} />
                 </SelectTrigger>
                 <SelectContent>
                   {pricingOptions.map((k) => (
@@ -196,7 +194,7 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="language">Code Langue (ISO 639-1)</Label>
+              <Label htmlFor="language">{t('admin.resources.languageCode')}</Label>
               <Input
                 id="language"
                 value={language}
@@ -208,12 +206,12 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description">{t('common.description')}</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description détaillée de la ressource..."
+              placeholder={t('admin.resources.descPlaceholder')}
               className="min-h-[120px] resize-y"
             />
           </div>
@@ -221,7 +219,7 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
 
         <CardFooter className="border-t border-[var(--color-border-light)] bg-gray-50/50 py-4 flex justify-between items-center">
           <span className="text-sm text-[var(--color-text-muted)]">
-            Soumis par : {initialData?.submittedBy?.username || 'Système'}
+            {t('resources.submittedBy')} : {initialData?.submittedBy?.username || t('admin.resources.system')}
           </span>
           <div className="flex gap-3">
             <Button
@@ -229,7 +227,7 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
               variant="outline"
               onClick={() => router.push('/admin/resources')}
             >
-              Annuler
+              {t('common.cancel')}
             </Button>
             <Button
               type="button"
@@ -237,7 +235,7 @@ export default function AdminEditResourcePage({ params }: { params: { id: string
               disabled={!hasChanges() || isSaving}
               className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white"
             >
-              {isSaving ? 'Enregistrement...' : 'Enregistrer les modifications'}
+              {isSaving ? t('admin.resources.saving') : t('admin.resources.saveChanges')}
             </Button>
           </div>
         </CardFooter>

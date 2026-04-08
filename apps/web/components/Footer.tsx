@@ -9,7 +9,7 @@ export default function Footer() {
   return (
     <footer className="border-t border-[var(--color-border)] bg-white mt-auto">
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-6">
           <div className="col-span-2 md:col-span-1">
             <span className="text-base font-bold text-[var(--color-text)] tracking-tight">speakio</span>
             <p className="text-sm text-[var(--color-text-muted)] mt-2 leading-relaxed">
@@ -38,9 +38,22 @@ export default function Footer() {
               <li><Link href="/write" className="hover:text-[var(--color-text)] transition-colors">{t('footer.writeArticle')}</Link></li>
             </ul>
           </div>
+          <div>
+            <h4 className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">{t('footer.legal')}</h4>
+            <ul className="space-y-1.5 text-sm text-[var(--color-text-secondary)]">
+              <li><Link href="/privacy" className="hover:text-[var(--color-text)] transition-colors">{t('footer.privacy')}</Link></li>
+              <li><Link href="/terms" className="hover:text-[var(--color-text)] transition-colors">{t('footer.terms')}</Link></li>
+              <li><Link href="/legal-notice" className="hover:text-[var(--color-text)] transition-colors">{t('footer.legalNotice')}</Link></li>
+            </ul>
+          </div>
         </div>
-        <div className="border-t border-[var(--color-border-light)] pt-5 text-xs text-[var(--color-text-muted)]">
-          © {new Date().getFullYear()} Speakio
+        <div className="border-t border-[var(--color-border-light)] pt-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-[var(--color-text-muted)]">
+          <span>© {new Date().getFullYear()} Speakio</span>
+          <nav className="flex items-center gap-4">
+            <Link href="/privacy" className="hover:text-[var(--color-text)] transition-colors">{t('footer.privacy')}</Link>
+            <Link href="/terms" className="hover:text-[var(--color-text)] transition-colors">{t('footer.terms')}</Link>
+            <Link href="/legal-notice" className="hover:text-[var(--color-text)] transition-colors">{t('footer.legalNotice')}</Link>
+          </nav>
         </div>
       </div>
     </footer>

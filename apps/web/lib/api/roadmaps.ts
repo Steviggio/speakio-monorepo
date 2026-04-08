@@ -1,7 +1,6 @@
 import { apiClient } from './client';
 import { unwrapApiData } from './utils';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const apiGetMyRoadmaps = async () => {
   const response = await apiClient.get('/roadmaps');
   return unwrapApiData<any>(response.data);
@@ -22,7 +21,6 @@ export const apiGetRoadmapStats = async () => {
   return unwrapApiData<any>(response.data);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const apiCreateRoadmap = async (data: any) => {
   const response = await apiClient.post('/roadmaps', data);
   return unwrapApiData<any>(response.data);
@@ -98,5 +96,5 @@ export const apiExportAnki = async (roadmapId: string) => {
   const response = await apiClient.post(`/roadmaps/${roadmapId}/anki-export`, {}, {
     responseType: 'blob' 
   });
-  return response.data; // Blob is unformatted properly, keep as is
+  return response.data;
 };

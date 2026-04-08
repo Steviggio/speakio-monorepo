@@ -7,7 +7,7 @@ import { useTranslation } from '@/lib/i18n';
 
 export default function Home() {
   const { t } = useTranslation();
-  
+
   return (
     <div className="min-h-screen flex flex-col bg-white">
       <Navbar />

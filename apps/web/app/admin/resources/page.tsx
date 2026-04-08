@@ -23,13 +23,11 @@ export default function AdminResourcesPage() {
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  // Filters
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [pricingFilter, setPricingFilter] = useState('');
   const [page, setPage] = useState(1);
 
-  // Authorization check
   useEffect(() => {
     if (user && user.role !== 'ADMIN') {
       router.push('/');
@@ -54,19 +52,18 @@ export default function AdminResourcesPage() {
   const totalPages = resourcesData?.meta?.totalPages ?? 1;
 
   if (!user || user.role !== 'ADMIN') {
-    return null; // Will redirect in useEffect
+    return null;
   }
 
   return (
     <div className="max-w-7xl mx-auto py-8 px-4">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text)]">Gestion des ressources</h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">Administration de toutes les ressources d'apprentissage</p>
+          <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text)]">{t('admin.resources.management')}</h1>
+          <p className="text-[var(--color-text-secondary)] mt-1">{t('admin.resources.managementDesc')}</p>
         </div>
       </div>
 
-      {/* Filters Bar */}
       <Card className="mb-6 border border-[var(--color-border)] shadow-sm">
         <CardContent className="p-4 flex flex-col md:flex-row gap-4 items-center">
           <div className="flex-1 w-full relative">
@@ -75,7 +72,7 @@ export default function AdminResourcesPage() {
             </svg>
             <Input
               type="text"
-              placeholder="Rechercher par titre, URL, description..."
+              placeholder={t('admin.resources.searchPlaceholder')}
               value={search}
               onChange={(e) => { setSearch(e.target.value); setPage(1); }}
               className="pl-9 h-10 w-full"
@@ -85,10 +82,10 @@ export default function AdminResourcesPage() {
           <div className="flex gap-4 w-full md:w-auto">
             <Select value={typeFilter} onValueChange={(val) => { setTypeFilter(val === 'all' ? '' : (val || '')); setPage(1); }}>
               <SelectTrigger className="w-full md:w-[180px] h-10">
-                <SelectValue placeholder="Tous les types" />
+                <SelectValue placeholder={t('resources.allTypes')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tous les types</SelectItem>
+                <SelectItem value="all">{t('resources.allTypes')}</SelectItem>
                 {types.map((k) => (
                   <SelectItem key={k} value={k}>{t(`resources.types.${k}`)}</SelectItem>
                 ))}
@@ -97,10 +94,10 @@ export default function AdminResourcesPage() {
 
             <Select value={pricingFilter} onValueChange={(val) => { setPricingFilter(val === 'all' ? '' : (val || '')); setPage(1); }}>
               <SelectTrigger className="w-full md:w-[180px] h-10">
-                <SelectValue placeholder="Tous les prix" />
+                <SelectValue placeholder={t('resources.allPricing')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tous les prix</SelectItem>
+                <SelectItem value="all">{t('resources.allPricing')}</SelectItem>
                 {pricing.map((k) => (
                   <SelectItem key={k} value={k}>{t(`resources.pricing.${k}`)}</SelectItem>
                 ))}
@@ -110,7 +107,6 @@ export default function AdminResourcesPage() {
         </CardContent>
       </Card>
 
-      {/* List Layout */}
       <Card className="border border-[var(--color-border)] shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="p-8 space-y-4">
@@ -125,7 +121,7 @@ export default function AdminResourcesPage() {
           </div>
         ) : resources.length === 0 ? (
           <div className="p-12 text-center text-[var(--color-text-muted)]">
-            <p>Aucune ressource trouvée correspondante à vos critères.</p>
+            <p>{t('resources.noResources')}</p>
           </div>
         ) : (
           <div className="divide-y divide-[var(--color-border-light)] max-h-[600px] overflow-y-auto">
@@ -159,7 +155,6 @@ export default function AdminResourcesPage() {
         )}
       </Card>
 
-      {/* Pagination Controls */}
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-4 mt-6">
           <Button
@@ -168,10 +163,10 @@ export default function AdminResourcesPage() {
             disabled={page <= 1}
             onClick={() => setPage(page - 1)}
           >
-            Précédent
+            {t("resources.previous")}
           </Button>
           <span className="text-sm font-medium text-[var(--color-text-secondary)]">
-            Page {page} sur {totalPages}
+            {t('resources.page')} {page} {t('resources.of')} {totalPages}
           </span>
           <Button
             variant="outline"
@@ -179,7 +174,7 @@ export default function AdminResourcesPage() {
             disabled={page >= totalPages}
             onClick={() => setPage(page + 1)}
           >
-            Suivant
+            {t('resources.next')}
           </Button>
         </div>
       )}
