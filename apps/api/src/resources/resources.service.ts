@@ -126,7 +126,7 @@ export class ResourcesService {
     if (query.type) match.type = query.type;
     if (query.pricing) match.pricing = query.pricing;
 
-    const [types, pricing, platforms, publishers, series] = await Promise.all([
+    const [types, pricing, languages, platforms, publishers, series] = await Promise.all([
       this.resourceModel.aggregate([
         { $match: match },
         { $group: { _id: '$type', count: { $sum: 1 } } },
@@ -135,6 +135,11 @@ export class ResourcesService {
       this.resourceModel.aggregate([
         { $match: match },
         { $group: { _id: '$pricing', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+      ]),
+      this.resourceModel.aggregate([
+        { $match: { ...match, language: { $exists: true, $ne: null, $ne: '' } } },
+        { $group: { _id: '$language', count: { $sum: 1 } } },
         { $sort: { count: -1 } },
       ]),
       this.resourceModel.aggregate([
@@ -188,6 +193,7 @@ export class ResourcesService {
     return {
       types,
       pricing,
+      languages,
       platforms,
       publishers,
       series,
