@@ -309,7 +309,7 @@ ResourceSchema.index({
   'raw.description': 'text',
   'enrichment.metaDescription': 'text',
   'enrichment.ogDescription': 'text',
-});
+}, { language_override: 'textSearchLanguage' });
 
 ResourceSchema.index({ language: 1, type: 1, status: 1, isActive: 1 });
 ResourceSchema.index({ language: 1, pricing: 1, status: 1, isActive: 1 });
