@@ -79,9 +79,10 @@ export default function ResourcesPage() {
       if (pricingFilter) params.pricing = pricingFilter;
       if (languageFilter) params.language = languageFilter;
 
-      const data = await apiGetResources(params);
-      setResources(Array.isArray(data?.data) ? data.data : []);
-      setTotalPages(data?.meta?.totalPages ?? 1);
+      const result = await apiGetResources(params);
+      const items = Array.isArray(result) ? result : Array.isArray(result?.data) ? result.data : [];
+      setResources(items);
+      setTotalPages(Array.isArray(result) ? 1 : (result?.meta?.totalPages ?? 1));
     } catch { /* silent */ }
     finally { setIsLoading(false); }
   }, [page, debouncedSearch, typeFilter, pricingFilter, languageFilter]);
