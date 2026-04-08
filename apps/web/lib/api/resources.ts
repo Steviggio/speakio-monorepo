@@ -104,6 +104,22 @@ export async function apiGetResources(
   return unwrapApiData<ResourceListResponse>(response.data);
 }
 
+export type FacetItem = { _id: string; count: number; label?: string; name?: string };
+
+export type ResourceFacets = {
+  types: FacetItem[];
+  pricing: FacetItem[];
+  languages: FacetItem[];
+  platforms: FacetItem[];
+  publishers: FacetItem[];
+  series: FacetItem[];
+};
+
+export async function apiGetResourceFacets(): Promise<ResourceFacets> {
+  const response = await apiClient.get('/resources/facets');
+  return unwrapApiData<ResourceFacets>(response.data);
+}
+
 export async function apiGetResource(id: string): Promise<ResourceItem> {
   const response = await apiClient.get(`/resources/${id}`);
   return unwrapApiData<ResourceItem>(response.data);
