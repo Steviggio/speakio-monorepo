@@ -29,7 +29,7 @@ export async function apiRegister(data: RegisterPayload): Promise<LoginResponse>
 }
 
 export async function apiGetProfile(): Promise<User> {
-  const response = await apiClient.get('/auth/profile');
+  const response = await apiClient.get('/users/me');
   return unwrapApiData<User>(response.data);
 }
 
