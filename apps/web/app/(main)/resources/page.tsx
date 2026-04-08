@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { apiGetResources } from '@/lib/api/resources';
+import { apiGetResources, apiGetResourceFacets } from '@/lib/api/resources';
+import type { FacetItem } from '@/lib/api/resources';
 import { useTranslation } from '@/lib/i18n';
 import { RESOURCE_TYPES, PRICING_VALUES } from '@repo/types';
 
@@ -24,15 +25,41 @@ interface ResourceItem {
 const types = Object.values(RESOURCE_TYPES);
 const pricing = Object.values(PRICING_VALUES);
 
+const DEBOUNCE_MS = 350;
+
+function useDebounce(value: string, delay: number): string {
+  const [debounced, setDebounced] = useState(value);
+  useEffect(() => {
+    const timer = setTimeout(() => setDebounced(value), delay);
+    return () => clearTimeout(timer);
+  }, [value, delay]);
+  return debounced;
+}
+
 export default function ResourcesPage() {
   const { t } = useTranslation();
   const [resources, setResources] = useState<ResourceItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [pricingFilter, setPricingFilter] = useState('');
+  const [languageFilter, setLanguageFilter] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [availableLanguages, setAvailableLanguages] = useState<FacetItem[]>([]);
+
+  const debouncedSearch = useDebounce(searchInput, DEBOUNCE_MS);
+
+  const hasFetchedFacets = useRef(false);
+  useEffect(() => {
+    if (hasFetchedFacets.current) return;
+    hasFetchedFacets.current = true;
+    apiGetResourceFacets()
+      .then((facets) => {
+        setAvailableLanguages(Array.isArray(facets?.languages) ? facets.languages : []);
+      })
+      .catch(() => { /* silent — filter simply won't be populated */ });
+  }, []);
 
   const fetchResources = useCallback(async () => {
     setIsLoading(true);
@@ -47,17 +74,27 @@ export default function ResourcesPage() {
       } catch { /* ignore parse error */ }
 
       const params: Record<string, string> = { page: String(page), limit: String(limit) };
-      if (search) params.search = search;
+      if (debouncedSearch) params.search = debouncedSearch;
       if (typeFilter) params.type = typeFilter;
       if (pricingFilter) params.pricing = pricingFilter;
+      if (languageFilter) params.language = languageFilter;
+
       const data = await apiGetResources(params);
-      setResources(data?.data || data);
-      setTotalPages(data.meta?.totalPages ?? 1);
+      setResources(Array.isArray(data?.data) ? data.data : []);
+      setTotalPages(data?.meta?.totalPages ?? 1);
     } catch { /* silent */ }
     finally { setIsLoading(false); }
-  }, [page, search, typeFilter, pricingFilter]);
+  }, [page, debouncedSearch, typeFilter, pricingFilter, languageFilter]);
 
   useEffect(() => { fetchResources(); }, [fetchResources]);
+
+  useEffect(() => { setPage(1); }, [debouncedSearch, typeFilter, pricingFilter, languageFilter]);
+
+  const formatLanguageLabel = (lang: string): string => {
+    return lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase();
+  };
+
+  const selectClasses = "h-10 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/30 appearance-none";
 
   return (
     <div className="max-w-5xl mx-auto py-8 px-4">
@@ -70,22 +107,34 @@ export default function ResourcesPage() {
         <div className="flex-1"><Input
           type="text"
           placeholder={t('resources.searchPlaceholder')}
-          value={search}
-          onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
           className="h-10 pb-0"
         /></div>
         <select
+          value={languageFilter}
+          onChange={(e) => setLanguageFilter(e.target.value)}
+          className={selectClasses}
+        >
+          <option value="">{t('resources.allLanguages')}</option>
+          {availableLanguages.map((lang) => (
+            <option key={lang._id} value={lang._id}>
+              {formatLanguageLabel(lang._id)} ({lang.count})
+            </option>
+          ))}
+        </select>
+        <select
           value={typeFilter}
-          onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-          className="h-10 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/30 appearance-none"
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className={selectClasses}
         >
           <option value="">{t('resources.allTypes')}</option>
           {types.map((k) => <option key={k} value={k}>{t(`resources.types.${k}`)}</option>)}
         </select>
         <select
           value={pricingFilter}
-          onChange={(e) => { setPricingFilter(e.target.value); setPage(1); }}
-          className="h-10 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/30 appearance-none"
+          onChange={(e) => setPricingFilter(e.target.value)}
+          className={selectClasses}
         >
           <option value="">{t('resources.allPricing')}</option>
           {pricing.map((k) => <option key={k} value={k}>{t(`resources.pricing.${k}`)}</option>)}
