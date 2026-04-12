@@ -62,7 +62,7 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
         </form>
       ) : (
         <p className="text-sm text-[var(--color-text-muted)] mb-5">
-          <a href="/login" className="text-[var(--color-brand)]">{t('comments.login')}</a> {t('comments.toLeaveComment')}
+          <a href="/login" className="text-[var(--color-brand)]">{t('comments.loginToComment')}</a>
         </p>
       )}
 
