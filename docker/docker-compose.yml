@@ -1,9 +1,6 @@
 
 services:
 
-  # ══════════════════════════════════════════════════════
-  #  CORE APPLICATION
-  # ══════════════════════════════════════════════════════
 
   mongo:
     image: mongo:7
@@ -106,9 +103,6 @@ services:
       - monitoring
       - analytics
 
-  # ══════════════════════════════════════════════════════
-  #  OBSERVABILITY
-  # ══════════════════════════════════════════════════════
 
   prometheus:
     image: prom/prometheus:v2.51.0
@@ -201,10 +195,6 @@ services:
       - monitoring
       - backend
 
-  # ══════════════════════════════════════════════════════
-  #  ANALYTICS (réseau isolé)
-  # ══════════════════════════════════════════════════════
-
   umami-db:
     image: postgres:15-alpine
     container_name: speakio-umami-db
@@ -252,9 +242,6 @@ services:
     networks:
       - analytics
 
-# ══════════════════════════════════════════════════════
-#  NETWORKS (isolation par couche)
-# ══════════════════════════════════════════════════════
 
 networks:
   frontend:
@@ -270,9 +257,6 @@ networks:
     driver: bridge
     name: speakio-analytics
 
-# ══════════════════════════════════════════════════════
-#  VOLUMES
-# ══════════════════════════════════════════════════════
 
 volumes:
   mongo-data:
