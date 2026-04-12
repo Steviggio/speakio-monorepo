@@ -12,6 +12,7 @@ export interface User {
   locale: LanguageCode;
   learningLanguages: LanguageCode[];
   favoriteResources: string[];
+  isOnboardingCompleted: boolean;
   resetPasswordToken?: string;
   resetPasswordExpires?: Date;
   deletedAt?: Date;

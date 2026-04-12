@@ -50,6 +50,9 @@ export class User {
 
   @Prop({ required: false })
   deletedAt?: Date;
+
+  @Prop({ required: true, default: false })
+  isOnboardingCompleted: boolean;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

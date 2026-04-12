@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Post,
   Patch,
   Body,
   Param,
@@ -39,6 +40,17 @@ export class UsersController {
     delete safeUser.resetPasswordToken;
     delete safeUser.resetPasswordExpires;
     return safeUser;
+  }
+
+  @Post('onboarding')
+  @UseGuards(JwtAuthGuard)
+  async completeOnboarding(@Request() req: any) {
+    const userId = req.user.userId;
+    const updatedUser = await this.usersService.update(userId, { isOnboardingCompleted: true });
+    if (!updatedUser) {
+      throw new NotFoundException('User not found');
+    }
+    return { success: true, isOnboardingCompleted: updatedUser.isOnboardingCompleted };
   }
 
   @Patch('me')
