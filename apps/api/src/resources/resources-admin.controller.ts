@@ -21,7 +21,7 @@ import { ResourcesService } from './resources.service';
 @Roles('ADMIN')
 @Controller('admin/resources')
 export class ResourcesAdminController {
-  constructor(private readonly resourcesService: ResourcesService) { }
+  constructor(private readonly resourcesService: ResourcesService) {}
 
   @Post()
   create(@Body() dto: CreateResourceDto, @Request() req: any) {

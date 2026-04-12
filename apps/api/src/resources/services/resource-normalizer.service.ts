@@ -24,7 +24,8 @@ export class ResourceNormalizerService {
       rule?.rootDomainOverride ?? this.extractRootDomain(domain);
 
     const label =
-      rule?.platformLabel ?? this.buildFriendlyPlatformLabel(domain, rootDomain);
+      rule?.platformLabel ??
+      this.buildFriendlyPlatformLabel(domain, rootDomain);
 
     return {
       canonicalUrl,
@@ -108,7 +109,10 @@ export class ResourceNormalizerService {
     return lastTwo;
   }
 
-  private buildFriendlyPlatformLabel(domain: string, rootDomain: string): string {
+  private buildFriendlyPlatformLabel(
+    domain: string,
+    rootDomain: string,
+  ): string {
     const source = domain === rootDomain ? rootDomain : domain;
     const firstSegment = source.split('.')[0];
 

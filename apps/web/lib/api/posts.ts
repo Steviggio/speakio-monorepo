@@ -1,5 +1,5 @@
-import { apiClient } from './client';
-import { unwrapApiData } from './utils';
+import { apiClient } from "./client";
+import { unwrapApiData } from "./utils";
 
 export type PostItem = {
   _id: string;
@@ -26,12 +26,12 @@ export type PostListResponse = {
 };
 
 export async function apiGetPosts(params?: Record<string, string | number>) {
-  const response = await apiClient.get('/posts', { params });
+  const response = await apiClient.get("/posts", { params });
   return unwrapApiData<PostListResponse>(response.data);
 }
 
 export async function apiGetMyPosts() {
-  const response = await apiClient.get('/posts/mine');
+  const response = await apiClient.get("/posts/mine");
   return unwrapApiData<PostItem[]>(response.data);
 }
 
@@ -45,15 +45,17 @@ export type CreatePostInput = {
   content: string;
   language: string;
   tags?: string[];
-  status: 'published' | 'draft';
+  status: "published" | "draft";
 };
 
 export async function apiCreatePost(data: CreatePostInput) {
-  const response = await apiClient.post('/posts', data);
+  const response = await apiClient.post("/posts", data);
   return unwrapApiData<PostItem>(response.data);
 }
 
 export async function apiDeletePost(id: string) {
   const response = await apiClient.delete(`/posts/${id}`);
-  return unwrapApiData<{ deleted?: boolean } | Record<string, unknown>>(response.data);
+  return unwrapApiData<{ deleted?: boolean } | Record<string, unknown>>(
+    response.data,
+  );
 }

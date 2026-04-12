@@ -1,7 +1,7 @@
-import { apiClient } from './client';
-import { unwrapApiData } from './utils';
+import { apiClient } from "./client";
+import { unwrapApiData } from "./utils";
 
-export type ResourceVoteType = 'positive' | 'negative';
+export type ResourceVoteType = "positive" | "negative";
 
 export type ResourceItem = {
   _id: string;
@@ -36,7 +36,7 @@ export type ResourceListParams = {
   providerDomain?: string;
   publisherSlug?: string;
   seriesSlug?: string;
-  sort?: 'newest' | 'oldest' | 'popular';
+  sort?: "newest" | "oldest" | "popular";
 };
 
 export type ResourceListResponse = {
@@ -51,19 +51,19 @@ export type ResourceListResponse = {
 
 export type RelatedResourcesResponse = {
   sameSeries: {
-    type: 'SERIES';
+    type: "SERIES";
     name: string | null;
     slug: string | null;
     items: ResourceItem[];
   };
   samePublisher: {
-    type: 'PUBLISHER';
+    type: "PUBLISHER";
     name: string | null;
     slug: string | null;
     items: ResourceItem[];
   };
   samePlatform: {
-    type: 'PLATFORM';
+    type: "PLATFORM";
     name: string | null;
     domain: string | null;
     items: ResourceItem[];
@@ -89,7 +89,7 @@ function cleanParams(params?: Record<string, string | number | undefined>) {
 
   return Object.fromEntries(
     Object.entries(params).filter(
-      ([, value]) => value !== undefined && value !== null && value !== '',
+      ([, value]) => value !== undefined && value !== null && value !== "",
     ),
   );
 }
@@ -97,14 +97,19 @@ function cleanParams(params?: Record<string, string | number | undefined>) {
 export async function apiGetResources(
   params?: ResourceListParams,
 ): Promise<ResourceListResponse> {
-  const response = await apiClient.get('/resources', {
+  const response = await apiClient.get("/resources", {
     params: cleanParams(params),
   });
 
   return unwrapApiData<ResourceListResponse>(response.data);
 }
 
-export type FacetItem = { _id: string; count: number; label?: string; name?: string };
+export type FacetItem = {
+  _id: string;
+  count: number;
+  label?: string;
+  name?: string;
+};
 
 export type ResourceFacets = {
   types: FacetItem[];
@@ -116,7 +121,7 @@ export type ResourceFacets = {
 };
 
 export async function apiGetResourceFacets(): Promise<ResourceFacets> {
-  const response = await apiClient.get('/resources/facets');
+  const response = await apiClient.get("/resources/facets");
   return unwrapApiData<ResourceFacets>(response.data);
 }
 
@@ -135,7 +140,7 @@ export async function apiGetRelatedResources(
 export async function apiCreateResource(
   data: CreateOrUpdateResourceInput,
 ): Promise<ResourceItem> {
-  const response = await apiClient.post('/resources', data);
+  const response = await apiClient.post("/resources", data);
   return unwrapApiData<ResourceItem>(response.data);
 }
 
@@ -151,8 +156,10 @@ export async function apiVote(
   resourceId: string,
   type: ResourceVoteType,
 ): Promise<{ success?: boolean } | Record<string, unknown>> {
-  const response = await apiClient.post('/votes', { resourceId, type });
-  return unwrapApiData<{ success?: boolean } | Record<string, unknown>>(response.data);
+  const response = await apiClient.post("/votes", { resourceId, type });
+  return unwrapApiData<{ success?: boolean } | Record<string, unknown>>(
+    response.data,
+  );
 }
 
 export async function apiGetMyVote(

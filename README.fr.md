@@ -42,6 +42,7 @@ Ce dépôt utilise une architecture **Monorepo** gérée par [Turborepo](https:/
 ### 1. Pré-requis
 
 Assurez-vous d'avoir installé les outils suivants sur votre machine :
+
 - [Node.js](https://nodejs.org/fr) (v18 ou supérieur)
 - [Docker & Docker Compose](https://www.docker.com/) (pour lancer MongoDB & Nginx)
 - npm, yarn, ou pnpm
@@ -65,7 +66,8 @@ Créez les fichiers `.env` nécessaires en vous basant sur leurs équivalents `.
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env
 ```
-*(N'oubliez pas de configurer `MONGO_URI`, `JWT_SECRET`, etc. dans le fichier `.env` de votre backend !)*
+
+_(N'oubliez pas de configurer `MONGO_URI`, `JWT_SECRET`, etc. dans le fichier `.env` de votre backend !)_
 
 ### 4. Démarrer l'Infrastructure Locale (Docker)
 
@@ -74,7 +76,8 @@ Pour lancer la base de données locale MongoDB ainsi que le proxy Nginx, utilise
 ```bash
 docker-compose -f docker/docker-compose.yml up -d
 ```
-*Note : Assurez-vous que vous n'avez pas déjà une instance locale de MongoDB qui tourne sur les ports 27017 ou 27018 afin d'éviter tout conflit.*
+
+_Note : Assurez-vous que vous n'avez pas déjà une instance locale de MongoDB qui tourne sur les ports 27017 ou 27018 afin d'éviter tout conflit._
 
 ### 5. Lancer l'Application
 
@@ -101,7 +104,7 @@ Depuis le fichier `package.json` situé à la racine, vous pouvez lancer les com
 
 Les contributions sont toujours les bienvenues ! Veuillez suivre ces étapes pour contribuer :
 
-1. Créez un *fork* du dépôt.
+1. Créez un _fork_ du dépôt.
 2. Créez votre branche de fonctionnalité (`git checkout -b feature/IncroyableFonctionnalite`).
 3. Appliquez vos modifications via un commit (`git commit -m 'Ajout d'une IncroyableFonctionnalite'`).
 4. Poussez vos modifications sur la nouvelle branche (`git push origin feature/IncroyableFonctionnalite`).

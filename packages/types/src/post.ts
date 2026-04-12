@@ -6,7 +6,7 @@ export interface Post {
   author: string | { _id: string; username: string; avatarUrl?: string };
   language: string;
   tags: string[];
-  status: 'draft' | 'published';
+  status: "draft" | "published";
   coverImageUrl?: string;
   createdAt: Date;
   updatedAt: Date;

@@ -28,4 +28,4 @@ import * as path from 'path';
     }),
   ],
 })
-export class ConfigModule { }
+export class ConfigModule {}

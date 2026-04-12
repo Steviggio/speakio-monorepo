@@ -1,19 +1,23 @@
-'use client';
+"use client";
 
-import { usePathname } from 'next/navigation';
-import Link from 'next/link';
-import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
-import { useTranslation } from "@/lib/i18n"
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { useTranslation } from "@/lib/i18n";
 
-export default function SettingsLayout({ children }: { children: React.ReactNode }) {
+export default function SettingsLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const pathname = usePathname();
   const { t } = useTranslation();
 
   const sidebarLinks = [
-    { href: '/settings/profile', label: t("settings.profile") },
-    { href: '/settings/account', label: t("settings.account") },
-    { href: '/settings/preferences', label: t("settings.preferences") },
+    { href: "/settings/profile", label: t("settings.profile") },
+    { href: "/settings/account", label: t("settings.account") },
+    { href: "/settings/preferences", label: t("settings.preferences") },
   ];
 
   return (
@@ -26,11 +30,14 @@ export default function SettingsLayout({ children }: { children: React.ReactNode
               {sidebarLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (
-                  <Link key={link.href} href={link.href}
-                    className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive
-                      ? 'bg-[var(--color-bg-hover)] text-[var(--color-text)]'
-                      : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)]'
-                      }`}
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      isActive
+                        ? "bg-[var(--color-bg-hover)] text-[var(--color-text)]"
+                        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)]"
+                    }`}
                   >
                     {link.label}
                   </Link>

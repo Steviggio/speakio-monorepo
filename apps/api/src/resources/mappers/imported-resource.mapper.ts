@@ -1,4 +1,4 @@
-import type { ResourceFormat, ResourceType, Pricing } from "@repo/types";
+import type { ResourceFormat, ResourceType, Pricing } from '@repo/types';
 
 type ImportedResourceMapperInput = {
   item: Record<string, unknown>;

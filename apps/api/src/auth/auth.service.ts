@@ -178,7 +178,14 @@ export class AuthService {
 
     await this.postModel.updateMany(
       { author: userId },
-      { $set: { content: '[deleted]', title: '[deleted]', status: 'deleted', tags: [] } },
+      {
+        $set: {
+          content: '[deleted]',
+          title: '[deleted]',
+          status: 'deleted',
+          tags: [],
+        },
+      },
     );
 
     await this.roadmapModel.deleteMany({ owner: userId });

@@ -8,7 +8,10 @@ export class FavoritesService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
   async toggle(userId: string, resourceId: string) {
-    const user = await this.userModel.findById(userId).select('favoriteResources').exec();
+    const user = await this.userModel
+      .findById(userId)
+      .select('favoriteResources')
+      .exec();
     if (!user) throw new NotFoundException('User not found');
 
     const resObjId = new Types.ObjectId(resourceId);
@@ -17,14 +20,18 @@ export class FavoritesService {
     );
 
     if (!isFavorited) {
-      await this.userModel.findByIdAndUpdate(userId, {
-        $addToSet: { favoriteResources: resObjId },
-      }).exec();
+      await this.userModel
+        .findByIdAndUpdate(userId, {
+          $addToSet: { favoriteResources: resObjId },
+        })
+        .exec();
       return { action: 'added', resourceId };
     } else {
-      await this.userModel.findByIdAndUpdate(userId, {
-        $pull: { favoriteResources: resObjId },
-      }).exec();
+      await this.userModel
+        .findByIdAndUpdate(userId, {
+          $pull: { favoriteResources: resObjId },
+        })
+        .exec();
       return { action: 'removed', resourceId };
     }
   }

@@ -36,4 +36,4 @@ import { ResourceQualityService } from './services/resource-quality.service';
   ],
   exports: [ResourcesService],
 })
-export class ResourcesModule { }
+export class ResourcesModule {}

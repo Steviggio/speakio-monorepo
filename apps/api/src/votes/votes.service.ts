@@ -11,12 +11,6 @@ export class VotesService {
     private readonly resourcesService: ResourcesService,
   ) {}
 
-  /**
-   * Toggle a vote on a resource.
-   * - If the user hasn't voted → create vote & increment counter
-   * - If the user voted the same type → remove vote & decrement counter (toggle off)
-   * - If the user voted a different type → switch vote type, adjust both counters
-   */
   async toggleVote(
     userId: string,
     resourceId: string,

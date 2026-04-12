@@ -110,4 +110,3 @@ export class UsersController {
     res.send(JSON.stringify(exportData, null, 2));
   }
 }
-

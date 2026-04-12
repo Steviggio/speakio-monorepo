@@ -1,4 +1,11 @@
-import { ResourceType, Pricing, ResourceFormat, ResourceLevel, ResourceOrigin, ResourceStatus } from './enums';
+import {
+  ResourceType,
+  Pricing,
+  ResourceFormat,
+  ResourceLevel,
+  ResourceOrigin,
+  ResourceStatus,
+} from "./enums";
 
 export interface ResourceProvider {
   name: string;
@@ -44,5 +51,7 @@ export interface Resource {
   updatedAt: string;
 }
 
-
-export type CreateResourceDto = Omit<Resource, '_id' | 'createdAt' | 'updatedAt' | 'positiveVotes' | 'negativeVotes'>;
+export type CreateResourceDto = Omit<
+  Resource,
+  "_id" | "createdAt" | "updatedAt" | "positiveVotes" | "negativeVotes"
+>;

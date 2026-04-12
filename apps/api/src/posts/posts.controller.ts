@@ -56,7 +56,12 @@ export class PostsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Body() updateDto: UpdatePostDto,
   ) {
-    return this.postsService.update(id, updateDto, req.user.userId, req.user.role);
+    return this.postsService.update(
+      id,
+      updateDto,
+      req.user.userId,
+      req.user.role,
+    );
   }
 
   @Delete(':id')

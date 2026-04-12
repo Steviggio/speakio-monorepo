@@ -1,4 +1,11 @@
-import { IsOptional, IsString, IsBoolean, IsDateString, ValidateNested, IsArray } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsBoolean,
+  IsDateString,
+  ValidateNested,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { VocabularyItemDto, AddSubStepDto } from './add-step.dto';
 

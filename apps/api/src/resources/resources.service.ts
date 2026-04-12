@@ -20,7 +20,7 @@ export class ResourcesService {
     private readonly inference: ResourceInferenceService,
     private readonly importService: ResourceImportService,
     private readonly relatedService: ResourceRelatedService,
-  ) { }
+  ) {}
 
   async create(
     createDto: CreateResourceDto,
@@ -126,69 +126,72 @@ export class ResourcesService {
     if (query.type) match.type = query.type;
     if (query.pricing) match.pricing = query.pricing;
 
-    const [types, pricing, languages, platforms, publishers, series] = await Promise.all([
-      this.resourceModel.aggregate([
-        { $match: match },
-        { $group: { _id: '$type', count: { $sum: 1 } } },
-        { $sort: { count: -1 } },
-      ]),
-      this.resourceModel.aggregate([
-        { $match: match },
-        { $group: { _id: '$pricing', count: { $sum: 1 } } },
-        { $sort: { count: -1 } },
-      ]),
-      this.resourceModel.aggregate([
-        { $match: { ...match, language: { $exists: true, $nin: [null, ''] } } },
-        { $group: { _id: '$language', count: { $sum: 1 } } },
-        { $sort: { count: -1 } },
-      ]),
-      this.resourceModel.aggregate([
-        { $match: match },
-        {
-          $group: {
-            _id: '$sourcePlatform.rootDomain',
-            label: { $first: '$sourcePlatform.label' },
-            count: { $sum: 1 },
+    const [types, pricing, languages, platforms, publishers, series] =
+      await Promise.all([
+        this.resourceModel.aggregate([
+          { $match: match },
+          { $group: { _id: '$type', count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+        ]),
+        this.resourceModel.aggregate([
+          { $match: match },
+          { $group: { _id: '$pricing', count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+        ]),
+        this.resourceModel.aggregate([
+          {
+            $match: { ...match, language: { $exists: true, $nin: [null, ''] } },
           },
-        },
-        { $sort: { count: -1 } },
-        { $limit: 20 },
-      ]),
-      this.resourceModel.aggregate([
-        {
-          $match: {
-            ...match,
-            'publisher.slug': { $exists: true, $ne: null },
+          { $group: { _id: '$language', count: { $sum: 1 } } },
+          { $sort: { count: -1 } },
+        ]),
+        this.resourceModel.aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: '$sourcePlatform.rootDomain',
+              label: { $first: '$sourcePlatform.label' },
+              count: { $sum: 1 },
+            },
           },
-        },
-        {
-          $group: {
-            _id: '$publisher.slug',
-            name: { $first: '$publisher.name' },
-            count: { $sum: 1 },
+          { $sort: { count: -1 } },
+          { $limit: 20 },
+        ]),
+        this.resourceModel.aggregate([
+          {
+            $match: {
+              ...match,
+              'publisher.slug': { $exists: true, $ne: null },
+            },
           },
-        },
-        { $sort: { count: -1 } },
-        { $limit: 20 },
-      ]),
-      this.resourceModel.aggregate([
-        {
-          $match: {
-            ...match,
-            'series.slug': { $exists: true, $ne: null },
+          {
+            $group: {
+              _id: '$publisher.slug',
+              name: { $first: '$publisher.name' },
+              count: { $sum: 1 },
+            },
           },
-        },
-        {
-          $group: {
-            _id: '$series.slug',
-            name: { $first: '$series.name' },
-            count: { $sum: 1 },
+          { $sort: { count: -1 } },
+          { $limit: 20 },
+        ]),
+        this.resourceModel.aggregate([
+          {
+            $match: {
+              ...match,
+              'series.slug': { $exists: true, $ne: null },
+            },
           },
-        },
-        { $sort: { count: -1 } },
-        { $limit: 20 },
-      ]),
-    ]);
+          {
+            $group: {
+              _id: '$series.slug',
+              name: { $first: '$series.name' },
+              count: { $sum: 1 },
+            },
+          },
+          { $sort: { count: -1 } },
+          { $limit: 20 },
+        ]),
+      ]);
 
     return {
       types,
@@ -250,7 +253,10 @@ export class ResourcesService {
       } as any;
     }
 
-    if (!updateDto.publisher && (!resource.publisher?.slug || !resource.publisher?.name)) {
+    if (
+      !updateDto.publisher &&
+      (!resource.publisher?.slug || !resource.publisher?.name)
+    ) {
       resource.publisher = this.inference.inferPublisher(
         resource.title,
         resource.description,
@@ -258,7 +264,10 @@ export class ResourcesService {
       ) as any;
     }
 
-    if (!updateDto.series && (!resource.series?.slug || !resource.series?.name)) {
+    if (
+      !updateDto.series &&
+      (!resource.series?.slug || !resource.series?.name)
+    ) {
       resource.series = this.inference.inferSeries(
         resource.title,
         resource.description,

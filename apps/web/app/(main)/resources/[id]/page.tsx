@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { apiGetResource, apiVote, apiGetMyVote } from '@/lib/api/resources';
-import { apiToggleFavorite, apiGetFavorites } from '@/lib/api/social';
-import { useAuth } from '@/lib/hooks/useAuth';
-import CommentSection from '@/components/CommentSection';
-import { useTranslation } from '@/lib/i18n';
+import React from "react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { apiGetResource, apiVote, apiGetMyVote } from "@/lib/api/resources";
+import { apiToggleFavorite, apiGetFavorites } from "@/lib/api/social";
+import { useAuth } from "@/lib/hooks/useAuth";
+import CommentSection from "@/components/CommentSection";
+import { useTranslation } from "@/lib/i18n";
 
 export default function ResourceDetailPage() {
   const params = useParams();
@@ -19,22 +19,24 @@ export default function ResourceDetailPage() {
   const queryClient = useQueryClient();
 
   const { data: resource, isLoading } = useQuery({
-    queryKey: ['resource', id],
+    queryKey: ["resource", id],
     queryFn: () => apiGetResource(id),
   });
 
   const { data: myVoteData } = useQuery({
-    queryKey: ['myVote', id],
+    queryKey: ["myVote", id],
     queryFn: () => apiGetMyVote(id),
     enabled: !!user,
   });
   const myVote = myVoteData?.type || null;
 
   const { data: isFavoritedData } = useQuery({
-    queryKey: ['favoriteStatus', id],
+    queryKey: ["favoriteStatus", id],
     queryFn: async () => {
       const favs = await apiGetFavorites();
-      const favIds = (favs || []).map((f: any) => typeof f === 'string' ? f : f._id);
+      const favIds = (favs || []).map((f: any) =>
+        typeof f === "string" ? f : f._id,
+      );
       return favIds.includes(id);
     },
     enabled: !!user,
@@ -42,21 +44,24 @@ export default function ResourceDetailPage() {
   const isFavorited = isFavoritedData || false;
 
   const voteMutation = useMutation({
-    mutationFn: (type: 'positive' | 'negative') => apiVote(id, type),
+    mutationFn: (type: "positive" | "negative") => apiVote(id, type),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['resource', id] });
-      queryClient.invalidateQueries({ queryKey: ['myVote', id] });
+      queryClient.invalidateQueries({ queryKey: ["resource", id] });
+      queryClient.invalidateQueries({ queryKey: ["myVote", id] });
     },
-    onError: () => toast.error(t('resources.errorBoundary') || 'Une erreur est survenue.'),
+    onError: () =>
+      toast.error(t("resources.errorBoundary") || "Une erreur est survenue."),
   });
 
   const favoriteMutation = useMutation({
     mutationFn: () => apiToggleFavorite(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['favoriteStatus', id] }),
-    onError: () => toast.error(t('resources.errorBoundary') || 'Une erreur est survenue.'),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["favoriteStatus", id] }),
+    onError: () =>
+      toast.error(t("resources.errorBoundary") || "Une erreur est survenue."),
   });
 
-  const handleVote = (type: 'positive' | 'negative') => {
+  const handleVote = (type: "positive" | "negative") => {
     if (!user || voteMutation.isPending) return;
     voteMutation.mutate(type);
   };
@@ -69,26 +74,40 @@ export default function ResourceDetailPage() {
   const favLoading = favoriteMutation.isPending;
   const voteLoading = voteMutation.isPending;
 
-  if (isLoading) return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
-      <div className="animate-pulse">
-        <div className="h-6 bg-[var(--color-bg-hover)] rounded w-2/3 mb-4" />
-        <div className="h-4 bg-[var(--color-bg-hover)] rounded w-full mb-2" />
-        <div className="h-4 bg-[var(--color-bg-hover)] rounded w-5/6" />
+  if (isLoading)
+    return (
+      <div className="max-w-3xl mx-auto py-8 px-4">
+        <div className="animate-pulse">
+          <div className="h-6 bg-[var(--color-bg-hover)] rounded w-2/3 mb-4" />
+          <div className="h-4 bg-[var(--color-bg-hover)] rounded w-full mb-2" />
+          <div className="h-4 bg-[var(--color-bg-hover)] rounded w-5/6" />
+        </div>
       </div>
-    </div>
-  );
+    );
 
-  if (!resource) return (
-    <div className="max-w-3xl mx-auto py-8 px-4 text-center">
-      <p className="text-[var(--color-text-muted)]">{t('resources.notFound')}</p>
-      <Link href="/resources" className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] mt-3 inline-block text-sm">{t('resources.backToCatalogue')}</Link>
-    </div>
-  );
+  if (!resource)
+    return (
+      <div className="max-w-3xl mx-auto py-8 px-4 text-center">
+        <p className="text-[var(--color-text-muted)]">
+          {t("resources.notFound")}
+        </p>
+        <Link
+          href="/resources"
+          className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] mt-3 inline-block text-sm"
+        >
+          {t("resources.backToCatalogue")}
+        </Link>
+      </div>
+    );
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
-      <Link href="/resources" className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors mb-6 inline-block">{t('resources.backToCatalogue')}</Link>
+      <Link
+        href="/resources"
+        className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors mb-6 inline-block"
+      >
+        {t("resources.backToCatalogue")}
+      </Link>
 
       <div className="rounded-lg border border-[var(--color-border)] bg-white p-6 shadow-sm">
         <div className="flex items-start justify-between mb-3">
@@ -98,7 +117,9 @@ export default function ResourceDetailPage() {
               <span>·</span>
               <span>{resource.language}</span>
             </div>
-            <h1 className="text-xl font-bold text-[var(--color-text)]">{resource.title}</h1>
+            <h1 className="text-xl font-bold text-[var(--color-text)]">
+              {resource.title}
+            </h1>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-[var(--color-text-secondary)] bg-[var(--color-bg-hover)] px-2.5 py-1 rounded-md">
@@ -107,34 +128,61 @@ export default function ResourceDetailPage() {
           </div>
         </div>
 
-        <p className="text-[var(--color-text-secondary)] leading-relaxed mb-5">{resource.description}</p>
+        <p className="text-[var(--color-text-secondary)] leading-relaxed mb-5">
+          {resource.description}
+        </p>
 
         <div className="flex items-center gap-3 mb-5">
-          <a href={resource.url} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white text-sm font-medium rounded-lg transition-colors">
-            {t('resources.visitResource')}
+          <a
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white text-sm font-medium rounded-lg transition-colors"
+          >
+            {t("resources.visitResource")}
           </a>
 
           {user && (
             <button
               onClick={handleToggleFavorite}
               disabled={favLoading}
-              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${isFavorited
-                ? 'bg-amber-50 border-amber-200 text-amber-600 hover:bg-amber-100'
-                : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]'
-                } disabled:opacity-40`}
-              title={isFavorited ? t('resources.removeFromFavorites') : t('resources.addToFavorites')}
+              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
+                isFavorited
+                  ? "bg-amber-50 border-amber-200 text-amber-600 hover:bg-amber-100"
+                  : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"
+              } disabled:opacity-40`}
+              title={
+                isFavorited
+                  ? t("resources.removeFromFavorites")
+                  : t("resources.addToFavorites")
+              }
             >
               {isFavorited ? (
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="currentColor"
+                >
                   <path d="M2 2a1 1 0 011-1h10a1 1 0 011 1v13.5a.5.5 0 01-.777.416L8 12.101l-5.223 3.815A.5.5 0 012 15.5V2z" />
                 </svg>
               ) : (
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2">
-                  <path d="M3 2.5A1.5 1.5 0 014.5 1h7A1.5 1.5 0 0113 2.5v12l-5-3.5L3 14.5v-12z" strokeLinecap="round" strokeLinejoin="round" />
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.2"
+                >
+                  <path
+                    d="M3 2.5A1.5 1.5 0 014.5 1h7A1.5 1.5 0 0113 2.5v12l-5-3.5L3 14.5v-12z"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               )}
-              {isFavorited ? t('resources.saved') : t('resources.save')}
+              {isFavorited ? t("resources.saved") : t("resources.save")}
             </button>
           )}
         </div>
@@ -142,29 +190,55 @@ export default function ResourceDetailPage() {
         {resource.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-5">
             {resource.tags.map((tag) => (
-              <span key={tag} className="text-xs px-2.5 py-1 rounded-md bg-[var(--color-bg)] text-[var(--color-text-secondary)] border border-[var(--color-border-light)]">{tag}</span>
+              <span
+                key={tag}
+                className="text-xs px-2.5 py-1 rounded-md bg-[var(--color-bg)] text-[var(--color-text-secondary)] border border-[var(--color-border-light)]"
+              >
+                {tag}
+              </span>
             ))}
           </div>
         )}
 
         <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-border-light)]">
-          <button onClick={() => handleVote('positive')} disabled={!user || voteLoading}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm transition-colors ${myVote === 'positive' ? 'bg-green-50 border-green-200 text-green-700' : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]'
-              } disabled:opacity-40`}>
+          <button
+            onClick={() => handleVote("positive")}
+            disabled={!user || voteLoading}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm transition-colors ${
+              myVote === "positive"
+                ? "bg-green-50 border-green-200 text-green-700"
+                : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"
+            } disabled:opacity-40`}
+          >
             ▲ <span className="font-medium">{resource.positiveVotes}</span>
           </button>
-          <button onClick={() => handleVote('negative')} disabled={!user || voteLoading}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm transition-colors ${myVote === 'negative' ? 'bg-red-50 border-red-200 text-red-700' : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]'
-              } disabled:opacity-40`}>
+          <button
+            onClick={() => handleVote("negative")}
+            disabled={!user || voteLoading}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm transition-colors ${
+              myVote === "negative"
+                ? "bg-red-50 border-red-200 text-red-700"
+                : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"
+            } disabled:opacity-40`}
+          >
             ▼ <span className="font-medium">{resource.negativeVotes}</span>
           </button>
-          {!user && <span className="text-xs text-[var(--color-text-muted)]"><Link href="/login" className="text-[var(--color-brand)]">{t('resources.loginToVote')}</Link> {t('resources.toVoteAndSave')}</span>}
+          {!user && (
+            <span className="text-xs text-[var(--color-text-muted)]">
+              <Link href="/login" className="text-[var(--color-brand)]">
+                {t("resources.loginToVote")}
+              </Link>{" "}
+              {t("resources.toVoteAndSave")}
+            </span>
+          )}
         </div>
 
         {resource.submittedBy && (
           <div className="mt-4 pt-3 border-t border-[var(--color-border-light)] flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
-            <span>{t('resources.submittedBy')}</span>
-            <span className="text-[var(--color-text)] font-medium">{resource.submittedBy.username}</span>
+            <span>{t("resources.submittedBy")}</span>
+            <span className="text-[var(--color-text)] font-medium">
+              {resource.submittedBy.username}
+            </span>
             <span>·</span>
             <span>{resource.createdAt}</span>
           </div>

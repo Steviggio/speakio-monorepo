@@ -299,17 +299,20 @@ export class Resource {
 
 export const ResourceSchema = SchemaFactory.createForClass(Resource);
 
-ResourceSchema.index({
-  title: 'text',
-  description: 'text',
-  tags: 'text',
-  'publisher.name': 'text',
-  'series.name': 'text',
-  'raw.title': 'text',
-  'raw.description': 'text',
-  'enrichment.metaDescription': 'text',
-  'enrichment.ogDescription': 'text',
-}, { language_override: 'textSearchLanguage' });
+ResourceSchema.index(
+  {
+    title: 'text',
+    description: 'text',
+    tags: 'text',
+    'publisher.name': 'text',
+    'series.name': 'text',
+    'raw.title': 'text',
+    'raw.description': 'text',
+    'enrichment.metaDescription': 'text',
+    'enrichment.ogDescription': 'text',
+  },
+  { language_override: 'textSearchLanguage' },
+);
 
 ResourceSchema.index({ language: 1, type: 1, status: 1, isActive: 1 });
 ResourceSchema.index({ language: 1, pricing: 1, status: 1, isActive: 1 });

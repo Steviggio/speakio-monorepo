@@ -8,7 +8,7 @@ export class ResourceRelatedService {
   constructor(
     @InjectModel(Resource.name)
     private readonly resourceModel: Model<ResourceDocument>,
-  ) { }
+  ) {}
 
   async getRelatedResources(id: string) {
     const resource = await this.resourceModel.findById(id).lean().exec();
@@ -20,9 +20,8 @@ export class ResourceRelatedService {
     const baseFilter = this.buildPublicFilter();
     const excludedIds: string[] = [String(resource._id)];
 
-    const sameSeriesItems =
-      resource.series?.slug
-        ? await this.resourceModel
+    const sameSeriesItems = resource.series?.slug
+      ? await this.resourceModel
           .find({
             ...baseFilter,
             _id: { $nin: excludedIds },
@@ -32,13 +31,12 @@ export class ResourceRelatedService {
           .limit(8)
           .lean()
           .exec()
-        : [];
+      : [];
 
     excludedIds.push(...sameSeriesItems.map((item) => String(item._id)));
 
-    const samePublisherItems =
-      resource.publisher?.slug
-        ? await this.resourceModel
+    const samePublisherItems = resource.publisher?.slug
+      ? await this.resourceModel
           .find({
             ...baseFilter,
             _id: { $nin: excludedIds },
@@ -48,13 +46,12 @@ export class ResourceRelatedService {
           .limit(8)
           .lean()
           .exec()
-        : [];
+      : [];
 
     excludedIds.push(...samePublisherItems.map((item) => String(item._id)));
 
-    const samePlatformItems =
-      resource.sourcePlatform?.rootDomain
-        ? await this.resourceModel
+    const samePlatformItems = resource.sourcePlatform?.rootDomain
+      ? await this.resourceModel
           .find({
             ...baseFilter,
             _id: { $nin: excludedIds },
@@ -64,7 +61,7 @@ export class ResourceRelatedService {
           .limit(8)
           .lean()
           .exec()
-        : [];
+      : [];
 
     return {
       sameSeries: {

@@ -1,16 +1,16 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { apiGetPost, apiDeletePost, PostItem } from '@/lib/api/posts';
-import { useAuth } from '@/lib/hooks/useAuth';
-import CommentSection from '@/components/CommentSection';
-import { Button } from '@/components/ui/button';
-import { useTranslation } from '@/lib/i18n';
+import React, { useState, useEffect, useCallback } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { apiGetPost, apiDeletePost, PostItem } from "@/lib/api/posts";
+import { useAuth } from "@/lib/hooks/useAuth";
+import CommentSection from "@/components/CommentSection";
+import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/lib/i18n";
 
 function renderMarkdown(md: string): string {
-  return (md || '')
+  return (md || "")
     .replace(
       /^### (.+)$/gm,
       '<h3 class="text-lg font-bold text-[var(--color-text)] mt-6 mb-2">$1</h3>',
@@ -27,7 +27,7 @@ function renderMarkdown(md: string): string {
       /\*\*(.+?)\*\*/g,
       '<strong class="font-semibold text-[var(--color-text)]">$1</strong>',
     )
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/\*(.+?)\*/g, "<em>$1</em>")
     .replace(
       /```([\s\S]*?)```/g,
       '<pre class="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg p-4 my-4 overflow-x-auto text-sm text-[var(--color-text-secondary)]"><code>$1</code></pre>',
@@ -44,8 +44,11 @@ function renderMarkdown(md: string): string {
       /^- (.+)$/gm,
       '<li class="ml-4 list-disc text-[var(--color-text-secondary)]">$1</li>',
     )
-    .replace(/\n\n/g, '</p><p class="text-[var(--color-text-secondary)] leading-relaxed mb-4">')
-    .replace(/\n/g, '<br/>');
+    .replace(
+      /\n\n/g,
+      '</p><p class="text-[var(--color-text-secondary)] leading-relaxed mb-4">',
+    )
+    .replace(/\n/g, "<br/>");
 }
 
 export default function BlogPostPage() {
@@ -83,14 +86,15 @@ export default function BlogPostPage() {
 
     try {
       await apiDeletePost(post._id);
-      router.push('/blog');
+      router.push("/blog");
     } catch {
       setIsDeleting(false);
       setShowDeleteConfirm(false);
     }
   };
 
-  const isAuthor = user && post?.author && (user as any)._id === post.author._id;
+  const isAuthor =
+    user && post?.author && (user as any)._id === post.author._id;
 
   if (isLoading) {
     return (
@@ -107,21 +111,22 @@ export default function BlogPostPage() {
   if (error || !post) {
     return (
       <div className="max-w-3xl mx-auto py-8 px-4 text-center">
-        <p className="text-[var(--color-text-muted)]">{t('blog.notFound')}</p>
+        <p className="text-[var(--color-text-muted)]">{t("blog.notFound")}</p>
         <Link
           href="/blog"
           className="text-[var(--color-brand)] mt-3 inline-block text-sm"
         >
-          {t('blog.backToBlog')}
+          {t("blog.backToBlog")}
         </Link>
       </div>
     );
   }
 
   const safeTags = Array.isArray(post.tags) ? post.tags : [];
-  const safeLanguage = typeof post.language === 'string' ? post.language : 'unknown';
+  const safeLanguage =
+    typeof post.language === "string" ? post.language : "unknown";
   const safeAuthorUsername =
-    post.author && typeof post.author.username === 'string'
+    post.author && typeof post.author.username === "string"
       ? post.author.username
       : null;
 
@@ -132,7 +137,7 @@ export default function BlogPostPage() {
           href="/blog"
           className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
         >
-          {t('blog.backToBlog')}
+          {t("blog.backToBlog")}
         </Link>
 
         {isAuthor && (
@@ -142,7 +147,7 @@ export default function BlogPostPage() {
             onClick={() => setShowDeleteConfirm(true)}
             className="text-red-500 hover:text-red-600 px-2 h-auto text-xs py-1"
           >
-            {t('blog.delete')}
+            {t("blog.delete")}
           </Button>
         )}
       </div>
@@ -157,14 +162,17 @@ export default function BlogPostPage() {
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="text-base font-semibold text-[var(--color-text)] mb-2">
-              {t('blog.deleteTitle')}
+              {t("blog.deleteTitle")}
             </h3>
             <p className="text-sm text-[var(--color-text-secondary)] mb-5">
-              {t('blog.deleteDesc')}
+              {t("blog.deleteDesc")}
             </p>
             <div className="flex items-center justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowDeleteConfirm(false)}>
-                {t('common.cancel')}
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteConfirm(false)}
+              >
+                {t("common.cancel")}
               </Button>
 
               <Button
@@ -172,7 +180,7 @@ export default function BlogPostPage() {
                 isLoading={isDeleting}
                 className="bg-red-500 hover:bg-red-600 focus:ring-red-500/40"
               >
-                {isDeleting ? t('blog.deleting') : t('blog.delete')}
+                {isDeleting ? t("blog.deleting") : t("blog.delete")}
               </Button>
             </div>
           </div>
@@ -196,11 +204,11 @@ export default function BlogPostPage() {
                   {safeAuthorUsername}
                 </p>
                 <p className="text-xs">
-                  {new Date(post.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                  })}{' '}
+                  {new Date(post.createdAt).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}{" "}
                   · {safeLanguage.toUpperCase()}
                 </p>
               </div>

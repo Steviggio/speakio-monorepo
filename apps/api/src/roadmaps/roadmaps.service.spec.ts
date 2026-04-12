@@ -35,7 +35,7 @@ describe('RoadmapsService', () => {
 
   describe('exportToAnkiCsv', () => {
     const mockUserId = 'user123';
-    
+
     beforeEach(() => {
       mockRoadmapModel.findById.mockReturnValue({
         exec: jest.fn().mockResolvedValue({
@@ -51,14 +51,12 @@ describe('RoadmapsService', () => {
               ],
               subSteps: [
                 {
-                  vocabularies: [
-                    { front: 'SubHello', back: 'SubBonjour' }
-                  ]
-                }
-              ]
-            }
-          ]
-        })
+                  vocabularies: [{ front: 'SubHello', back: 'SubBonjour' }],
+                },
+              ],
+            },
+          ],
+        }),
       });
     });
 

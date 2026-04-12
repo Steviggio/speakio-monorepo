@@ -1,14 +1,14 @@
-import axios from 'axios';
+import axios from "axios";
 
 const API_URL =
-  process.env.NEXT_PUBLIC_CLIENT_API_URL?.trim() || 'http://localhost:3001/api';
+  process.env.NEXT_PUBLIC_CLIENT_API_URL?.trim() || "http://localhost:3001/api";
 
 export const apiClient = axios.create({
   baseURL: API_URL,
   withCredentials: true,
   headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
+    Accept: "application/json",
+    "Content-Type": "application/json",
   },
 });
 

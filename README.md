@@ -41,6 +41,7 @@ This repository uses a **Monorepo** architecture managed by [Turborepo](https://
 ### 1. Prerequisites
 
 Make sure you have installed the following on your machine:
+
 - [Node.js](https://nodejs.org/en) (v18 or higher)
 - [Docker & Docker Compose](https://www.docker.com/) (for MongoDB & Nginx)
 - npm, yarn, or pnpm
@@ -64,7 +65,8 @@ Create the required `.env` files based on their respective `.env.example` equiva
 cp apps/api/.env.example apps/api/.env
 cp apps/web/.env.example apps/web/.env
 ```
-*(Make sure to define `MONGO_URI`, `JWT_SECRET`, etc. in your backend `.env` file!)*
+
+_(Make sure to define `MONGO_URI`, `JWT_SECRET`, etc. in your backend `.env` file!)_
 
 ### 4. Start Local Infrastructure (Docker)
 
@@ -73,7 +75,8 @@ To run the local MongoDB database and Nginx proxy, rely on Docker Compose:
 ```bash
 docker-compose -f docker/docker-compose.yml up -d
 ```
-*Note: Make sure your local MongoDB instance is not already running on port 27017 or 27018 to avoid collisions.*
+
+_Note: Make sure your local MongoDB instance is not already running on port 27017 or 27018 to avoid collisions._
 
 ### 5. Run the Application
 

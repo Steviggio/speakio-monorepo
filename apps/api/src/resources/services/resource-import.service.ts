@@ -26,7 +26,7 @@ export class ResourceImportService {
     private readonly classification: ResourceClassificationService,
     private readonly quality: ResourceQualityService,
     private readonly inference: ResourceInferenceService,
-  ) { }
+  ) {}
 
   async importBatch(dto: ImportResourcesDto, importedBy: string) {
     const batch = await this.importBatchModel.create({
@@ -116,11 +116,13 @@ export class ResourceImportService {
           existingIsActive: existingInfo?.isActive as boolean | undefined,
         });
 
-        const updateResult = await this.resourceModel.findOneAndUpdate(
-          { canonicalUrl: payload.canonicalUrl },
-          { $set: payload },
-          { upsert: true, new: false }
-        ).exec();
+        const updateResult = await this.resourceModel
+          .findOneAndUpdate(
+            { canonicalUrl: payload.canonicalUrl },
+            { $set: payload },
+            { upsert: true, new: false },
+          )
+          .exec();
 
         if (updateResult) {
           batch.stats.updated += 1;
@@ -161,8 +163,7 @@ export class ResourceImportService {
   ) {
     const safeTitle =
       typeof item?.title === 'string' ? item.title : '(no title)';
-    const safeUrl =
-      typeof item?.url === 'string' ? item.url : '(no url)';
+    const safeUrl = typeof item?.url === 'string' ? item.url : '(no url)';
 
     console.error(
       `[RESOURCE IMPORT ERROR] file=${fileName} index=${index} title="${safeTitle}" url="${safeUrl}"`,

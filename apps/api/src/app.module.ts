@@ -55,4 +55,4 @@ import { MetricsInterceptor } from './common/metrics/prometheus.interceptor';
     { provide: APP_INTERCEPTOR, useClass: MetricsInterceptor },
   ],
 })
-export class AppModule { }
+export class AppModule {}

@@ -1,4 +1,10 @@
-import { IsOptional, IsString, IsDateString, ValidateNested, IsArray } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsDateString,
+  ValidateNested,
+  IsArray,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 import { StepDto } from './create-roadmap.dto';
 

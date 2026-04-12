@@ -1,4 +1,9 @@
-import type { ResourceFormat, ResourceType, Pricing, ResourceLevel } from "@repo/types";
+import type {
+  ResourceFormat,
+  ResourceType,
+  Pricing,
+  ResourceLevel,
+} from '@repo/types';
 
 export function mapImportedResourceToDocument(input: {
   dto: { source?: string; fileName: string };

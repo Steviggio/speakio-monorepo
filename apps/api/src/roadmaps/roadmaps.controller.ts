@@ -13,7 +13,11 @@ import {
 import type { Response } from 'express';
 import { RoadmapsService } from './roadmaps.service';
 import { CreateRoadmapDto } from './dto/create-roadmap.dto';
-import { AddStepDto, AddSubStepDto, UpdateVocabularyDto } from './dto/add-step.dto';
+import {
+  AddStepDto,
+  AddSubStepDto,
+  UpdateVocabularyDto,
+} from './dto/add-step.dto';
 import { UpdateRoadmapDto } from './dto/update-roadmap.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
 import { UpdateSubStepDto } from './dto/update-substep.dto';
@@ -51,9 +55,9 @@ export class RoadmapsController {
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   update(
-    @Request() req: any, 
+    @Request() req: any,
     @Param('id', ParseObjectIdPipe) id: string,
-    @Body() updateDto: UpdateRoadmapDto
+    @Body() updateDto: UpdateRoadmapDto,
   ) {
     return this.roadmapsService.update(id, req.user.userId, updateDto);
   }
@@ -64,13 +68,13 @@ export class RoadmapsController {
     @Request() req: any,
     @Param('id', ParseObjectIdPipe) id: string,
     @Param('stepIndex') stepIndex: string,
-    @Body() updateDto: UpdateStepDto
+    @Body() updateDto: UpdateStepDto,
   ) {
     return this.roadmapsService.updateStep(
       id,
       parseInt(stepIndex, 10),
       req.user.userId,
-      updateDto
+      updateDto,
     );
   }
 
@@ -106,7 +110,12 @@ export class RoadmapsController {
     @Param('stepIndex') stepIndex: string,
     @Body() body: AddSubStepDto,
   ) {
-    return this.roadmapsService.addSubStep(id, parseInt(stepIndex, 10), body, req.user.userId);
+    return this.roadmapsService.addSubStep(
+      id,
+      parseInt(stepIndex, 10),
+      body,
+      req.user.userId,
+    );
   }
 
   @Patch(':id/steps/:stepIndex/substeps/:subStepIndex')
@@ -116,14 +125,14 @@ export class RoadmapsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Param('stepIndex') stepIndex: string,
     @Param('subStepIndex') subStepIndex: string,
-    @Body() updateDto: UpdateSubStepDto
+    @Body() updateDto: UpdateSubStepDto,
   ) {
     return this.roadmapsService.updateSubStep(
       id,
       parseInt(stepIndex, 10),
       parseInt(subStepIndex, 10),
       req.user.userId,
-      updateDto
+      updateDto,
     );
   }
 
@@ -139,7 +148,7 @@ export class RoadmapsController {
       id,
       parseInt(stepIndex, 10),
       parseInt(subStepIndex, 10),
-      req.user.userId
+      req.user.userId,
     );
   }
 
@@ -167,7 +176,12 @@ export class RoadmapsController {
     @Param('stepIndex') stepIndex: string,
     @Body() body: UpdateVocabularyDto,
   ) {
-    return this.roadmapsService.updateVocabularies(id, req.user.userId, body, parseInt(stepIndex, 10));
+    return this.roadmapsService.updateVocabularies(
+      id,
+      req.user.userId,
+      body,
+      parseInt(stepIndex, 10),
+    );
   }
 
   @Post(':id/steps/:stepIndex/substeps/:subStepIndex/vocabularies')
@@ -180,11 +194,11 @@ export class RoadmapsController {
     @Body() body: UpdateVocabularyDto,
   ) {
     return this.roadmapsService.updateVocabularies(
-      id, 
-      req.user.userId, 
-      body, 
-      parseInt(stepIndex, 10), 
-      parseInt(subStepIndex, 10)
+      id,
+      req.user.userId,
+      body,
+      parseInt(stepIndex, 10),
+      parseInt(subStepIndex, 10),
     );
   }
 
@@ -196,12 +210,22 @@ export class RoadmapsController {
 
   @Post(':id/anki-export')
   @UseGuards(JwtAuthGuard)
-  async exportToAnkiCsv(@Request() req: any, @Param('id', ParseObjectIdPipe) id: string, @Res() res: Response) {
-    const csvString = await this.roadmapsService.exportToAnkiCsv(id, req.user.userId);
-    
+  async exportToAnkiCsv(
+    @Request() req: any,
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Res() res: Response,
+  ) {
+    const csvString = await this.roadmapsService.exportToAnkiCsv(
+      id,
+      req.user.userId,
+    );
+
     res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', `attachment; filename="anki-export-${id}.csv"`);
-    
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="anki-export-${id}.csv"`,
+    );
+
     return res.send(csvString);
   }
 }

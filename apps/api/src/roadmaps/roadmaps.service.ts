@@ -1,10 +1,18 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Roadmap, RoadmapDocument } from '../schemas/roadmap.schema';
 import { CreateRoadmapDto } from './dto/create-roadmap.dto';
 import { CreateAnkiExportDto } from './dto/anki-export.dto';
-import { AddStepDto, AddSubStepDto, UpdateVocabularyDto } from './dto/add-step.dto';
+import {
+  AddStepDto,
+  AddSubStepDto,
+  UpdateVocabularyDto,
+} from './dto/add-step.dto';
 import { UpdateRoadmapDto } from './dto/update-roadmap.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
 import { UpdateSubStepDto } from './dto/update-substep.dto';
@@ -15,7 +23,10 @@ export class RoadmapsService {
     @InjectModel(Roadmap.name) private roadmapModel: Model<RoadmapDocument>,
   ) {}
 
-  async create(createDto: CreateRoadmapDto, userId: string): Promise<RoadmapDocument> {
+  async create(
+    createDto: CreateRoadmapDto,
+    userId: string,
+  ): Promise<RoadmapDocument> {
     const steps = (createDto.steps || []).map((s) => ({
       ...s,
       completed: false,
@@ -44,12 +55,18 @@ export class RoadmapsService {
     return roadmap;
   }
 
-  async update(id: string, userId: string, updateDto: UpdateRoadmapDto): Promise<RoadmapDocument> {
-    const roadmap = await this.roadmapModel.findOneAndUpdate(
-      { _id: id, owner: userId },
-      { $set: updateDto },
-      { new: true }
-    ).exec();
+  async update(
+    id: string,
+    userId: string,
+    updateDto: UpdateRoadmapDto,
+  ): Promise<RoadmapDocument> {
+    const roadmap = await this.roadmapModel
+      .findOneAndUpdate(
+        { _id: id, owner: userId },
+        { $set: updateDto },
+        { new: true },
+      )
+      .exec();
 
     if (!roadmap) {
       throw new NotFoundException('Roadmap not found or unauthorized');
@@ -62,12 +79,13 @@ export class RoadmapsService {
     roadmapId: string,
     stepIndex: number,
     userId: string,
-    updateDto: UpdateStepDto
+    updateDto: UpdateStepDto,
   ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(roadmapId).exec();
-    
+
     if (!roadmap) throw new NotFoundException('Roadmap not found');
-    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
+    if (roadmap.owner.toString() !== userId)
+      throw new ForbiddenException('Not authorized');
 
     if (stepIndex < 0 || stepIndex >= roadmap.steps.length) {
       throw new NotFoundException('Step not found');
@@ -75,10 +93,13 @@ export class RoadmapsService {
 
     const step = roadmap.steps[stepIndex];
     if (updateDto.title !== undefined) step.title = updateDto.title;
-    if (updateDto.description !== undefined) step.description = updateDto.description;
-    
+    if (updateDto.description !== undefined)
+      step.description = updateDto.description;
+
     if (updateDto.deadline !== undefined) {
-      step.deadline = updateDto.deadline ? new Date(updateDto.deadline) : undefined;
+      step.deadline = updateDto.deadline
+        ? new Date(updateDto.deadline)
+        : undefined;
     }
 
     if (updateDto.completed !== undefined) {
@@ -91,7 +112,11 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
-  async toggleStep(id: string, stepIndex: number, userId: string): Promise<RoadmapDocument> {
+  async toggleStep(
+    id: string,
+    stepIndex: number,
+    userId: string,
+  ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
     if (roadmap.owner.toString() !== userId) {
@@ -109,32 +134,43 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
-  async addStep(id: string, dto: AddStepDto, userId: string): Promise<RoadmapDocument> {
+  async addStep(
+    id: string,
+    dto: AddStepDto,
+    userId: string,
+  ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
     if (roadmap.owner.toString() !== userId) {
       throw new ForbiddenException('Not authorized');
     }
-    
+
     roadmap.steps.push({
       title: dto.title,
       description: dto.description,
       deadline: dto.deadline ? new Date(dto.deadline) : undefined,
       vocabularies: dto.vocabularies || [],
       subSteps: [],
-      completed: false
+      completed: false,
     } as any);
-    
+
     roadmap.markModified('steps');
     await roadmap.save();
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
-  async addSubStep(id: string, stepIndex: number, dto: AddSubStepDto, userId: string): Promise<RoadmapDocument> {
+  async addSubStep(
+    id: string,
+    stepIndex: number,
+    dto: AddSubStepDto,
+    userId: string,
+  ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
-    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) throw new NotFoundException('Step not found');
+    if (roadmap.owner.toString() !== userId)
+      throw new ForbiddenException('Not authorized');
+    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
+      throw new NotFoundException('Step not found');
 
     roadmap.steps[stepIndex].subSteps = roadmap.steps[stepIndex].subSteps || [];
     roadmap.steps[stepIndex].subSteps.push({
@@ -142,7 +178,7 @@ export class RoadmapsService {
       description: dto.description,
       deadline: dto.deadline ? new Date(dto.deadline) : undefined,
       vocabularies: dto.vocabularies || [],
-      completed: false
+      completed: false,
     } as any);
 
     roadmap.markModified('steps');
@@ -155,24 +191,33 @@ export class RoadmapsService {
     stepIndex: number,
     subStepIndex: number,
     userId: string,
-    updateDto: UpdateSubStepDto
+    updateDto: UpdateSubStepDto,
   ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
-    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) throw new NotFoundException('Step not found');
+    if (roadmap.owner.toString() !== userId)
+      throw new ForbiddenException('Not authorized');
+    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
+      throw new NotFoundException('Step not found');
 
     const step = roadmap.steps[stepIndex];
-    if (!step.subSteps || subStepIndex < 0 || subStepIndex >= step.subSteps.length) {
+    if (
+      !step.subSteps ||
+      subStepIndex < 0 ||
+      subStepIndex >= step.subSteps.length
+    ) {
       throw new NotFoundException('SubStep not found');
     }
 
     const subStep = step.subSteps[subStepIndex];
     if (updateDto.title !== undefined) subStep.title = updateDto.title;
-    if (updateDto.description !== undefined) subStep.description = updateDto.description;
+    if (updateDto.description !== undefined)
+      subStep.description = updateDto.description;
 
     if (updateDto.deadline !== undefined) {
-      subStep.deadline = updateDto.deadline ? new Date(updateDto.deadline) : undefined;
+      subStep.deadline = updateDto.deadline
+        ? new Date(updateDto.deadline)
+        : undefined;
     }
 
     if (updateDto.completed !== undefined) {
@@ -189,15 +234,21 @@ export class RoadmapsService {
     id: string,
     stepIndex: number,
     subStepIndex: number,
-    userId: string
+    userId: string,
   ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
-    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) throw new NotFoundException('Step not found');
+    if (roadmap.owner.toString() !== userId)
+      throw new ForbiddenException('Not authorized');
+    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
+      throw new NotFoundException('Step not found');
 
     const step = roadmap.steps[stepIndex];
-    if (!step.subSteps || subStepIndex < 0 || subStepIndex >= step.subSteps.length) {
+    if (
+      !step.subSteps ||
+      subStepIndex < 0 ||
+      subStepIndex >= step.subSteps.length
+    ) {
       throw new NotFoundException('SubStep not found');
     }
 
@@ -208,41 +259,58 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
-  async toggleSubStep(id: string, stepIndex: number, subStepIndex: number, userId: string): Promise<RoadmapDocument> {
+  async toggleSubStep(
+    id: string,
+    stepIndex: number,
+    subStepIndex: number,
+    userId: string,
+  ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
-    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) throw new NotFoundException('Step not found');
-    
+    if (roadmap.owner.toString() !== userId)
+      throw new ForbiddenException('Not authorized');
+    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
+      throw new NotFoundException('Step not found');
+
     const step = roadmap.steps[stepIndex];
-    if (!step.subSteps || subStepIndex < 0 || subStepIndex >= step.subSteps.length) {
+    if (
+      !step.subSteps ||
+      subStepIndex < 0 ||
+      subStepIndex >= step.subSteps.length
+    ) {
       throw new NotFoundException('SubStep not found');
     }
 
     const subStep = step.subSteps[subStepIndex];
     subStep.completed = !subStep.completed;
     subStep.completedAt = subStep.completed ? new Date() : undefined;
-    
+
     roadmap.markModified('steps');
     await roadmap.save();
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
   async updateVocabularies(
-    id: string, 
-    userId: string, 
+    id: string,
+    userId: string,
     dto: UpdateVocabularyDto,
-    stepIndex: number, 
-    subStepIndex?: number
+    stepIndex: number,
+    subStepIndex?: number,
   ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
-    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) throw new NotFoundException('Step not found');
+    if (roadmap.owner.toString() !== userId)
+      throw new ForbiddenException('Not authorized');
+    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
+      throw new NotFoundException('Step not found');
 
     if (subStepIndex !== undefined) {
       const step = roadmap.steps[stepIndex];
-      if (!step.subSteps || subStepIndex < 0 || subStepIndex >= step.subSteps.length) {
+      if (
+        !step.subSteps ||
+        subStepIndex < 0 ||
+        subStepIndex >= step.subSteps.length
+      ) {
         throw new NotFoundException('SubStep not found');
       }
       step.subSteps[subStepIndex].vocabularies = dto.vocabularies;
@@ -279,7 +347,8 @@ export class RoadmapsService {
   async exportToAnkiCsv(id: string, userId: string): Promise<string> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
-    if (roadmap.owner.toString() !== userId) throw new ForbiddenException('Not authorized');
+    if (roadmap.owner.toString() !== userId)
+      throw new ForbiddenException('Not authorized');
 
     const allVocabs: { front: string; back: string }[] = [];
 
@@ -304,4 +373,3 @@ export class RoadmapsService {
       .join('\n');
   }
 }
-

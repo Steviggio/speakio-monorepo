@@ -7,7 +7,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthController } from './auth.controller';
 import { JwtStrategy } from './jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
-import { ConfigModule as NestConfigModule, ConfigService } from '@nestjs/config';
+import {
+  ConfigModule as NestConfigModule,
+  ConfigService,
+} from '@nestjs/config';
 import { Post, PostSchema } from '../schemas/post.schema';
 import { Comment, CommentSchema } from '../schemas/comment.schema';
 import { Roadmap, RoadmapSchema } from '../schemas/roadmap.schema';
@@ -37,4 +40,3 @@ import { Vote, VoteSchema } from '../schemas/vote.schema';
   exports: [AuthService],
 })
 export class AuthModule {}
-

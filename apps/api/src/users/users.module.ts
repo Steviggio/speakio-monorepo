@@ -23,4 +23,3 @@ import { Vote, VoteSchema } from '../schemas/vote.schema';
   exports: [UsersService],
 })
 export class UsersModule {}
-

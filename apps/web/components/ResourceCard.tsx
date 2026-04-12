@@ -1,12 +1,16 @@
-import { Heart } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Resource } from '@repo/types';
-import { useTranslation } from '@/lib/i18n';
+import { Heart } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Resource } from "@repo/types";
+import { useTranslation } from "@/lib/i18n";
 
-export function ResourceCard({ resource, isFavorite, onToggleFavorite }: {
+export function ResourceCard({
+  resource,
+  isFavorite,
+  onToggleFavorite,
+}: {
   resource: Resource;
   isFavorite: boolean;
-  onToggleFavorite: (id: string, isFav: boolean) => void
+  onToggleFavorite: (id: string, isFav: boolean) => void;
 }) {
   const { t } = useTranslation();
   return (
@@ -18,8 +22,11 @@ export function ResourceCard({ resource, isFavorite, onToggleFavorite }: {
           className="transition-transform hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-1"
         >
           <Heart
-            className={`w-6 h-6 transition-colors ${isFavorite ? 'fill-rose-500 text-rose-500' : 'text-slate-300 hover:text-rose-400'
-              }`}
+            className={`w-6 h-6 transition-colors ${
+              isFavorite
+                ? "fill-rose-500 text-rose-500"
+                : "text-slate-300 hover:text-rose-400"
+            }`}
           />
         </button>
       </div>
@@ -33,7 +40,12 @@ export function ResourceCard({ resource, isFavorite, onToggleFavorite }: {
           </span>
         </div>
         <h3 className="text-lg font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">
-          <a href={resource.url} target="_blank" rel="noopener noreferrer" className="focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded">
+          <a
+            href={resource.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+          >
             {resource.title}
             <span className="absolute inset-0 z-0" aria-hidden="true" />
           </a>
@@ -43,8 +55,10 @@ export function ResourceCard({ resource, isFavorite, onToggleFavorite }: {
         </p>
       </div>
       <div className="mt-4 flex gap-2 flex-wrap relative z-10">
-        {resource.tags?.map(tag => (
-          <span key={tag} className="text-xs text-slate-400">#{tag}</span>
+        {resource.tags?.map((tag) => (
+          <span key={tag} className="text-xs text-slate-400">
+            #{tag}
+          </span>
         ))}
       </div>
     </Card>

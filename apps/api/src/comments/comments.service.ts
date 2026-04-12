@@ -32,15 +32,10 @@ export class CommentsService {
     targetId: string,
     pagination: PaginationDto,
   ) {
-    return paginate(
-      this.commentModel,
-      { targetType, targetId },
-      pagination,
-      {
-        sort: { createdAt: -1 },
-        populate: { path: 'author', select: 'username avatarUrl' },
-      },
-    );
+    return paginate(this.commentModel, { targetType, targetId }, pagination, {
+      sort: { createdAt: -1 },
+      populate: { path: 'author', select: 'username avatarUrl' },
+    });
   }
 
   async remove(

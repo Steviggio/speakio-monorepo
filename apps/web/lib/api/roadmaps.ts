@@ -1,8 +1,8 @@
-import { apiClient } from './client';
-import { unwrapApiData } from './utils';
+import { apiClient } from "./client";
+import { unwrapApiData } from "./utils";
 
 export const apiGetMyRoadmaps = async () => {
-  const response = await apiClient.get('/roadmaps');
+  const response = await apiClient.get("/roadmaps");
   return unwrapApiData<any>(response.data);
 };
 
@@ -11,29 +11,39 @@ export const apiGetRoadmap = async (id: string) => {
   return unwrapApiData<any>(response.data);
 };
 
-export const apiUpdateRoadmap = async (id: string, data: { title?: string; description?: string; deadline?: string }) => {
+export const apiUpdateRoadmap = async (
+  id: string,
+  data: { title?: string; description?: string; deadline?: string },
+) => {
   const response = await apiClient.patch(`/roadmaps/${id}`, data);
   return unwrapApiData<any>(response.data);
 };
 
 export const apiGetRoadmapStats = async () => {
-  const response = await apiClient.get('/roadmaps/stats');
+  const response = await apiClient.get("/roadmaps/stats");
   return unwrapApiData<any>(response.data);
 };
 
 export const apiCreateRoadmap = async (data: any) => {
-  const response = await apiClient.post('/roadmaps', data);
+  const response = await apiClient.post("/roadmaps", data);
   return unwrapApiData<any>(response.data);
 };
 
 export const apiToggleStep = async (roadmapId: string, stepIndex: number) => {
-  const response = await apiClient.patch(`/roadmaps/${roadmapId}/steps/${stepIndex}/toggle`);
+  const response = await apiClient.patch(
+    `/roadmaps/${roadmapId}/steps/${stepIndex}/toggle`,
+  );
   return unwrapApiData<any>(response.data);
 };
 
 export const apiAddStep = async (
-  roadmapId: string, 
-  data: { title: string; description?: string; deadline?: string; vocabularies?: any[] }
+  roadmapId: string,
+  data: {
+    title: string;
+    description?: string;
+    deadline?: string;
+    vocabularies?: any[];
+  },
 ) => {
   const response = await apiClient.post(`/roadmaps/${roadmapId}/steps`, data);
   return unwrapApiData<any>(response.data);
@@ -42,23 +52,45 @@ export const apiAddStep = async (
 export const apiUpdateStep = async (
   roadmapId: string,
   stepIndex: number,
-  data: { title?: string; description?: string; deadline?: string; completed?: boolean }
+  data: {
+    title?: string;
+    description?: string;
+    deadline?: string;
+    completed?: boolean;
+  },
 ) => {
-  const response = await apiClient.patch(`/roadmaps/${roadmapId}/steps/${stepIndex}`, data);
+  const response = await apiClient.patch(
+    `/roadmaps/${roadmapId}/steps/${stepIndex}`,
+    data,
+  );
   return unwrapApiData<any>(response.data);
 };
 
 export const apiAddSubStep = async (
-  roadmapId: string, 
-  stepIndex: number, 
-  data: { title: string; description?: string; deadline?: string; vocabularies?: any[] }
+  roadmapId: string,
+  stepIndex: number,
+  data: {
+    title: string;
+    description?: string;
+    deadline?: string;
+    vocabularies?: any[];
+  },
 ) => {
-  const response = await apiClient.post(`/roadmaps/${roadmapId}/steps/${stepIndex}/substeps`, data);
+  const response = await apiClient.post(
+    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps`,
+    data,
+  );
   return unwrapApiData<any>(response.data);
 };
 
-export const apiToggleSubStep = async (roadmapId: string, stepIndex: number, subStepIndex: number) => {
-  const response = await apiClient.patch(`/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}/toggle`);
+export const apiToggleSubStep = async (
+  roadmapId: string,
+  stepIndex: number,
+  subStepIndex: number,
+) => {
+  const response = await apiClient.patch(
+    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}/toggle`,
+  );
   return unwrapApiData<any>(response.data);
 };
 
@@ -66,24 +98,53 @@ export const apiUpdateSubStep = async (
   roadmapId: string,
   stepIndex: number,
   subStepIndex: number,
-  data: { title?: string; description?: string; deadline?: string; completed?: boolean }
+  data: {
+    title?: string;
+    description?: string;
+    deadline?: string;
+    completed?: boolean;
+  },
 ) => {
-  const response = await apiClient.patch(`/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}`, data);
+  const response = await apiClient.patch(
+    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}`,
+    data,
+  );
   return unwrapApiData<any>(response.data);
 };
 
-export const apiRemoveSubStep = async (roadmapId: string, stepIndex: number, subStepIndex: number) => {
-  const response = await apiClient.delete(`/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}`);
+export const apiRemoveSubStep = async (
+  roadmapId: string,
+  stepIndex: number,
+  subStepIndex: number,
+) => {
+  const response = await apiClient.delete(
+    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}`,
+  );
   return unwrapApiData<any>(response.data);
 };
 
-export const apiUpdateStepVocabularies = async (roadmapId: string, stepIndex: number, vocabularies: any[]) => {
-  const response = await apiClient.post(`/roadmaps/${roadmapId}/steps/${stepIndex}/vocabularies`, { vocabularies });
+export const apiUpdateStepVocabularies = async (
+  roadmapId: string,
+  stepIndex: number,
+  vocabularies: any[],
+) => {
+  const response = await apiClient.post(
+    `/roadmaps/${roadmapId}/steps/${stepIndex}/vocabularies`,
+    { vocabularies },
+  );
   return unwrapApiData<any>(response.data);
 };
 
-export const apiUpdateSubStepVocabularies = async (roadmapId: string, stepIndex: number, subStepIndex: number, vocabularies: any[]) => {
-  const response = await apiClient.post(`/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}/vocabularies`, { vocabularies });
+export const apiUpdateSubStepVocabularies = async (
+  roadmapId: string,
+  stepIndex: number,
+  subStepIndex: number,
+  vocabularies: any[],
+) => {
+  const response = await apiClient.post(
+    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}/vocabularies`,
+    { vocabularies },
+  );
   return unwrapApiData<any>(response.data);
 };
 
@@ -93,8 +154,12 @@ export const apiDeleteRoadmap = async (id: string) => {
 };
 
 export const apiExportAnki = async (roadmapId: string) => {
-  const response = await apiClient.post(`/roadmaps/${roadmapId}/anki-export`, {}, {
-    responseType: 'blob' 
-  });
+  const response = await apiClient.post(
+    `/roadmaps/${roadmapId}/anki-export`,
+    {},
+    {
+      responseType: "blob",
+    },
+  );
   return response.data;
 };

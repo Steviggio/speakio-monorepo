@@ -9,8 +9,8 @@ export type ApiEnvelope<T> = {
 export function unwrapApiData<T>(payload: T | ApiEnvelope<T>): T {
   if (
     payload &&
-    typeof payload === 'object' &&
-    'data' in (payload as Record<string, unknown>)
+    typeof payload === "object" &&
+    "data" in (payload as Record<string, unknown>)
   ) {
     return (payload as ApiEnvelope<T>).data;
   }

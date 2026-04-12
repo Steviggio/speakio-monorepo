@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
-import { apiGetPosts } from '@/lib/api/posts';
-import { useTranslation } from '@/lib/i18n';
-import { Button } from '@/components/ui/button';
+import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { apiGetPosts } from "@/lib/api/posts";
+import { useTranslation } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
 
 interface PostItem {
   _id: string;
@@ -38,7 +38,7 @@ export default function BlogListingPage() {
     try {
       const data = (await apiGetPosts({
         page: String(page),
-        limit: '10',
+        limit: "10",
       })) as PostsResponse | PostItem[];
 
       const normalizedPosts = Array.isArray(data)
@@ -50,9 +50,9 @@ export default function BlogListingPage() {
       setPosts(normalizedPosts);
 
       const resolvedTotalPages =
-        !Array.isArray(data) && typeof data?.meta?.totalPages === 'number'
+        !Array.isArray(data) && typeof data?.meta?.totalPages === "number"
           ? data.meta.totalPages
-          : !Array.isArray(data) && typeof data?.totalPages === 'number'
+          : !Array.isArray(data) && typeof data?.totalPages === "number"
             ? data.totalPages
             : 1;
 
@@ -70,24 +70,24 @@ export default function BlogListingPage() {
   }, [fetchPosts]);
 
   const formatDate = (d: string) =>
-    new Date(d).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
+    new Date(d).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     });
 
   const excerpt = (content: string) =>
-    `${(content || '').replace(/[#*`\[\]]/g, '').slice(0, 180)}...`;
+    `${(content || "").replace(/[#*`\[\]]/g, "").slice(0, 180)}...`;
 
   return (
     <div className="max-w-3xl mx-auto py-8 px-4">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-text)] tracking-tight">
-            {t('blog.title')}
+            {t("blog.title")}
           </h1>
           <p className="text-[var(--color-text-secondary)] mt-1">
-            {t('blog.subtitle')}
+            {t("blog.subtitle")}
           </p>
         </div>
 
@@ -95,7 +95,7 @@ export default function BlogListingPage() {
           href="/write"
           className="px-4 py-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white text-sm font-medium rounded-lg transition-colors"
         >
-          {t('blog.write')}
+          {t("blog.write")}
         </Link>
       </div>
 
@@ -114,15 +114,16 @@ export default function BlogListingPage() {
         </div>
       ) : posts.length === 0 ? (
         <p className="text-center text-[var(--color-text-muted)] py-12">
-          {t('blog.noArticles')}
+          {t("blog.noArticles")}
         </p>
       ) : (
         <div className="space-y-4">
           {posts.map((post) => {
             const safeTags = Array.isArray(post.tags) ? post.tags : [];
-            const safeLanguage = typeof post.language === 'string' ? post.language : 'unknown';
+            const safeLanguage =
+              typeof post.language === "string" ? post.language : "unknown";
             const safeAuthor =
-              post.author && typeof post.author.username === 'string'
+              post.author && typeof post.author.username === "string"
                 ? post.author.username
                 : null;
 
@@ -180,7 +181,7 @@ export default function BlogListingPage() {
             disabled={page <= 1}
             onClick={() => setPage((prev) => prev - 1)}
           >
-            {t('common.previous')}
+            {t("common.previous")}
           </Button>
 
           <span className="text-sm text-[var(--color-text-muted)]">
@@ -193,7 +194,7 @@ export default function BlogListingPage() {
             disabled={page >= totalPages}
             onClick={() => setPage((prev) => prev + 1)}
           >
-            {t('common.next')}
+            {t("common.next")}
           </Button>
         </div>
       )}

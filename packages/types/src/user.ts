@@ -1,4 +1,4 @@
-import { LanguageCode } from './enums';
+import { LanguageCode } from "./enums";
 
 export interface User {
   _id: string;
@@ -8,7 +8,7 @@ export interface User {
   googleId?: string;
   bio?: string;
   avatarUrl?: string;
-  role: 'USER' | 'ADMIN';
+  role: "USER" | "ADMIN";
   locale: LanguageCode;
   learningLanguages: LanguageCode[];
   favoriteResources: string[];
@@ -19,4 +19,4 @@ export interface User {
   updatedAt: Date;
 }
 
-export type UserWithoutPassword = Omit<User, 'passwordHash'>;
+export type UserWithoutPassword = Omit<User, "passwordHash">;

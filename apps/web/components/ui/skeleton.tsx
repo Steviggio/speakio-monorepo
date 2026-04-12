@@ -1,6 +1,6 @@
-import React from 'react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import React from "react";
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -8,13 +8,13 @@ function cn(...inputs: ClassValue[]) {
 
 export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function Skeleton({
-  className,
-  ...props
-}: SkeletonProps) {
+export function Skeleton({ className, ...props }: SkeletonProps) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-[var(--color-bg-hover)]", className)}
+      className={cn(
+        "animate-pulse rounded-md bg-[var(--color-bg-hover)]",
+        className,
+      )}
       {...props}
     />
   );

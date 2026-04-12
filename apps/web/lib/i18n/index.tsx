@@ -1,10 +1,16 @@
-'use client';
+"use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import en from './en.json';
-import fr from './fr.json';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import en from "./en.json";
+import fr from "./fr.json";
 
-export type Locale = 'en' | 'fr';
+export type Locale = "en" | "fr";
 
 const translations: Record<Locale, Record<string, any>> = { en, fr };
 
@@ -15,53 +21,57 @@ interface I18nContextType {
 }
 
 const I18nContext = createContext<I18nContextType>({
-  locale: 'en',
-  setLocale: () => { },
+  locale: "en",
+  setLocale: () => {},
   t: (key: string) => key,
 });
 
-/**
- * Resolve a dot-separated key like "nav.resources" from a nested object.
- */
 function resolve(obj: Record<string, any>, path: string): string {
-  const parts = path.split('.');
+  const parts = path.split(".");
   let current: any = obj;
   for (const part of parts) {
-    if (current == null || typeof current !== 'object') return path;
+    if (current == null || typeof current !== "object") return path;
     current = current[part];
   }
-  return typeof current === 'string' ? current : path;
+  return typeof current === "string" ? current : path;
 }
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>('en');
+  const [locale, setLocaleState] = useState<Locale>("en");
 
   useEffect(() => {
-
     try {
-      const prefs = localStorage.getItem('speakio_preferences');
+      const prefs = localStorage.getItem("speakio_preferences");
       if (prefs) {
         const parsed = JSON.parse(prefs);
-        if (parsed.interfaceLang && translations[parsed.interfaceLang as Locale]) {
+        if (
+          parsed.interfaceLang &&
+          translations[parsed.interfaceLang as Locale]
+        ) {
           setLocaleState(parsed.interfaceLang as Locale);
         }
       }
-    } catch { /* */ }
+    } catch {}
   }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
 
     try {
-      const prefs = JSON.parse(localStorage.getItem('speakio_preferences') || '{}');
+      const prefs = JSON.parse(
+        localStorage.getItem("speakio_preferences") || "{}",
+      );
       prefs.interfaceLang = newLocale;
-      localStorage.setItem('speakio_preferences', JSON.stringify(prefs));
-    } catch { /* */ }
+      localStorage.setItem("speakio_preferences", JSON.stringify(prefs));
+    } catch {}
   }, []);
 
-  const t = useCallback((key: string): string => {
-    return resolve(translations[locale], key);
-  }, [locale]);
+  const t = useCallback(
+    (key: string): string => {
+      return resolve(translations[locale], key);
+    },
+    [locale],
+  );
 
   return (
     <I18nContext.Provider value={{ locale, setLocale, t }}>

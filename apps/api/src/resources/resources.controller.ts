@@ -5,7 +5,7 @@ import { ParseObjectIdPipe } from '../pipes/parse-objectid.pipe';
 
 @Controller('resources')
 export class ResourcesController {
-  constructor(private readonly resourcesService: ResourcesService) { }
+  constructor(private readonly resourcesService: ResourcesService) {}
 
   @Get()
   findAll(@Query() query: QueryResourcesDto) {
