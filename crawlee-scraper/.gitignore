@@ -1,0 +1,15 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Crawlee storage (runtime data)
+storage/
+
+# Test output (generated data)
+test-output/
+output/
+
+# Package lock (regenerated on install)
+package-lock.json
