@@ -60,10 +60,10 @@ func (s *PgvectorStore) DenseSearch(ctx context.Context, q *models.RetrievalQuer
 	}
 
 	query := fmt.Sprintf(`
-		SELECT dc.id, dc.document_id, d.title, dc.chunk_text,
-		       dc.topic, dc.category, dc.cefr_level,
+		SELECT dc.id, dc.document_id, COALESCE(d.title, ''), dc.chunk_text,
+		       COALESCE(dc.topic, ''), COALESCE(dc.category, ''), COALESCE(dc.cefr_level, ''),
 		       1 - (dc.embedding <=> $1) AS score,
-		       d.canonical_url
+		       COALESCE(d.canonical_url, '')
 		FROM document_chunks dc
 		JOIN documents d ON d.id = dc.document_id
 		%s
@@ -110,10 +110,10 @@ func (s *PgvectorStore) LexicalSearch(ctx context.Context, q *models.RetrievalQu
 	}
 
 	query := fmt.Sprintf(`
-		SELECT dc.id, dc.document_id, d.title, dc.chunk_text,
-		       dc.topic, dc.category, dc.cefr_level,
+		SELECT dc.id, dc.document_id, COALESCE(d.title, ''), dc.chunk_text,
+		       COALESCE(dc.topic, ''), COALESCE(dc.category, ''), COALESCE(dc.cefr_level, ''),
 		       ts_rank(dc.tsv, plainto_tsquery('simple', $1)) AS score,
-		       d.canonical_url
+		       COALESCE(d.canonical_url, '')
 		FROM document_chunks dc
 		JOIN documents d ON d.id = dc.document_id
 		WHERE %s

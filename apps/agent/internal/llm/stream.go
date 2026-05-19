@@ -10,14 +10,45 @@ import (
 	"strings"
 )
 
+// flushWriter abstracts flush behaviour so we can support both the legacy
+// http.Flusher interface and the newer http.ResponseController (Go 1.20+).
+type flushWriter struct {
+	w  http.ResponseWriter
+	rc *http.ResponseController
+}
+
+func newFlushWriter(w http.ResponseWriter) (*flushWriter, error) {
+	rc := http.NewResponseController(w)
+
+	// Probe: try a flush to see if the underlying writer supports it.
+	if err := rc.Flush(); err != nil {
+		// Fallback to the legacy interface.
+		if _, ok := w.(http.Flusher); !ok {
+			return nil, fmt.Errorf("llm/stream: response writer does not support flushing")
+		}
+	}
+
+	return &flushWriter{w: w, rc: rc}, nil
+}
+
+func (fw *flushWriter) Flush() {
+	if err := fw.rc.Flush(); err != nil {
+		// Fallback: try the legacy Flusher interface.
+		if f, ok := fw.w.(http.Flusher); ok {
+			f.Flush()
+		}
+	}
+}
+
 // Relay reads SSE chunks from the vLLM stream and forwards them to the
 // client's ResponseWriter. It flushes after each chunk for real-time display.
+// Handles Qwen 3.5 thinking mode where content may arrive in a reasoning field.
 func Relay(logger *slog.Logger, llmBody io.ReadCloser, w http.ResponseWriter) error {
 	defer llmBody.Close()
 
-	flusher, ok := w.(http.Flusher)
-	if !ok {
-		return fmt.Errorf("llm/stream: response writer does not support flushing")
+	fw, err := newFlushWriter(w)
+	if err != nil {
+		return err
 	}
 
 	scanner := bufio.NewScanner(llmBody)
@@ -36,7 +67,7 @@ func Relay(logger *slog.Logger, llmBody io.ReadCloser, w http.ResponseWriter) er
 
 		if data == "[DONE]" {
 			fmt.Fprintf(w, "data: [DONE]\n\n")
-			flusher.Flush()
+			fw.Flush()
 			break
 		}
 
@@ -50,14 +81,20 @@ func Relay(logger *slog.Logger, llmBody io.ReadCloser, w http.ResponseWriter) er
 			continue
 		}
 
-		content := chunk.Choices[0].Delta.Content
+		delta := chunk.Choices[0].Delta
+
+		// Prefer content; fall back to reasoning (Qwen 3.5 thinking mode).
+		content := delta.Content
+		if content == "" {
+			content = delta.Reasoning
+		}
 		if content == "" {
 			continue
 		}
 
 		ssePayload, _ := json.Marshal(map[string]string{"content": content})
 		fmt.Fprintf(w, "data: %s\n\n", ssePayload)
-		flusher.Flush()
+		fw.Flush()
 	}
 
 	if err := scanner.Err(); err != nil {

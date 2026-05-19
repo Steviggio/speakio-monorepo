@@ -25,6 +25,7 @@ import (
 	"github.com/steviggio/speakio-agent/internal/users"
 )
 
+// main boots the HTTP API server: loads config, connects stores, wires services, and handles graceful shutdown.
 func main() {
 	// Load .env file if present (non-fatal if missing).
 	_ = godotenv.Load()

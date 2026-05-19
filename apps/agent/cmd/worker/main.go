@@ -17,6 +17,7 @@ import (
 	"github.com/steviggio/speakio-agent/internal/storage"
 )
 
+// main boots the background ingestion worker: connects stores, starts job loop with graceful shutdown.
 func main() {
 	// Load .env file if present (non-fatal if missing).
 	_ = godotenv.Load()

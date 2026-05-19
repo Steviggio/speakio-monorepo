@@ -2,9 +2,40 @@ package llm
 
 // ChatMessage represents a single message in the conversation history.
 type ChatMessage struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
+	Role      string `json:"role"`
+	Content   string `json:"content"`
+	Reasoning string `json:"reasoning,omitempty"`
 }
+
+// ── Ollama Native API types (/api/chat) ──────────────────────────────
+
+// OllamaChatRequest is the payload for Ollama's native /api/chat endpoint.
+// This endpoint correctly supports the "think" parameter for Qwen3 models.
+type OllamaChatRequest struct {
+	Model    string        `json:"model"`
+	Messages []ChatMessage `json:"messages"`
+	Stream   bool          `json:"stream"`
+	Think    *bool         `json:"think,omitempty"`
+	Options  *OllamaOpts   `json:"options,omitempty"`
+}
+
+// OllamaOpts holds optional generation parameters.
+type OllamaOpts struct {
+	Temperature float64 `json:"temperature,omitempty"`
+	NumPredict  int     `json:"num_predict,omitempty"`
+	TopP        float64 `json:"top_p,omitempty"`
+}
+
+// OllamaChatResponse is the non-streaming response from /api/chat.
+type OllamaChatResponse struct {
+	Model      string      `json:"model"`
+	CreatedAt  string      `json:"created_at"`
+	Message    ChatMessage `json:"message"`
+	Done       bool        `json:"done"`
+	DoneReason string      `json:"done_reason"`
+}
+
+// ── OpenAI-compatible types (kept for compatibility & streaming) ──────
 
 // ChatCompletionRequest is the payload sent to the vLLM OpenAI-compatible endpoint.
 type ChatCompletionRequest struct {
@@ -14,6 +45,7 @@ type ChatCompletionRequest struct {
 	Temperature float64       `json:"temperature,omitempty"`
 	MaxTokens   int           `json:"max_tokens,omitempty"`
 	TopP        float64       `json:"top_p,omitempty"`
+	Think       *bool         `json:"think,omitempty"`
 }
 
 // ChatCompletionResponse is a non-streaming response from vLLM.

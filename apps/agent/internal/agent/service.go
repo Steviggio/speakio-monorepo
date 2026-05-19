@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -90,10 +91,7 @@ func (s *Service) Chat(ctx context.Context, userID uuid.UUID, req *models.AgentC
 		return nil, fmt.Errorf("agent: generate failed: %w", err)
 	}
 
-	content := ""
-	if len(resp.Choices) > 0 {
-		content = resp.Choices[0].Message.Content
-	}
+	content := extractContent(resp)
 
 	s.logInteraction(ctx, userID, req, chunks, content)
 
@@ -123,10 +121,7 @@ func (s *Service) Recommend(ctx context.Context, userID uuid.UUID, req *models.A
 		return nil, fmt.Errorf("agent: recommend generate failed: %w", err)
 	}
 
-	content := ""
-	if len(resp.Choices) > 0 {
-		content = resp.Choices[0].Message.Content
-	}
+	content := extractContent(resp)
 
 	return s.formatter.ParseRecommendation(content), nil
 }
@@ -154,10 +149,7 @@ func (s *Service) Explain(ctx context.Context, userID uuid.UUID, req *models.Age
 		return nil, fmt.Errorf("agent: explain generate failed: %w", err)
 	}
 
-	content := ""
-	if len(resp.Choices) > 0 {
-		content = resp.Choices[0].Message.Content
-	}
+	content := extractContent(resp)
 
 	return &models.AgentResponse{Content: content}, nil
 }
@@ -188,4 +180,27 @@ func truncate(s string, maxLen int) string {
 		return s
 	}
 	return s[:maxLen] + "…"
+}
+
+// extractContent extracts usable text from an LLM response.
+// Qwen 3.5 in thinking mode puts the actual answer in a "reasoning" field
+// while leaving "content" empty. This helper handles both cases.
+func extractContent(resp *llm.ChatCompletionResponse) string {
+	if resp == nil || len(resp.Choices) == 0 {
+		return ""
+	}
+
+	msg := resp.Choices[0].Message
+
+	content := strings.TrimSpace(msg.Content)
+	if content != "" {
+		return content
+	}
+
+	// Fallback: use reasoning field (Qwen 3.5 thinking mode).
+	if reasoning := strings.TrimSpace(msg.Reasoning); reasoning != "" {
+		return reasoning
+	}
+
+	return ""
 }

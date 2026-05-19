@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// main is a CLI tool for running PostgreSQL schema migrations (up, down, version).
 func main() {
 	// Load .env file if present (non-fatal if missing).
 	_ = godotenv.Load()
