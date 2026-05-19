@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import type { User } from '@repo/types';
 import Cookies from 'js-cookie';
 import { apiGetProfile } from '../api/auth';
@@ -15,6 +15,7 @@ export interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Manages JWT-based auth state: auto-loads profile on mount, exposes login/logout.
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -40,18 +41,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const login = (token: string, userData: User) => {
+  // Stores the JWT in a cookie, sets the Authorization header, and updates user state.
+  const login = useCallback((token: string, userData: User) => {
 
     Cookies.set('access_token', token, { expires: 7, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', path: '/' });
     apiClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(userData);
-  };
+  }, []);
 
-  const logout = () => {
+  // Clears the JWT cookie, removes the Authorization header, and resets user state.
+  const logout = useCallback(() => {
     Cookies.remove('access_token', { path: '/' });
     delete apiClient.defaults.headers.common['Authorization'];
     setUser(null);
-  };
+  }, []);
 
   return (
     <AuthContext.Provider value={{ user, isLoading, login, logout }}>
