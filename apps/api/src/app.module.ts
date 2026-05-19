@@ -22,6 +22,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { PrometheusModule } from './common/metrics/prometheus.module';
 import { MetricsInterceptor } from './common/metrics/prometheus.interceptor';
+// Root module wiring MongoDB, throttling, all feature modules, and Prometheus metrics.
 @Module({
   imports: [
     ConfigModule,

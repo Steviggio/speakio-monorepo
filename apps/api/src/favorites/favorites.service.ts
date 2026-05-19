@@ -7,6 +7,7 @@ import { User, UserDocument } from '../schemas/user.schema';
 export class FavoritesService {
   constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
 
+  // Adds or removes a resource from the user's favorites (toggle behavior).
   async toggle(userId: string, resourceId: string) {
     const user = await this.userModel.findById(userId).select('favoriteResources').exec();
     if (!user) throw new NotFoundException('User not found');
@@ -29,6 +30,7 @@ export class FavoritesService {
     }
   }
 
+  // Returns the user's favorited resources with full population.
   async listFavorites(userId: string) {
     const user = await this.userModel
       .findById(userId)

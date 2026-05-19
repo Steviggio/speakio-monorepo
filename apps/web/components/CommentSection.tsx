@@ -8,6 +8,7 @@ import { CommentItem } from '@/lib/api/social';
 
 interface CommentSectionProps { targetType: 'Resource' | 'Post'; targetId: string; }
 
+// Reusable comment thread for resources or posts, handles CRUD with loading states.
 export default function CommentSection({ targetType, targetId }: CommentSectionProps) {
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -16,6 +17,7 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Loads comments for the given target type and ID from the API.
   const fetchComments = useCallback(async () => {
     try { const data = await apiGetComments(targetType, targetId); setComments(data || data); }
     catch { /* */ } finally { setIsLoading(false); }
@@ -23,6 +25,7 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
 
   useEffect(() => { fetchComments(); }, [fetchComments]);
 
+  // Creates a new comment and prepends it to the local list optimistically.
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim() || isSubmitting) return;
@@ -34,6 +37,7 @@ export default function CommentSection({ targetType, targetId }: CommentSectionP
     } catch { /* */ } finally { setIsSubmitting(false); }
   };
 
+  // Deletes a comment by ID and removes it from the local state.
   const handleDelete = async (commentId: string) => {
     try { await apiDeleteComment(commentId); setComments((prev) => prev.filter((c) => c._id !== commentId)); }
     catch { /* */ }

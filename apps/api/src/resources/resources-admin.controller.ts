@@ -17,6 +17,7 @@ import { ImportResourcesDto } from './dto/import-resources.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourcesService } from './resources.service';
 
+// Admin-only CRUD endpoints for resources: create, update, delete, publish, archive, import.
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('ADMIN')
 @Controller('admin/resources')

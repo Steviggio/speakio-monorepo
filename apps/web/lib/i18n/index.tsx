@@ -33,6 +33,7 @@ function resolve(obj: Record<string, any>, path: string): string {
   return typeof current === 'string' ? current : path;
 }
 
+// Provides locale state and translation function, persists preference in localStorage.
 export function I18nProvider({ children }: { children: React.ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>('en');
 
@@ -70,6 +71,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
+// Returns the current locale, setLocale function, and t() translation helper.
 export function useTranslation() {
   return useContext(I18nContext);
 }

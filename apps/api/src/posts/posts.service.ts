@@ -15,6 +15,7 @@ import { paginate } from '../common/helpers/paginate.helper';
 export class PostsService {
   constructor(@InjectModel(Post.name) private postModel: Model<PostDocument>) {}
 
+  // Generates a URL-safe slug from the post title with a unique timestamp suffix.
   private generateSlug(title: string): string {
     return (
       title
@@ -28,6 +29,7 @@ export class PostsService {
     );
   }
 
+  // Creates a blog post with an auto-generated slug and the author set.
   async create(
     createDto: CreatePostDto,
     userId: string,
@@ -41,6 +43,7 @@ export class PostsService {
     return post.save();
   }
 
+  // Returns published posts sorted by newest, with author populated.
   async findAllPublished(query: PaginationDto) {
     return paginate(this.postModel, { status: 'published' }, query, {
       sort: { createdAt: -1 },
@@ -48,6 +51,7 @@ export class PostsService {
     });
   }
 
+  // Fetches a single published post by its URL slug.
   async findBySlug(slug: string): Promise<PostDocument> {
     const post = await this.postModel
       .findOne({ slug, status: 'published' })
@@ -72,6 +76,7 @@ export class PostsService {
     });
   }
 
+  // Updates a post; regenerates the slug if the title changed.
   async update(
     id: string,
     updateDto: UpdatePostDto,
@@ -94,6 +99,7 @@ export class PostsService {
     return post.save();
   }
 
+  // Deletes a post after verifying ownership or admin role.
   async remove(
     id: string,
     userId: string,

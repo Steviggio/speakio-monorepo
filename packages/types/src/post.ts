@@ -1,3 +1,4 @@
+// Blog post model supporting draft/published status with author population.
 export interface Post {
   _id: string;
   title: string;

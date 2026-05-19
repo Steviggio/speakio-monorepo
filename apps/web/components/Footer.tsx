@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useTranslation } from '@/lib/i18n';
 
+// Site-wide footer with navigation links grouped by section and legal links.
 export default function Footer() {
   const { t } = useTranslation();
 

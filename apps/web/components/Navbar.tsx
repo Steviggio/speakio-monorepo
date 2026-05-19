@@ -13,6 +13,7 @@ const navLinks = [
   { href: '/favorites', labelKey: 'nav.favorites' },
 ];
 
+// Sticky top navigation with responsive mobile menu, user dropdown, and admin link.
 export default function Navbar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();

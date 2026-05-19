@@ -25,6 +25,7 @@ export type ToggleFavoriteResponse =
   }
   | Record<string, unknown>;
 
+// Fetches comments for a given target type (Resource or Post) and ID.
 export async function apiGetComments(
   targetType: CommentTargetType,
   targetId: string,
@@ -35,6 +36,7 @@ export async function apiGetComments(
   return unwrapApiData<CommentItem[]>(response.data);
 }
 
+// Posts a new comment on a resource or blog post.
 export async function apiCreateComment(
   targetType: CommentTargetType,
   targetId: string,
@@ -48,6 +50,7 @@ export async function apiCreateComment(
   return unwrapApiData<CommentItem>(response.data);
 }
 
+// Deletes a comment owned by the current user.
 export async function apiDeleteComment(
   id: string,
 ): Promise<{ deleted?: boolean } | Record<string, unknown>> {
@@ -55,6 +58,7 @@ export async function apiDeleteComment(
   return unwrapApiData<{ deleted?: boolean } | Record<string, unknown>>(response.data);
 }
 
+// Adds or removes a resource from the user's favorites list.
 export async function apiToggleFavorite(
   resourceId: string,
 ): Promise<ToggleFavoriteResponse> {
@@ -62,6 +66,7 @@ export async function apiToggleFavorite(
   return unwrapApiData<ToggleFavoriteResponse>(response.data);
 }
 
+// Returns the full list of the current user's favorited resources.
 export async function apiGetFavorites(): Promise<ResourceItem[]> {
   const response = await apiClient.get('/favorites');
   return unwrapApiData<ResourceItem[]>(response.data);

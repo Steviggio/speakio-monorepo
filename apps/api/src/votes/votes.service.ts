@@ -54,6 +54,7 @@ export class VotesService {
     return { action: 'switched', type };
   }
 
+  // Returns the current user's existing vote on a resource, if any.
   async getUserVote(
     userId: string,
     resourceId: string,

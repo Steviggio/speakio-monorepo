@@ -15,6 +15,7 @@ export class RoadmapsService {
     @InjectModel(Roadmap.name) private roadmapModel: Model<RoadmapDocument>,
   ) {}
 
+  // Creates a learning roadmap with initial steps owned by the user.
   async create(createDto: CreateRoadmapDto, userId: string): Promise<RoadmapDocument> {
     const steps = (createDto.steps || []).map((s) => ({
       ...s,
@@ -28,6 +29,7 @@ export class RoadmapsService {
     return roadmap.save();
   }
 
+  // Lists all roadmaps for a user, sorted by most recently updated.
   async findMyRoadmaps(userId: string): Promise<RoadmapDocument[]> {
     return this.roadmapModel
       .find({ owner: userId })
@@ -91,6 +93,7 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
+  // Flips the completed state of a step and sets the completedAt timestamp.
   async toggleStep(id: string, stepIndex: number, userId: string): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
@@ -109,6 +112,7 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
+  // Appends a new step to an existing roadmap.
   async addStep(id: string, dto: AddStepDto, userId: string): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
@@ -130,6 +134,7 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
+  // Appends a sub-step under a specific roadmap step.
   async addSubStep(id: string, stepIndex: number, dto: AddSubStepDto, userId: string): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
@@ -208,6 +213,7 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
+  // Flips the completed state of a sub-step.
   async toggleSubStep(id: string, stepIndex: number, subStepIndex: number, userId: string): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
@@ -228,6 +234,7 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
+  // Replaces the vocabulary flashcard list on a step or sub-step.
   async updateVocabularies(
     id: string, 
     userId: string, 
@@ -255,6 +262,7 @@ export class RoadmapsService {
     return roadmap.populate('owner', 'username avatarUrl');
   }
 
+  // Deletes a roadmap after verifying ownership.
   async remove(id: string, userId: string): Promise<{ deleted: boolean }> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
@@ -265,6 +273,7 @@ export class RoadmapsService {
     return { deleted: true };
   }
 
+  // Aggregates roadmap progress stats: total roadmaps, total steps, completed steps.
   async getUserStats(userId: string) {
     const roadmaps = await this.roadmapModel.find({ owner: userId }).exec();
     const totalRoadmaps = roadmaps.length;
@@ -276,6 +285,7 @@ export class RoadmapsService {
     return { totalRoadmaps, totalSteps, completedSteps };
   }
 
+  // Collects all vocabulary from a roadmap and formats it as Anki-compatible CSV.
   async exportToAnkiCsv(id: string, userId: string): Promise<string> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');

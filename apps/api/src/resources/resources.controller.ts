@@ -3,6 +3,7 @@ import { ResourcesService } from './resources.service';
 import { QueryResourcesDto } from './dto/query-resource.dto';
 import { ParseObjectIdPipe } from '../pipes/parse-objectid.pipe';
 
+// Public read-only endpoints for browsing resources, facets, and related items.
 @Controller('resources')
 export class ResourcesController {
   constructor(private readonly resourcesService: ResourcesService) { }

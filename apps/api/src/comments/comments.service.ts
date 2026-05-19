@@ -16,6 +16,7 @@ export class CommentsService {
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
   ) {}
 
+  // Creates a comment linked to a resource or post and populates the author.
   async create(
     createDto: CreateCommentDto,
     userId: string,
@@ -27,6 +28,7 @@ export class CommentsService {
     return (await comment.save()).populate('author', 'username avatarUrl');
   }
 
+  // Returns paginated comments for a target type and ID, newest first.
   async findByTarget(
     targetType: 'Resource' | 'Post',
     targetId: string,
@@ -43,6 +45,7 @@ export class CommentsService {
     );
   }
 
+  // Deletes a comment after verifying ownership or admin role.
   async remove(
     commentId: string,
     userId: string,

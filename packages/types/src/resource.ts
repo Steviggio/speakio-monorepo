@@ -13,6 +13,7 @@ export interface ResourceSourceMetadata {
   rawTitle?: string | null;
 }
 
+// Full resource model for language-learning content, including voting, status, and source metadata.
 export interface Resource {
   _id: string;
   title: string;
@@ -45,4 +46,5 @@ export interface Resource {
 }
 
 
+// DTO for resource creation, omitting server-generated fields like votes and timestamps.
 export type CreateResourceDto = Omit<Resource, '_id' | 'createdAt' | 'updatedAt' | 'positiveVotes' | 'negativeVotes'>;

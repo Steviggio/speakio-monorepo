@@ -1,3 +1,4 @@
+// Single step within a learning roadmap, tracks title and completion state.
 export interface RoadmapStep {
   title: string;
   description?: string;
@@ -5,6 +6,7 @@ export interface RoadmapStep {
   completedAt?: Date;
 }
 
+// User-owned learning roadmap with ordered steps and language scope.
 export interface Roadmap {
   _id: string;
   title: string;

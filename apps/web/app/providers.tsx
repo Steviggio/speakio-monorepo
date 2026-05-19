@@ -6,6 +6,7 @@ import { AuthProvider } from '../lib/providers/AuthProvider';
 import { I18nProvider } from '../lib/i18n';
 import OnboardingGuard from '@/components/OnboardingGuard';
 
+// Composes global providers: React Query, Auth, i18n, and onboarding guard around the app tree.
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>

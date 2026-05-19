@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { Resource } from '@repo/types';
 import { useTranslation } from '@/lib/i18n';
 
+// Displays a single resource with type badge, language tag, favorite toggle, and tag list.
 export function ResourceCard({ resource, isFavorite, onToggleFavorite }: {
   resource: Resource;
   isFavorite: boolean;

@@ -4,6 +4,7 @@ import { useAuth } from '@/lib/hooks/useAuth';
 import { useRouter, usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
+// Redirects authenticated users to /onboarding if they haven't completed the setup wizard.
 export default function OnboardingGuard({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   const router = useRouter();

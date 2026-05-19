@@ -29,6 +29,7 @@ export class UsersController {
     @InjectModel('Vote') private voteModel: Model<any>,
   ) {}
 
+  // Returns a public user profile with sensitive fields stripped.
   @Get(':id/profile')
   async getProfile(@Param('id', ParseObjectIdPipe) id: string) {
     const user = await this.usersService.findById(id);
@@ -42,6 +43,7 @@ export class UsersController {
     return safeUser;
   }
 
+  // Marks the authenticated user's onboarding as completed.
   @Post('onboarding')
   @UseGuards(JwtAuthGuard)
   async completeOnboarding(@Request() req: any) {
@@ -53,6 +55,7 @@ export class UsersController {
     return { success: true, isOnboardingCompleted: updatedUser.isOnboardingCompleted };
   }
 
+  // Updates the authenticated user's own profile fields.
   @Patch('me')
   @UseGuards(JwtAuthGuard)
   async updateMe(@Request() req: any, @Body() updateUserDto: UpdateUserDto) {
@@ -68,6 +71,7 @@ export class UsersController {
     return safeUser;
   }
 
+  // Returns the authenticated user's full profile (minus sensitive fields).
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async getMe(@Request() req: any) {
@@ -83,6 +87,7 @@ export class UsersController {
     return safeUser;
   }
 
+  // GDPR data export: bundles user profile, posts, comments, roadmaps, and votes as JSON.
   @Get('me/export')
   @UseGuards(JwtAuthGuard)
   async exportMyData(@Request() req: any, @Res() res: Response) {

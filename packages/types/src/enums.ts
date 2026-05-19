@@ -1,3 +1,4 @@
+// Allowed resource content types used for filtering and validation across the stack.
 export const RESOURCE_TYPES = [
   'BOOK',
   'AUDIO',
@@ -9,9 +10,11 @@ export const RESOURCE_TYPES = [
 ] as const;
 export type ResourceType = (typeof RESOURCE_TYPES)[number];
 
+// Resource pricing tiers: free, freemium, or premium.
 export const PRICING_VALUES = ['FREE', 'FREEMIUM', 'PREMIUM'] as const;
 export type Pricing = (typeof PRICING_VALUES)[number];
 
+// Lifecycle statuses for resources from draft through publication to archive.
 export const RESOURCE_STATUSES = [
   'DRAFT',
   'REVIEW',

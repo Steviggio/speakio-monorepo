@@ -22,6 +22,7 @@ export class ResourcesService {
     private readonly relatedService: ResourceRelatedService,
   ) { }
 
+  // Creates a resource with URL normalization, publisher/series inference, and dedup check.
   async create(
     createDto: CreateResourceDto,
     userId?: string | null,
@@ -66,6 +67,7 @@ export class ResourcesService {
     return resource.save();
   }
 
+  // Queries resources with filters, text search, sorting, and pagination.
   async findAll(query: QueryResourcesDto) {
     const filter: Record<string, any> = this.buildPublicFilter();
 
@@ -119,6 +121,7 @@ export class ResourcesService {
     };
   }
 
+  // Runs MongoDB aggregation to produce filter facets (type, pricing, language, etc.).
   async getFacets(query: QueryResourcesDto) {
     const match: Record<string, any> = this.buildPublicFilter();
 
@@ -200,6 +203,7 @@ export class ResourcesService {
     };
   }
 
+  // Fetches a single published resource by ID with submitter populated.
   async findById(id: string): Promise<ResourceDocument> {
     const resource = await this.resourceModel
       .findOne({
@@ -220,6 +224,7 @@ export class ResourcesService {
     return this.relatedService.getRelatedResources(id);
   }
 
+  // Updates a resource, re-normalizes URL, and re-infers publisher/series if needed.
   async update(
     id: string,
     updateDto: UpdateResourceDto,
@@ -268,6 +273,7 @@ export class ResourcesService {
     return resource.save();
   }
 
+  // Soft-deletes a resource by archiving it instead of removing from the database.
   async remove(
     id: string,
     _userId?: string,
@@ -286,6 +292,7 @@ export class ResourcesService {
     return { deleted: false, archived: true };
   }
 
+  // Sets a resource status to PUBLISHED and marks it as active.
   async publish(id: string): Promise<ResourceDocument> {
     const resource = await this.resourceModel
       .findByIdAndUpdate(
@@ -305,6 +312,7 @@ export class ResourcesService {
     return resource;
   }
 
+  // Sets a resource status to ARCHIVED and marks it as inactive.
   async archive(id: string): Promise<ResourceDocument> {
     const resource = await this.resourceModel
       .findByIdAndUpdate(
@@ -324,6 +332,7 @@ export class ResourcesService {
     return resource;
   }
 
+  // Atomically adjusts a resource's positive or negative vote counter.
   async incrementVote(
     id: string,
     field: 'positiveVotes' | 'negativeVotes',
@@ -334,10 +343,12 @@ export class ResourcesService {
       .exec();
   }
 
+  // Delegates batch import of resources to the import sub-service.
   async importBatch(dto: ImportResourcesDto, importedBy: string) {
     return this.importService.importBatch(dto, importedBy);
   }
 
+  // Returns the default Mongo filter for publicly visible resources.
   private buildPublicFilter(): Record<string, unknown> {
     return {
       isActive: { $ne: false },

@@ -31,6 +31,7 @@ const formats = [
   { id: 'music', label: 'Music & Lyrics' }
 ];
 
+// Three-step animated wizard collecting language, CEFR level, and format preferences.
 export default function OnboardingWizard() {
   const { user } = useAuth();
   const router = useRouter();
@@ -50,6 +51,7 @@ export default function OnboardingWizard() {
     );
   };
 
+  // Submits the linguistic profile to the Go agent and flags onboarding as complete.
   const handleFinish = async () => {
     if (!user) return;
     setIsSubmitting(true);

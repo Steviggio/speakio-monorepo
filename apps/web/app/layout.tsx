@@ -46,6 +46,7 @@ export const metadata: Metadata = {
 const umamiUrl = process.env.NEXT_PUBLIC_UMAMI_URL;
 const umamiWebsiteId = process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
 
+// Next.js root layout: sets fonts, metadata, wraps children in Providers, and loads Umami analytics.
 export default function RootLayout({
   children,
 }: Readonly<{

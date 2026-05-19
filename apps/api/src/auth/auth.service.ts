@@ -19,6 +19,7 @@ export class AuthService {
     @InjectModel('Vote') private voteModel: Model<any>,
   ) {}
 
+  // Verifies email/password against bcrypt hash; returns sanitized user or null.
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findByEmail(email);
     if (
@@ -33,6 +34,7 @@ export class AuthService {
     return null;
   }
 
+  // Signs a JWT with user email, ID, and role, then returns token + user.
   login(user: any) {
     const payload = { email: user.email, sub: user._id, role: user.role };
     return {
@@ -41,6 +43,7 @@ export class AuthService {
     };
   }
 
+  // Creates a new user with hashed password and consent timestamp, then auto-logs in.
   async register(registerDto: any) {
     const { email, username, password } = registerDto;
     const existingUser = await this.usersService.findByEmail(email);
@@ -61,6 +64,7 @@ export class AuthService {
     return this.login(user);
   }
 
+  // Handles Google OAuth: links existing accounts or creates new users, then logs in.
   async googleLogin(reqUser: {
     googleId: string;
     email: string;
@@ -97,6 +101,7 @@ export class AuthService {
     return this.login(user);
   }
 
+  // Generates a time-limited reset token and stores it on the user document.
   async forgotPassword(email: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) {
@@ -125,6 +130,7 @@ export class AuthService {
     };
   }
 
+  // Validates a reset token, hashes the new password, and clears the token.
   async resetPassword(token: string, newPassword: string) {
     const user = await this.usersService['userModel'].findOne({
       resetPasswordToken: token,
@@ -148,6 +154,7 @@ export class AuthService {
     return { message: 'Password has been successfully reset' };
   }
 
+  // Updates the user's email after checking uniqueness.
   async changeEmail(userId: string, newEmail: string) {
     const existingEmail = await this.usersService.findByEmail(newEmail);
     if (existingEmail) {
@@ -158,6 +165,7 @@ export class AuthService {
     return { message: 'Email updated successfully' };
   }
 
+  // GDPR-compliant deletion: anonymizes user, archives content, removes personal data.
   async deleteAccount(userId: string) {
     const user = await this.usersService.findById(userId);
     if (!user) {

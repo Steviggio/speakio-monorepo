@@ -6,6 +6,7 @@ export type ApiEnvelope<T> = {
   timestamp?: string;
 };
 
+// Extracts the `data` field from the standard API envelope, or returns raw payload.
 export function unwrapApiData<T>(payload: T | ApiEnvelope<T>): T {
   if (
     payload &&

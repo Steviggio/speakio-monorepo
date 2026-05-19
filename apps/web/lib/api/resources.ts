@@ -84,6 +84,7 @@ export type CreateOrUpdateResourceInput = {
   pricing: string;
 };
 
+// Strips undefined/null/empty values from query params before sending to the API.
 function cleanParams(params?: Record<string, string | number | undefined>) {
   if (!params) return undefined;
 
@@ -94,6 +95,7 @@ function cleanParams(params?: Record<string, string | number | undefined>) {
   );
 }
 
+// Fetches a paginated, filterable list of published resources.
 export async function apiGetResources(
   params?: ResourceListParams,
 ): Promise<ResourceListResponse> {
@@ -115,16 +117,19 @@ export type ResourceFacets = {
   series: FacetItem[];
 };
 
+// Returns aggregated filter facets (types, pricing, languages, platforms).
 export async function apiGetResourceFacets(): Promise<ResourceFacets> {
   const response = await apiClient.get('/resources/facets');
   return unwrapApiData<ResourceFacets>(response.data);
 }
 
+// Fetches a single resource by ID with submitter info populated.
 export async function apiGetResource(id: string): Promise<ResourceItem> {
   const response = await apiClient.get(`/resources/${id}`);
   return unwrapApiData<ResourceItem>(response.data);
 }
 
+// Fetches resources related by series, publisher, or platform.
 export async function apiGetRelatedResources(
   id: string,
 ): Promise<RelatedResourcesResponse> {
@@ -132,6 +137,7 @@ export async function apiGetRelatedResources(
   return unwrapApiData<RelatedResourcesResponse>(response.data);
 }
 
+// Submits a new resource for review.
 export async function apiCreateResource(
   data: CreateOrUpdateResourceInput,
 ): Promise<ResourceItem> {
@@ -147,6 +153,7 @@ export async function apiUpdateResource(
   return unwrapApiData<ResourceItem>(response.data);
 }
 
+// Casts or toggles a positive/negative vote on a resource.
 export async function apiVote(
   resourceId: string,
   type: ResourceVoteType,
@@ -155,6 +162,7 @@ export async function apiVote(
   return unwrapApiData<{ success?: boolean } | Record<string, unknown>>(response.data);
 }
 
+// Returns the current user's vote on a specific resource, if any.
 export async function apiGetMyVote(
   resourceId: string,
 ): Promise<MyVoteResponse> {

@@ -19,6 +19,7 @@ export class UploadService {
     }
   }
 
+  // Validates file type/size, generates a UUID filename, and writes to the uploads directory.
   async saveAvatar(file: Express.Multer.File): Promise<string> {
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
     const ext = path.extname(file.originalname).toLowerCase();

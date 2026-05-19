@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { useTranslation } from '@/lib/i18n';
 
+// Landing page with hero section, CTA buttons, and feature highlights for Speakio.
 export default function Home() {
   const { t } = useTranslation();
 

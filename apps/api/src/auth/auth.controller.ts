@@ -18,6 +18,7 @@ import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { Throttle } from '@nestjs/throttler';
 
+// Auth REST endpoints: login, register, Google OAuth, password reset, and account deletion.
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
