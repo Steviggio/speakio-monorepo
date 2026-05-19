@@ -44,3 +44,5 @@ yarn-error.log*
 docs/*
 
 crawlee-test/*
+
+audit_*
