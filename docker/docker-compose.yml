@@ -316,18 +316,21 @@ services:
       - APP_ENV=${APP_ENV:-development}
       - DATABASE_URL=postgres://speakio:***REMOVED***@agent-db:5432/speakio_agent?sslmode=disable
       - REDIS_URL=redis://agent-redis:6379
-      - VLLM_BASE_URL=http://vllm:8000
-      - VLLM_MODEL=${VLLM_MODEL:-Qwen/Qwen3-8B}
-      - EMBEDDING_URL=http://vllm:8000
-      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-BAAI/bge-m3}
+      - VLLM_BASE_URL=http://host.docker.internal:11434
+      - VLLM_MODEL=${VLLM_MODEL:-qwen3.5:0.8b}
+      - EMBEDDING_URL=http://host.docker.internal:11434
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-qwen3-embedding:0.6b}
       - JWT_SECRET=${JWT_SECRET:-speakio_super_secret_dev_key}
       - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LLM_TIMEOUT=180s
     deploy:
       resources:
         limits:
           memory: 256M
         reservations:
           memory: 64M
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       agent-db:
         condition: service_healthy
@@ -347,16 +350,19 @@ services:
       - APP_ENV=${APP_ENV:-development}
       - DATABASE_URL=postgres://speakio:***REMOVED***@agent-db:5432/speakio_agent?sslmode=disable
       - REDIS_URL=redis://agent-redis:6379
-      - EMBEDDING_URL=http://vllm:8000
-      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-BAAI/bge-m3}
+      - EMBEDDING_URL=http://host.docker.internal:11434
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-qwen3-embedding:0.6b}
       - JWT_SECRET=${JWT_SECRET:-speakio_super_secret_dev_key}
       - LOG_LEVEL=${LOG_LEVEL:-info}
+      - LLM_TIMEOUT=180s
     deploy:
       resources:
         limits:
           memory: 256M
         reservations:
           memory: 64M
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       agent-db:
         condition: service_healthy
