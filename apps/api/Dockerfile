@@ -1,5 +1,5 @@
 
-FROM node:20-alpine AS builder
+FROM node:20.18.1-alpine3.21 AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json turbo.json ./
@@ -10,7 +10,7 @@ RUN npm ci
 
 RUN npx turbo run build --filter=api...
 
-FROM node:20-alpine AS runner
+FROM node:20.18.1-alpine3.21 AS runner
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 nestjs && \

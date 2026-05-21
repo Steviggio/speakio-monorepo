@@ -1,5 +1,5 @@
 
-FROM node:20-alpine AS builder
+FROM node:20.18.1-alpine3.21 AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json turbo.json ./
@@ -12,7 +12,8 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV NEXT_PUBLIC_CLIENT_API_URL=http://localhost/api
 RUN npx turbo run build --filter=web...
 
-FROM node:20-alpine AS runner
+# ── Optimized standalone runtime ──
+FROM node:20.18.1-alpine3.21 AS runner
 WORKDIR /app
 
 RUN addgroup --system --gid 1001 nextjs && \
@@ -21,10 +22,9 @@ RUN addgroup --system --gid 1001 nextjs && \
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-COPY --from=builder --chown=nextjs:nextjs /app/package.json ./
-COPY --from=builder --chown=nextjs:nextjs /app/node_modules ./node_modules
-COPY --from=builder --chown=nextjs:nextjs /app/apps/web ./apps/web
-COPY --from=builder --chown=nextjs:nextjs /app/packages ./packages
+COPY --from=builder --chown=nextjs:nextjs /app/apps/web/.next/standalone ./
+COPY --from=builder --chown=nextjs:nextjs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder --chown=nextjs:nextjs /app/apps/web/public ./apps/web/public
 
 USER nextjs
 
@@ -33,4 +33,4 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-CMD ["npx", "next", "start", "apps/web", "--port", "3000"]
+CMD ["node", "apps/web/server.js"]
