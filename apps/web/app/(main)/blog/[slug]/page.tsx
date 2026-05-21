@@ -8,6 +8,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import CommentSection from "@/components/CommentSection";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/lib/i18n";
+import DOMPurify from 'isomorphic-dompurify';
 
 function renderMarkdown(md: string): string {
   return (md || "")
@@ -220,7 +221,10 @@ export default function BlogPostPage() {
       <div
         className="prose max-w-none text-[var(--color-text-secondary)] leading-relaxed"
         dangerouslySetInnerHTML={{
-          __html: `<p class="text-[var(--color-text-secondary)] leading-relaxed mb-4">${renderMarkdown(post.content)}</p>`,
+          __html: DOMPurify.sanitize(
+            `<p class="text-[var(--color-text-secondary)] leading-relaxed mb-4">${renderMarkdown(post.content)}</p>`,
+            { ADD_ATTR: ['target', 'rel'] }
+          ),
         }}
       />
 

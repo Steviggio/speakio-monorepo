@@ -10,9 +10,14 @@ async function createAdmin() {
     await mongoose.connect(MONGODB_URI);
     console.log('Connected.');
 
-    const email = 'admin@speakio.com';
-    const password = 'admin';
-    const username = 'admin';
+    const email = process.env.ADMIN_EMAIL;
+    const password = process.env.ADMIN_PASSWORD;
+    const username = process.env.ADMIN_USERNAME;
+
+    if (!email || !password || !username) {
+      console.error('Missing required environment variables: ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_USERNAME');
+      process.exit(1);
+    }
 
     const usersCollection = mongoose.connection.collection('users');
 
@@ -44,7 +49,7 @@ async function createAdmin() {
 
     console.log('Admin user created successfully!');
     console.log(`Email: ${email}`);
-    console.log(`Password: ${password}`);
+    console.log(`Username: ${username}`);
   } catch (error) {
     console.error('Error creating admin user:', error);
   } finally {
