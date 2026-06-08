@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-});
 
 import Providers from "./providers";
 import { Geist } from "next/font/google";
@@ -55,7 +49,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={cn("font-sans", geist.variable)}>
-      <body className={`${geistSans.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <Providers>{children}</Providers>
         {umamiUrl && umamiWebsiteId && (
           <Script
@@ -68,3 +62,4 @@ export default function RootLayout({
     </html>
   );
 }
+
