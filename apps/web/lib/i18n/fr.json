@@ -11,7 +11,9 @@
         "loading": "Chargement...",
         "error": "Erreur",
         "success": "Succès",
-        "update": "Mettre à jour"
+        "update": "Mettre à jour",
+        "previous": "Précédent",
+        "next": "Suivant"
     },
     "nav": {
         "resources": "Ressources",
@@ -133,6 +135,13 @@
             "FREEMIUM": "Freemium",
             "PREMIUM": "Premium"
         },
+        "sortNewest": "Plus récents",
+        "sortOldest": "Plus anciens",
+        "sortPopular": "Plus populaires",
+        "errorBoundary": "Une erreur est survenue.",
+        "toVoteAndSave": "pour voter et sauvegarder.",
+        "addToFavorites": "Ajouter aux favoris",
+        "removeFromFavorites": "Retirer des favoris",
         "page": "Page",
         "of": "sur"
     },

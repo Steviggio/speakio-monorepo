@@ -119,6 +119,13 @@
             "FREEMIUM": "Freemium",
             "PREMIUM": "Premium"
         },
+        "sortNewest": "Newest first",
+        "sortOldest": "Oldest first",
+        "sortPopular": "Most popular",
+        "errorBoundary": "An error occurred.",
+        "toVoteAndSave": "to vote and save.",
+        "addToFavorites": "Add to favorites",
+        "removeFromFavorites": "Remove from favorites",
         "page": "Page",
         "of": "of"
     },
@@ -264,7 +271,9 @@
     "common": {
         "loading": "Loading...",
         "error": "An error occurred.",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "previous": "Previous",
+        "next": "Next"
     },
     "legal": {
         "privacy": {

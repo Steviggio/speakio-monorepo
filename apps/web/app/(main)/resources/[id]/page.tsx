@@ -3,6 +3,7 @@
 import React from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { format } from "date-fns";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { apiGetResource, apiVote, apiGetMyVote } from "@/lib/api/resources";
@@ -240,7 +241,7 @@ export default function ResourceDetailPage() {
               {resource.submittedBy.username}
             </span>
             <span>·</span>
-            <span>{resource.createdAt}</span>
+            <span>{resource.createdAt ? format(new Date(resource.createdAt), "PPP") : ""}</span>
           </div>
         )}
       </div>
