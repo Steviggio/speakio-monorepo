@@ -126,10 +126,7 @@ export class AuthService {
   }
 
   async resetPassword(token: string, newPassword: string) {
-    const user = await this.usersService['userModel'].findOne({
-      resetPasswordToken: token,
-      resetPasswordExpires: { $gt: new Date() },
-    });
+    const user = await this.usersService.findByResetToken(token);
 
     if (!user) {
       throw new UnauthorizedException(

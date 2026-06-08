@@ -27,4 +27,13 @@ export class UsersService {
   async update(id: string, data: Partial<User>): Promise<UserDocument | null> {
     return this.userModel.findByIdAndUpdate(id, data, { new: true }).exec();
   }
+
+  async findByResetToken(token: string): Promise<UserDocument | null> {
+    return this.userModel
+      .findOne({
+        resetPasswordToken: token,
+        resetPasswordExpires: { $gt: new Date() },
+      })
+      .exec();
+  }
 }
