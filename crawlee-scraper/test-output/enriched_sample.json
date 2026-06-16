@@ -1,0 +1,563 @@
+[
+  {
+    "title": "ModernStates.org",
+    "description": "If you need a free textbook recommendation for Spanish, ModernStates.org is probably a good starting point since they try to replicate college courses and so they include PDF textbooks + lectures",
+    "url": "http://modernstates.org/",
+    "type": "BOOK",
+    "language": "es",
+    "tags": [
+      "reddit_languagelearning"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [free(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "modernstates.org"
+  },
+  {
+    "title": "https://community-courses.memrise.com",
+    "description": "https://community-courses.memrise.com",
+    "url": "https://community-courses.memrise.com/",
+    "type": "APP",
+    "language": "multi",
+    "tags": [
+      "reddit_languagelearning"
+    ],
+    "pricing": "FREEMIUM",
+    "pricingConfidence": 0.85,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREEMIUM",
+        "confidence": 0.85,
+        "reasoning": "Hostname \"community-courses.memrise.com\" matches known freemium domain list."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.1,
+        "reasoning": "Page text too short (37 chars) for meaningful analysis. Defaulting to FREE."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "community-courses.memrise.com"
+  },
+  {
+    "title": "50 Languages – Verlag Goethe",
+    "description": "Ressources multilingues 50 Languages – Verlag Goethe :Un site et une application gratuits pour apprendre le vocabulaire de base de plus de 50 langues, grâce à des exemples de phrases courtes dans des situations concrètes et à l’association entre texte et audio. Il offre un très grand choix de langues d’interface.",
+    "url": "https://www.goethe-verlag.com/",
+    "type": "AUDIO",
+    "language": "multi",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "goethe-verlag.com"
+  },
+  {
+    "title": "Live Lingua Project",
+    "description": "Ressources multilingues Live Lingua Project :Propose des milliers de méthodes de langues, de livres électroniques, de cours audios et vidéos gratuits pour plus de 130 langues du monde entier, dont les langues africaines et les langues amérindiennes.",
+    "url": "https://www.livelingua.com/project/",
+    "type": "AUDIO",
+    "language": "multi",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "PREMIUM",
+        "confidence": 0.5,
+        "reasoning": "URL path contains pricing segment \"/pro\"."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "livelingua.com"
+  },
+  {
+    "title": "Duolingo",
+    "description": "Ressources multilingues Duolingo :Une appli (et un site web) pour apprendre l’anglais, l’espagnol, l’allemand, l’italien et le portugais (sur création de compte, gratuite). Il offre au choix un parcours progressif pour débuter avec les bases et un test d’orientation pour prendre “un raccourci” et accéder directement aux un",
+    "url": "https://www.duolingo.com/",
+    "type": "APP",
+    "language": "en",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREEMIUM",
+    "pricingConfidence": 0.85,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREEMIUM",
+        "confidence": 0.85,
+        "reasoning": "Hostname \"www.duolingo.com\" matches known freemium domain list."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "duolingo.com"
+  },
+  {
+    "title": "Memrise",
+    "description": "Ressources multilingues Memrise :Une application et un site web, pour partie gratuits, et sur création de compte, pour débuter dans une dizaine de langues à partir du français : anglais, allemand espagnol, italien, arabe, russe, slovène, japonais, coréen et chinois (sur création de compte, gratuite). Il s’appuie sur des mo",
+    "url": "https://www.memrise.com/fr/",
+    "type": "APP",
+    "language": "ar",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREEMIUM",
+    "pricingConfidence": 0.85,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREEMIUM",
+        "confidence": 0.85,
+        "reasoning": "Hostname \"www.memrise.com\" matches known freemium domain list."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 2. Keywords: [gratuit(×2)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "memrise.com"
+  },
+  {
+    "title": "Busuu",
+    "description": "Ressources multilingues Busuu : Une appli (et un site web) pour partie gratuit, et sur création de compte, pour débuter dans une douzaine de langues, du niveau A1 au B2.",
+    "url": "https://www.busuu.com/fr",
+    "type": "APP",
+    "language": "multi",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREEMIUM",
+    "pricingConfidence": 0.85,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREEMIUM",
+        "confidence": 0.85,
+        "reasoning": "Hostname \"www.busuu.com\" matches known freemium domain list."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "busuu.com"
+  },
+  {
+    "title": "Améliorer ses écrits : Des ressources pour améliorer son français",
+    "description": "Ressources multilingues Améliorer ses écrits : Des ressources pour améliorer son françaisCe site web propose aux étudiants de nombreuses ressources en français écrit, librement consultables et réutilisables, sous la forme de cours complets ou de modules « à la carte » : orthographe lexicale, grammaticale, lexique pour l’e",
+    "url": "https://ameliorer-ses-ecrits.univ-cotedazur.fr/",
+    "type": "WEBSITE",
+    "language": "fr",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [libre(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "ameliorer-ses-ecrits.univ-cotedazur.fr"
+  },
+  {
+    "title": "Goethe Institut – Pratique gratuite de l’allemand",
+    "description": "Ressources multilingues Goethe Institut – Pratique gratuite de l’allemand : Le site du Goethe Institut met à disposition plusieurs offres d’exercices pour pratiquer l’allemand (A1 à C2), ainsi qu’une application ludique sur smartphone ou ordinateur pour développer son vocabulaire. 5 langues d’interface sont proposées.",
+    "url": "https://www.goethe.de/de/spr/ueb.html",
+    "type": "WEBSITE",
+    "language": "de",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "goethe.de"
+  },
+  {
+    "title": "Parla Cat",
+    "description": "Ressources multilingues Parla Cat : Un site pour apprendre le catalan gratuitement en solo (payant pour bénéficier de l’aide d’un tuteur), sur création d’un compte.",
+    "url": "https://www.parla.cat/pres_catalaenlinia/AppPHP/login/index.php?lang=fr",
+    "type": "WEBSITE",
+    "language": "ca",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREEMIUM",
+    "pricingConfidence": 0.7200000000000001,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREEMIUM",
+        "confidence": 0.7200000000000001,
+        "reasoning": "Both FREE (1) and PREMIUM (1) keywords detected. Ratio 1.00 suggests FREEMIUM."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "parla.cat"
+  },
+  {
+    "title": "J’aime le portugais",
+    "description": "Ressources multilingues J’aime le portugais : Un site pour apprendre le portugais européen, du niveau débutant à intermédiaire, avec une cinquantaine de cours sur inscription gratuite. Des contenus linguistiques essentiels, une touche de culture portugaise, et des ressources pour progresser à l’oral et réussir à comprendre",
+    "url": "https://jaimeleportugais.com/",
+    "type": "WEBSITE",
+    "language": "pt",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "jaimeleportugais.com"
+  },
+  {
+    "title": "Arabe-Gratuit.fr",
+    "description": "Ressources multilingues Arabe-Gratuit.fr : Des ressources pour apprendre l’arabe niveau débutant, avec un clavier arabe, un dictionnaire, un outil permettant d’écrire son prénom en arabe, des jeux…",
+    "url": "http://www.arabe-gratuit.fr/",
+    "type": "WEBSITE",
+    "language": "ar",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "arabe-gratuit.fr"
+  },
+  {
+    "title": "Learn Dutch",
+    "description": "Ressources multilingues Learn Dutch :Learn Dutch propose d’apprendre le néerlandais à partir de cours vidéos de vocabulaire, de grammaire et d’autres activités. Vidéos sous-titrées en néerlandais et en anglais. Certains contenus sont payants.",
+    "url": "https://www.learndutch.org/online-dutch-courses/",
+    "type": "WEBSITE",
+    "language": "nl",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "PREMIUM",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "PREMIUM",
+        "confidence": 0.8,
+        "reasoning": "Tier \"PREMIUM\" won with score 1. Keywords: [payant(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "learndutch.org"
+  },
+  {
+    "title": "NoW",
+    "description": "Ressources multilingues NoW et LearnNow : Site créé par l’université de Trondheim, avec deux interfaces. LearnNow est un cours de norvégien gratuit pour débutants en 12 chapitres qui se concentre sur quelques thèmes spécifiques. NoW propose quant à lui 10 leçons dans lesquelles nous suivons des étudiants étrangers à l’univ",
+    "url": "https://www.ntnu.edu/now",
+    "type": "WEBSITE",
+    "language": "no",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "ntnu.edu"
+  },
+  {
+    "title": "LearnNow",
+    "description": "Ressources multilingues NoW et LearnNow : Site créé par l’université de Trondheim, avec deux interfaces. LearnNow est un cours de norvégien gratuit pour débutants en 12 chapitres qui se concentre sur quelques thèmes spécifiques. NoW propose quant à lui 10 leçons dans lesquelles nous suivons des étudiants étrangers à l’univ",
+    "url": "https://www.ntnu.edu/learnnow",
+    "type": "WEBSITE",
+    "language": "no",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "ntnu.edu"
+  },
+  {
+    "title": "Icelandic Online",
+    "description": "Ressources multilingues Icelandic Online : Des cours avec différents exercices interactifs, visuels et audio pour apprendre l’islandais au quotidien de manière simple et amusante. Le site est développé par l’Université d’Islande. Gratuit sur création d’un compte pour les niveaux débutant et intermédiaire. Interface en angl",
+    "url": "https://icelandiconline.com/",
+    "type": "AUDIO",
+    "language": "is",
+    "tags": [
+      "bpi_selection_langues",
+      "openculture_languages"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "icelandiconline.com"
+  },
+  {
+    "title": "Apprendre le suédois",
+    "description": "Ressources multilingues Apprendre le suédois :Des petites vidéos de dialogues entre un français et son amie suédoise. Le niveau 1 est gratuit sur renseignement d’une adresse mail. Le site propose par ailleurs des exercices de grammaire, un guide de prononciation, des phrases utiles et des textes avec audios pour travailler",
+    "url": "https://www.apprendrelesuedois.com/cours-de-suedois-gratuit/",
+    "type": "AUDIO",
+    "language": "fr",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "apprendrelesuedois.com"
+  },
+  {
+    "title": "Apprendre le chinois",
+    "description": "Ressources multilingues Apprendre le chinois : Une méthode audio de chinois en ligne et gratuite pour apprendre à lire, écrire et parler chinois. 31 leçons progressives avec fichier son, de débutant à intermédiaire. Au programme : compréhension orale, étude des caractères chinois, lecture, écriture, vocabulaire, grammaire",
+    "url": "https://www.chine-nouvelle.com/methode/chinois",
+    "type": "AUDIO",
+    "language": "zh",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "chine-nouvelle.com"
+  },
+  {
+    "title": "Le japonais en douceur",
+    "description": "Ressources multilingues Le japonais en douceur : Ce site entièrement gratuit propose des cours de niveau débutant à intermédiaire. Chaque leçon comprend une vidéo animée, traduite en caractères japonais, rōmaji et français, une leçon de professeur, un point de grammaire et sur les sons, des supports d’apprentissage et des",
+    "url": "https://www.nhk.or.jp/lesson/french/",
+    "type": "VIDEO",
+    "language": "fr",
+    "tags": [
+      "bpi_selection_langues"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [gratuit(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "nhk.or.jp"
+  },
+  {
+    "title": "Arabic for beginners",
+    "description": "Ara­bic for Begin­ners 1 — YouTube Free A series of video lessons from Dalar­na Uni­ver­si­ty in Swe­den.",
+    "url": "http://www.youtube.com/playlist?list=PL4786999F0E9E9017",
+    "type": "VIDEO",
+    "language": "multi",
+    "tags": [
+      "openculture_languages"
+    ],
+    "pricing": "FREE",
+    "pricingConfidence": 0.8,
+    "pricingAudit": [
+      {
+        "strategyName": "UrlHeuristicStrategy",
+        "tier": "FREE",
+        "confidence": 0.3,
+        "reasoning": "No premium or freemium signals detected in URL structure."
+      },
+      {
+        "strategyName": "DomAnalysisStrategy",
+        "tier": "FREE",
+        "confidence": 0.8,
+        "reasoning": "Tier \"FREE\" won with score 1. Keywords: [free(×1)]."
+      }
+    ],
+    "submittedBy": "speakio",
+    "dnsDomain": "youtube.com"
+  }
+]

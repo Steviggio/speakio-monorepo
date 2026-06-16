@@ -1,0 +1,50 @@
+[
+  {
+    "title": "https://www.dreamingspanish.com/",
+    "url": "https://www.dreamingspanish.com/",
+    "oldPricing": "FREEMIUM",
+    "newPricing": "FREE",
+    "confidence": 0.3,
+    "audit": "UrlHeuristicStrategy: FREE (0.3) → DomAnalysisStrategy: FREE (0.2)"
+  },
+  {
+    "title": "Parla Cat",
+    "url": "https://www.parla.cat/pres_catalaenlinia/AppPHP/login/index.",
+    "oldPricing": "PREMIUM",
+    "newPricing": "FREEMIUM",
+    "confidence": 0.7200000000000001,
+    "audit": "UrlHeuristicStrategy: FREE (0.3) → DomAnalysisStrategy: FREEMIUM (0.7200000000000001)"
+  },
+  {
+    "title": "Proverbs",
+    "url": "https://www.omniglot.com/language/proverbs/index.htm",
+    "oldPricing": "FREE",
+    "newPricing": "PREMIUM",
+    "confidence": 0.5,
+    "audit": "UrlHeuristicStrategy: PREMIUM (0.5) → DomAnalysisStrategy: FREE (0.2)"
+  },
+  {
+    "title": "Mas­sive Open Online Course (MOOC)",
+    "url": "https://www.futurelearn.com/courses/norwegian",
+    "oldPricing": "PREMIUM",
+    "newPricing": "FREE",
+    "confidence": 0.8,
+    "audit": "UrlHeuristicStrategy: FREE (0.3) → DomAnalysisStrategy: FREE (0.8)"
+  },
+  {
+    "title": "Mas­sive Open Online Course (MOOC)",
+    "url": "https://www.futurelearn.com/courses/introduction-to-norwegia",
+    "oldPricing": "PREMIUM",
+    "newPricing": "FREE",
+    "confidence": 0.3,
+    "audit": "UrlHeuristicStrategy: FREE (0.3) → DomAnalysisStrategy: FREE (0.2)"
+  },
+  {
+    "title": "Web Site",
+    "url": "http://www.coffeebreakspanish.com/",
+    "oldPricing": "FREEMIUM",
+    "newPricing": "FREE",
+    "confidence": 0.8,
+    "audit": "UrlHeuristicStrategy: FREE (0.3) → DomAnalysisStrategy: FREE (0.8)"
+  }
+]

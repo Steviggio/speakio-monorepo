@@ -1,0 +1,101 @@
+{
+  "timestamp": "2026-05-09T16:32:25.668Z",
+  "totalProcessed": 605,
+  "pricingChangesCount": 6,
+  "groupedOutput": {
+    "totalResources": 605,
+    "totalOrigins": 145,
+    "summary": {
+      "bySource": {
+        "reddit_languagelearning": 4,
+        "bpi_selection_langues": 67,
+        "openculture_languages": 293,
+        "fsi_languages": 137,
+        "omniglot": 85,
+        "languagesgulper": 63
+      },
+      "byType": {
+        "WEBSITE": 407,
+        "BOOK": 2,
+        "APP": 19,
+        "AUDIO": 119,
+        "VIDEO": 57,
+        "ARTICLE": 1
+      },
+      "byLanguage": {
+        "es": 25,
+        "multi": 250,
+        "da": 2,
+        "en": 31,
+        "ar": 12,
+        "fr": 48,
+        "de": 12,
+        "it": 12,
+        "ca": 1,
+        "pt": 12,
+        "el": 9,
+        "nl": 7,
+        "no": 6,
+        "is": 2,
+        "ru": 9,
+        "zh": 22,
+        "iu": 1,
+        "am": 4,
+        "bn": 2,
+        "bg": 2,
+        "km": 4,
+        "cs": 2,
+        "fi": 4,
+        "ff": 2,
+        "ha": 2,
+        "he": 8,
+        "hi": 6,
+        "hu": 5,
+        "ig": 2,
+        "ja": 9,
+        "rn": 2,
+        "kg": 2,
+        "ko": 12,
+        "lo": 2,
+        "ln": 2,
+        "lg": 2,
+        "ne": 2,
+        "fa": 5,
+        "pl": 2,
+        "ro": 3,
+        "sh": 2,
+        "sn": 2,
+        "si": 2,
+        "sw": 2,
+        "sv": 3,
+        "tl": 2,
+        "th": 2,
+        "tr": 3,
+        "tw": 23,
+        "vi": 2,
+        "yo": 4,
+        "la": 4,
+        "bm": 1,
+        "id": 4,
+        "ms": 2
+      },
+      "byPricing": {
+        "FREE": 583,
+        "FREEMIUM": 20,
+        "PREMIUM": 2
+      }
+    }
+  },
+  "pricingDistribution": {
+    "old": {
+      "FREEMIUM": 21,
+      "FREE": 580,
+      "PREMIUM": 4
+    },
+    "new": {
+      "FREE": 583,
+      "FREEMIUM": 20,
+      "PREMIUM": 2
+    }
+  }
+}
