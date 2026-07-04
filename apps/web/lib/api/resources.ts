@@ -15,6 +15,12 @@ export type ResourceItem = {
   pricing: string;
   positiveVotes: number;
   negativeVotes: number;
+  sourcePlatform?: {
+    domain: string;
+    rootDomain: string;
+    baseUrl: string;
+    label: string;
+  } | null;
   quality?: { normalizationStatus?: string };
   enrichment?: Record<string, unknown>;
   createdAt?: string;
