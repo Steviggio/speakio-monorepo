@@ -5,6 +5,7 @@ import {
   RESOURCE_FORMATS,
   RESOURCE_LEVELS,
   RESOURCE_ORIGINS,
+  RESOURCE_PLATFORMS,
   RESOURCE_STATUSES,
   RESOURCE_TYPES,
   DESCRIPTION_SOURCES,
@@ -13,6 +14,7 @@ import {
   type ResourceFormat,
   type ResourceLevel,
   type ResourceOrigin,
+  type ResourcePlatform,
   type ResourceStatus,
   type ResourceType,
   type DescriptionSource,
@@ -211,6 +213,9 @@ export class Resource {
 
   @Prop({ type: String, enum: RESOURCE_TYPES, required: true, index: true })
   type: ResourceType;
+
+  @Prop({ type: String, enum: RESOURCE_PLATFORMS, default: 'OTHER', index: true })
+  platform: ResourcePlatform;
 
   @Prop({ type: String, required: true, index: true })
   language: string;
