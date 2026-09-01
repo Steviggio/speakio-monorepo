@@ -119,6 +119,8 @@
         "CHAT": "Chat",
         "ARTICLE": "Article",
         "WEBSITE": "Site web",
+        "COURSE": "Cours",
+        "TOOL": "Outil",
         "types": {
             "BOOK": "Livre",
             "AUDIO": "Audio",
@@ -126,7 +128,9 @@
             "APP": "Application",
             "CHAT": "Chat",
             "ARTICLE": "Article",
-            "WEBSITE": "Site web"
+            "WEBSITE": "Site web",
+            "COURSE": "Cours",
+            "TOOL": "Outil"
         },
         "pricing": {
             "FREE": "Gratuit",
