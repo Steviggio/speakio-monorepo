@@ -8,7 +8,7 @@ dotenv.config({
 
 import { NestFactory } from '@nestjs/core';
 import { ResourcesService } from '../src/resources/resources.service';
-import { AppModule } from 'src/app.module';
+import { AppModule } from '../src/app.module';
 
 type CliOptions = {
     filePath: string;
