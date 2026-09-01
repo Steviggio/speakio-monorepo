@@ -1,4 +1,4 @@
-import type { ResourceFormat, ResourceType, Pricing, ResourceLevel } from "@repo/types";
+import type { ResourceFormat, ResourceType, ResourcePlatform, Pricing, ResourceLevel } from "@repo/types";
 
 export function mapImportedResourceToDocument(input: {
   dto: { source?: string; fileName: string };
@@ -28,6 +28,7 @@ export function mapImportedResourceToDocument(input: {
   };
   classification: {
     type: ResourceType;
+    platform: ResourcePlatform;
     formats: ResourceFormat[];
     levels: ResourceLevel[];
   };
@@ -66,6 +67,7 @@ export function mapImportedResourceToDocument(input: {
     url: raw.url,
     canonicalUrl: normalizedUrl.canonicalUrl,
     type: classification.type,
+    platform: classification.platform,
     language: normalized.language,
     tags: raw.tags,
     pricing: normalized.pricing,

@@ -13,6 +13,7 @@ export class ResourceQualityService {
         sourcePlatformExists: boolean;
         inferredPublisherExists: boolean;
         inferredSeriesExists: boolean;
+        batchDescriptionCounts?: Record<string, number>;
     }) {
         const flags: string[] = [];
         const reviewReasons: string[] = [];
@@ -30,6 +31,16 @@ export class ResourceQualityService {
             flags.push('MISSING_TITLE');
         } else {
             score += 10;
+        }
+
+        // Flag slug-style titles (single capitalized word, or trailing slash patterns)
+        if (
+            /^[A-Z][a-z]+\/?$/.test(input.normalized.title) ||
+            /^https?:\/\//.test(input.normalized.title)
+        ) {
+            flags.push('SLUG_TITLE');
+            score -= 15;
+            reviewReasons.push('LOW_SCORE');
         }
 
         if (!input.raw.description) {
@@ -65,6 +76,18 @@ export class ResourceQualityService {
             score -= 10;
         }
 
+        // Batch duplicate description detection
+        if (
+            input.batchDescriptionCounts &&
+            input.raw.description &&
+            input.batchDescriptionCounts[input.raw.description] > 3
+        ) {
+            flags.push('BATCH_DUPLICATE_DESCRIPTION');
+            reviewReasons.push('NEEDS_EDITORIAL_REWRITE');
+            descriptionScore = Math.max(0, descriptionScore - 40);
+            score -= 15;
+        }
+
         if (input.normalized.type) score += 10;
         if (input.normalized.language && input.normalized.language !== 'multi') score += 10;
         if (input.inferredPublisherExists) score += 5;
@@ -76,8 +99,10 @@ export class ResourceQualityService {
         const isPublishable =
             score >= 80 &&
             !flags.includes('MISSING_TITLE') &&
+            !flags.includes('SLUG_TITLE') &&
             !flags.includes('DESCRIPTION_FALLBACK') &&
-            !flags.includes('GENERIC_DESCRIPTION');
+            !flags.includes('GENERIC_DESCRIPTION') &&
+            !flags.includes('BATCH_DUPLICATE_DESCRIPTION');
 
         if (!isPublishable && reviewReasons.length === 0) {
             reviewReasons.push('LOW_SCORE');

@@ -42,6 +42,15 @@ export class ResourceImportService {
       },
     });
 
+    // Pre-compute description frequency for batch duplicate detection
+    const batchDescriptionCounts: Record<string, number> = {};
+    for (const item of dto.items) {
+      const desc = typeof item.description === 'string' ? item.description.trim() : '';
+      if (desc) {
+        batchDescriptionCounts[desc] = (batchDescriptionCounts[desc] || 0) + 1;
+      }
+    }
+
     for (let index = 0; index < dto.items.length; index += 1) {
       const item = dto.items[index];
 
@@ -59,6 +68,7 @@ export class ResourceImportService {
             description: raw.description,
             language: raw.language,
             pricing: raw.pricing,
+            url: raw.url,
           },
           dto.language,
         );
@@ -94,6 +104,7 @@ export class ResourceImportService {
           sourcePlatformExists: Boolean(normalizedUrl.sourcePlatform),
           inferredPublisherExists: Boolean(inferredPublisher),
           inferredSeriesExists: Boolean(inferredSeries),
+          batchDescriptionCounts,
         });
 
         const existingInfo = await this.resourceModel
