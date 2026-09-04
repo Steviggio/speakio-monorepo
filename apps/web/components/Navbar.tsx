@@ -9,7 +9,7 @@ import { useTranslation } from "@/lib/i18n";
 const navLinks = [
   { href: "/resources", labelKey: "nav.resources" },
   { href: "/blog", labelKey: "nav.blog" },
-  { href: "/roadmaps", labelKey: "nav.roadmaps" },
+  // { href: "/roadmaps", labelKey: "nav.roadmaps" },
   { href: "/favorites", labelKey: "nav.favorites" },
 ];
 

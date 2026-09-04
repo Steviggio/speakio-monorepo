@@ -1,0 +1,14 @@
+# apps/api/Dockerfile.dev
+FROM node:20-alpine
+
+# Utilisation d'un répertoire applicatif dédié pour isoler l'exécution
+WORKDIR /app
+
+# Copie initiale du code source (le .dockerignore exclut node_modules)
+COPY . .
+
+# Installation des dépendances du monorepo (nécessite tous les packages)
+RUN npm install
+
+# Exécution du serveur de développement NestJS en mode watch natif
+CMD ["npm", "run", "start:dev", "--workspace=api"]

@@ -39,14 +39,14 @@ export default function Footer() {
                   {t("nav.blog")}
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link
                   href="/roadmaps"
                   className="hover:text-[var(--color-text)] transition-colors"
                 >
                   {t("nav.roadmaps")}
                 </Link>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div>

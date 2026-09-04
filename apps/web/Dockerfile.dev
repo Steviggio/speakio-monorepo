@@ -1,0 +1,13 @@
+# apps/web/Dockerfile.dev
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copie initiale du code source (le .dockerignore exclut node_modules)
+COPY . .
+
+# Installation des dépendances du monorepo (nécessite tous les packages)
+RUN npm install
+
+# Exécution du serveur Next.js en mode dev avec support Turbopack / Fast Refresh
+CMD ["npm", "run", "dev", "--workspace=web"]
