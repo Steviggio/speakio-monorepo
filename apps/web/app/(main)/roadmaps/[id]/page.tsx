@@ -277,12 +277,12 @@ export default function RoadmapDetailPage() {
     return (
       <div className="max-w-3xl mx-auto py-8 px-4">
         <div className="animate-pulse">
-          <div className="h-6 bg-[var(--color-bg-hover)] rounded w-2/3 mb-4" />
+          <div className="h-6 bg-bg-hover rounded w-2/3 mb-4" />
           <div className="space-y-3">
             {[1, 2, 3].map((i) => (
               <div
                 key={i}
-                className="h-12 bg-[var(--color-bg-hover)] rounded-lg"
+                className="h-12 bg-bg-hover rounded-lg"
               />
             ))}
           </div>
@@ -293,12 +293,12 @@ export default function RoadmapDetailPage() {
   if (!roadmap)
     return (
       <div className="max-w-3xl mx-auto py-8 px-4 text-center">
-        <p className="text-[var(--color-text-muted)]">
+        <p className="text-text-muted">
           {t("roadmaps.notFound")}
         </p>
         <Link
           href="/roadmaps"
-          className="text-[var(--color-brand)] mt-3 inline-block text-sm"
+          className="text-brand mt-3 inline-block text-sm"
         >
           {t("roadmaps.backToRoadmaps")}
         </Link>
@@ -329,7 +329,7 @@ export default function RoadmapDetailPage() {
     <div className="max-w-3xl mx-auto py-8 px-4">
       <Link
         href="/roadmaps"
-        className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors mb-6 inline-block"
+        className="text-sm text-text-muted hover:text-text transition-colors mb-6 inline-block"
       >
         {t("roadmaps.backToRoadmaps")}
       </Link>
@@ -337,16 +337,16 @@ export default function RoadmapDetailPage() {
       <div className="mb-6">
         <div className="flex justify-between items-start">
           <div>
-            <h1 className="text-2xl font-bold text-[var(--color-text)] mb-1">
+            <h1 className="text-2xl font-bold text-text mb-1">
               {roadmap.title}
             </h1>
             {roadmap.description && (
-              <p className="text-[var(--color-text-secondary)]">
+              <p className="text-text-secondary">
                 {roadmap.description}
               </p>
             )}
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 text-xs text-[var(--color-text-muted)]">
-              <span className="uppercase font-medium bg-[var(--color-border)] px-2 py-0.5 rounded text-[var(--color-text)]">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3 text-xs text-text-muted">
+              <span className="uppercase font-medium bg-[var(--color-border)] px-2 py-0.5 rounded text-text">
                 {roadmap.language}
               </span>
               <span className="flex items-center gap-1">
@@ -359,17 +359,17 @@ export default function RoadmapDetailPage() {
             </div>
             {isOwner && (
               <div className="mt-3 flex items-center gap-2 text-sm">
-                <span className="text-[var(--color-text-secondary)] font-medium">
+                <span className="text-text-secondary font-medium">
                   Objectif Final :
                 </span>
                 <Popover
                   open={globalCalendarOpen}
                   onOpenChange={setGlobalCalendarOpen}
                 >
-                  <PopoverTrigger className="flex items-center gap-2 px-3 py-1.5 text-xs text-left border rounded bg-white text-[var(--color-text)] hover:border-[var(--color-brand)] transition-colors">
+                  <PopoverTrigger className="flex items-center gap-2 px-3 py-1.5 text-xs text-left border rounded bg-white text-text hover:border-brand transition-colors">
                     <Calendar
                       size={14}
-                      className="text-[var(--color-text-muted)]"
+                      className="text-text-muted"
                     />
                     <span>
                       {roadmap.deadline
@@ -434,14 +434,14 @@ export default function RoadmapDetailPage() {
 
       <div className="mb-6">
         <div className="flex items-center justify-between text-sm mb-1.5">
-          <span className="text-[var(--color-text-secondary)]">Progress</span>
-          <span className="text-[var(--color-text)] font-semibold">
+          <span className="text-text-secondary">Progress</span>
+          <span className="text-text font-semibold">
             {progress}%
           </span>
         </div>
-        <div className="h-2 bg-[var(--color-bg)] rounded-full overflow-hidden">
+        <div className="h-2 bg-bg rounded-full overflow-hidden">
           <div
-            className="h-full bg-[var(--color-brand)] rounded-full transition-all duration-700"
+            className="h-full bg-brand rounded-full transition-all duration-700"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -456,10 +456,10 @@ export default function RoadmapDetailPage() {
           return (
             <div
               key={stepIndex}
-              className={`rounded-lg border transition-colors overflow-hidden ${step.completed ? "border-green-200 bg-green-50/30" : "border-[var(--color-border)] bg-white"}`}
+              className={`rounded-lg border transition-colors overflow-hidden ${step.completed ? "border-green-200 bg-green-50/30" : "border-border bg-white"}`}
             >
               <div
-                className={`p-3.5 flex items-start gap-3 cursor-pointer hover:bg-black/[0.02] ${isExpanded && !step.completed ? "bg-black/[0.01] border-b border-[var(--color-border)]" : ""}`}
+                className={`p-3.5 flex items-start gap-3 cursor-pointer hover:bg-black/[0.02] ${isExpanded && !step.completed ? "bg-black/[0.01] border-b border-border" : ""}`}
                 onClick={() => toggleExpand(stepIndex)}
               >
                 <div onClick={(e) => e.stopPropagation()}>
@@ -470,7 +470,7 @@ export default function RoadmapDetailPage() {
                       className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                         step.completed
                           ? "bg-green-500 border-green-500 text-white"
-                          : "border-[var(--color-border)] hover:border-[var(--color-brand)]"
+                          : "border-border hover:border-brand"
                       } disabled:opacity-50`}
                     >
                       {step.completed && (
@@ -491,7 +491,7 @@ export default function RoadmapDetailPage() {
                       className={`mt-0.5 w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 ${
                         step.completed
                           ? "bg-green-500 border-green-500 text-white"
-                          : "border-[var(--color-border)]"
+                          : "border-border"
                       }`}
                     >
                       {step.completed && (
@@ -512,17 +512,17 @@ export default function RoadmapDetailPage() {
 
                 <div className="flex-1 min-w-0">
                   <p
-                    className={`text-base font-medium ${step.completed ? "text-[var(--color-text-muted)] line-through" : "text-[var(--color-text)]"}`}
+                    className={`text-base font-medium ${step.completed ? "text-text-muted line-through" : "text-text"}`}
                   >
                     {step.title}
                   </p>
                   {step.description && (
-                    <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
+                    <p className="text-sm text-text-muted mt-0.5">
                       {step.description}
                     </p>
                   )}
 
-                  <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-[var(--color-text-muted)]">
+                  <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-text-muted">
                     {isOwner ? (
                       <div
                         onClick={(e) => e.stopPropagation()}
@@ -594,7 +594,7 @@ export default function RoadmapDetailPage() {
                   </div>
                 </div>
 
-                <div className="flex-shrink-0 text-[var(--color-text-muted)] mt-1">
+                <div className="flex-shrink-0 text-text-muted mt-1">
                   {isExpanded ? (
                     <ChevronDown size={18} />
                   ) : (
@@ -606,12 +606,12 @@ export default function RoadmapDetailPage() {
               {isExpanded && (
                 <div className="p-4 bg-black/[0.01]">
                   <div className="mb-5">
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-3">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-3">
                       Sub-tasks
                     </h4>
 
                     {(!step.subSteps || step.subSteps.length === 0) && (
-                      <p className="text-sm text-[var(--color-text-muted)] mb-3 italic">
+                      <p className="text-sm text-text-muted mb-3 italic">
                         No sub-tasks yet.
                       </p>
                     )}
@@ -624,13 +624,13 @@ export default function RoadmapDetailPage() {
                         return (
                           <div
                             key={subIdx}
-                            className="pl-2 border-l-2 border-[var(--color-border)] py-1 flex items-start gap-2.5"
+                            className="pl-2 border-l-2 border-border py-1 flex items-start gap-2.5"
                           >
                             {isOwner ? (
                               <button
                                 onClick={() => handleToggle(stepIndex, subIdx)}
                                 disabled={isTogglingSub}
-                                className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors ${subStep.completed ? "bg-green-500 border-green-500 text-white" : "border-[var(--color-border)] hover:border-[var(--color-brand)]"} disabled:opacity-50`}
+                                className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 transition-colors ${subStep.completed ? "bg-green-500 border-green-500 text-white" : "border-border hover:border-brand"} disabled:opacity-50`}
                               >
                                 {subStep.completed && (
                                   <svg width="8" height="8" viewBox="0 0 10 10">
@@ -647,7 +647,7 @@ export default function RoadmapDetailPage() {
                               </button>
                             ) : (
                               <div
-                                className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${subStep.completed ? "bg-green-500 border-green-500 text-white" : "border-[var(--color-border)]"}`}
+                                className={`mt-0.5 w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${subStep.completed ? "bg-green-500 border-green-500 text-white" : "border-border"}`}
                               >
                                 {subStep.completed && (
                                   <svg width="8" height="8" viewBox="0 0 10 10">
@@ -686,13 +686,13 @@ export default function RoadmapDetailPage() {
                                       handleEditSubStep(stepIndex, subIdx)
                                     }
                                     disabled={!editSubStepTitle.trim()}
-                                    className="px-3 py-1 bg-[var(--color-brand)] text-white text-[10px] font-medium rounded transition-colors disabled:opacity-40"
+                                    className="px-3 py-1 bg-brand text-white text-[10px] font-medium rounded transition-colors disabled:opacity-40"
                                   >
                                     Save
                                   </button>
                                   <button
                                     onClick={() => setEditSubStepTarget(null)}
-                                    className="px-3 py-1 bg-transparent hover:bg-black/5 text-[var(--color-text-secondary)] text-[10px] font-medium rounded transition-colors"
+                                    className="px-3 py-1 bg-transparent hover:bg-black/5 text-text-secondary text-[10px] font-medium rounded transition-colors"
                                   >
                                     Cancel
                                   </button>
@@ -700,7 +700,7 @@ export default function RoadmapDetailPage() {
                               ) : (
                                 <div className="flex items-start justify-between group">
                                   <p
-                                    className={`text-sm ${subStep.completed ? "text-[var(--color-text-muted)] line-through" : "text-[var(--color-text)]"}`}
+                                    className={`text-sm ${subStep.completed ? "text-text-muted line-through" : "text-text"}`}
                                   >
                                     {subStep.title}
                                   </p>
@@ -714,7 +714,7 @@ export default function RoadmapDetailPage() {
                                           });
                                           setEditSubStepTitle(subStep.title);
                                         }}
-                                        className="text-[var(--color-text-muted)] hover:text-[var(--color-brand)] p-1 rounded-md transition-colors"
+                                        className="text-text-muted hover:text-brand p-1 rounded-md transition-colors"
                                       >
                                         <Pencil size={12} />
                                       </button>
@@ -722,7 +722,7 @@ export default function RoadmapDetailPage() {
                                         onClick={() =>
                                           handleDeleteSubStep(stepIndex, subIdx)
                                         }
-                                        className="text-[var(--color-text-muted)] hover:text-red-500 p-1 rounded-md transition-colors"
+                                        className="text-text-muted hover:text-red-500 p-1 rounded-md transition-colors"
                                       >
                                         <Trash2 size={12} />
                                       </button>
@@ -737,7 +737,7 @@ export default function RoadmapDetailPage() {
                     </div>
 
                     {isOwner && newSubStepTarget === stepIndex ? (
-                      <div className="flex gap-2 pl-4 border-l-2 border-[var(--color-brand)] animate-in fade-in slide-in-from-top-2">
+                      <div className="flex gap-2 pl-4 border-l-2 border-brand animate-in fade-in slide-in-from-top-2">
                         <Input
                           autoFocus
                           value={newSubStepTitle}
@@ -751,7 +751,7 @@ export default function RoadmapDetailPage() {
                         <button
                           onClick={() => handleAddSubStep(stepIndex)}
                           disabled={!newSubStepTitle.trim()}
-                          className="px-3 py-1 bg-[var(--color-text)] text-white text-xs font-medium rounded transition-colors disabled:opacity-40"
+                          className="px-3 py-1 bg-text text-white text-xs font-medium rounded transition-colors disabled:opacity-40"
                         >
                           Add
                         </button>
@@ -760,7 +760,7 @@ export default function RoadmapDetailPage() {
                             setNewSubStepTarget(null);
                             setNewSubStepTitle("");
                           }}
-                          className="px-3 py-1 bg-transparent hover:bg-black/5 text-[var(--color-text-secondary)] text-xs font-medium rounded transition-colors"
+                          className="px-3 py-1 bg-transparent hover:bg-black/5 text-text-secondary text-xs font-medium rounded transition-colors"
                         >
                           Cancel
                         </button>
@@ -769,7 +769,7 @@ export default function RoadmapDetailPage() {
                       isOwner && (
                         <button
                           onClick={() => setNewSubStepTarget(stepIndex)}
-                          className="flex items-center gap-1.5 text-xs font-medium text-[var(--color-brand)] hover:text-[#5535a0] transition-colors"
+                          className="flex items-center gap-1.5 text-xs font-medium text-brand hover:text-[#5535a0] transition-colors"
                         >
                           <Plus size={14} /> Add sub-task
                         </button>
@@ -778,12 +778,12 @@ export default function RoadmapDetailPage() {
                   </div>
 
                   <div>
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)] mb-3 flex items-center gap-1.5">
+                    <h4 className="text-xs font-semibold uppercase tracking-wider text-text-muted mb-3 flex items-center gap-1.5">
                       <BookOpen size={14} /> Vocabulary
                     </h4>
 
                     {(!step.vocabularies || step.vocabularies.length === 0) && (
-                      <p className="text-sm text-[var(--color-text-muted)] mb-3 italic">
+                      <p className="text-sm text-text-muted mb-3 italic">
                         No vocabulary words saved.
                       </p>
                     )}
@@ -795,10 +795,10 @@ export default function RoadmapDetailPage() {
                             key={vIdx}
                             className="bg-white border rounded p-2 text-sm flex flex-col shadow-sm"
                           >
-                            <span className="font-medium text-[var(--color-text)]">
+                            <span className="font-medium text-text">
                               {vocab.front}
                             </span>
-                            <span className="text-[var(--color-text-secondary)] text-xs mt-0.5">
+                            <span className="text-text-secondary text-xs mt-0.5">
                               {vocab.back}
                             </span>
                           </div>
@@ -809,7 +809,7 @@ export default function RoadmapDetailPage() {
                     {isOwner &&
                     newVocabTarget?.step === stepIndex &&
                     newVocabTarget?.subStep === undefined ? (
-                      <div className="bg-white p-3 rounded border border-[var(--color-brand)]/30 animate-in fade-in slide-in-from-top-2">
+                      <div className="bg-white p-3 rounded border border-brand/30 animate-in fade-in slide-in-from-top-2">
                         <div className="grid grid-cols-2 gap-2 mb-2">
                           <Input
                             autoFocus
@@ -835,7 +835,7 @@ export default function RoadmapDetailPage() {
                             disabled={
                               !newVocabFront.trim() || !newVocabBack.trim()
                             }
-                            className="px-3 py-1 bg-[var(--color-brand)] text-white text-xs font-medium rounded transition-colors disabled:opacity-40"
+                            className="px-3 py-1 bg-brand text-white text-xs font-medium rounded transition-colors disabled:opacity-40"
                           >
                             Save Word
                           </button>
@@ -845,7 +845,7 @@ export default function RoadmapDetailPage() {
                               setNewVocabFront("");
                               setNewVocabBack("");
                             }}
-                            className="px-3 py-1 bg-transparent hover:bg-black/5 text-[var(--color-text-secondary)] text-xs font-medium rounded transition-colors"
+                            className="px-3 py-1 bg-transparent hover:bg-black/5 text-text-secondary text-xs font-medium rounded transition-colors"
                           >
                             Done
                           </button>
@@ -855,7 +855,7 @@ export default function RoadmapDetailPage() {
                       isOwner && (
                         <button
                           onClick={() => setNewVocabTarget({ step: stepIndex })}
-                          className="flex items-center gap-1.5 text-xs font-medium text-[var(--color-brand)] hover:text-[#5535a0] transition-colors"
+                          className="flex items-center gap-1.5 text-xs font-medium text-brand hover:text-[#5535a0] transition-colors"
                         >
                           <Plus size={14} /> Add vocabulary word
                         </button>
@@ -886,7 +886,7 @@ export default function RoadmapDetailPage() {
           <button
             onClick={handleAddStep}
             disabled={!newStepTitle.trim()}
-            className="px-4 py-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40"
+            className="px-4 py-2 bg-brand hover:bg-brand-hover text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40"
           >
             {t("roadmaps.addStep")}
           </button>

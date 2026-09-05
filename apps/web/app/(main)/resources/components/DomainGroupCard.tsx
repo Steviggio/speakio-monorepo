@@ -77,7 +77,7 @@ export function DomainGroupCard({
             {preview.description}
           </p>
         </div>
-        <div className="flex-shrink-0 mt-1">
+        <div className="shrink-0 mt-1">
           <svg
             className={`w-5 h-5 text-text-muted transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
             fill="none"

@@ -79,9 +79,9 @@ export default function ResourceDetailPage() {
     return (
       <div className="max-w-3xl mx-auto py-8 px-4">
         <div className="animate-pulse">
-          <div className="h-6 bg-[var(--color-bg-hover)] rounded w-2/3 mb-4" />
-          <div className="h-4 bg-[var(--color-bg-hover)] rounded w-full mb-2" />
-          <div className="h-4 bg-[var(--color-bg-hover)] rounded w-5/6" />
+          <div className="h-6 bg-bg-hover rounded w-2/3 mb-4" />
+          <div className="h-4 bg-bg-hover rounded w-full mb-2" />
+          <div className="h-4 bg-bg-hover rounded w-5/6" />
         </div>
       </div>
     );
@@ -89,12 +89,12 @@ export default function ResourceDetailPage() {
   if (!resource)
     return (
       <div className="max-w-3xl mx-auto py-8 px-4 text-center">
-        <p className="text-[var(--color-text-muted)]">
+        <p className="text-text-muted">
           {t("resources.notFound")}
         </p>
         <Link
           href="/resources"
-          className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] mt-3 inline-block text-sm"
+          className="text-brand hover:text-brand-hover mt-3 inline-block text-sm"
         >
           {t("resources.backToCatalogue")}
         </Link>
@@ -105,31 +105,31 @@ export default function ResourceDetailPage() {
     <div className="max-w-3xl mx-auto py-8 px-4">
       <Link
         href="/resources"
-        className="text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors mb-6 inline-block"
+        className="text-sm text-text-muted hover:text-text transition-colors mb-6 inline-block"
       >
         {t("resources.backToCatalogue")}
       </Link>
 
-      <div className="rounded-lg border border-[var(--color-border)] bg-white p-6 shadow-sm">
+      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
         <div className="flex items-start justify-between mb-3">
           <div>
-            <div className="flex items-center gap-2 text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-1.5">
+            <div className="flex items-center gap-2 text-xs text-text-muted uppercase tracking-wider mb-1.5">
               <span>{t(`resources.types.${resource.type}`)}</span>
               <span>·</span>
               <span>{resource.language}</span>
             </div>
-            <h1 className="text-xl font-bold text-[var(--color-text)]">
+            <h1 className="text-xl font-bold text-text">
               {resource.title}
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-[var(--color-text-secondary)] bg-[var(--color-bg-hover)] px-2.5 py-1 rounded-md">
+            <span className="text-xs font-medium text-text-secondary bg-bg-hover px-2.5 py-1 rounded-md">
               {t(`resources.pricing.${resource.pricing}`)}
             </span>
           </div>
         </div>
 
-        <p className="text-[var(--color-text-secondary)] leading-relaxed mb-5">
+        <p className="text-text-secondary leading-relaxed mb-5">
           {resource.description}
         </p>
 
@@ -138,7 +138,7 @@ export default function ResourceDetailPage() {
             href={resource.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white text-sm font-medium rounded-lg transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand hover:bg-brand-hover text-white text-sm font-medium rounded-lg transition-colors"
           >
             {t("resources.visitResource")}
           </a>
@@ -150,7 +150,7 @@ export default function ResourceDetailPage() {
               className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-all ${
                 isFavorited
                   ? "bg-amber-50 border-amber-200 text-amber-600 hover:bg-amber-100"
-                  : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"
+                  : "border-border text-text-secondary hover:bg-bg-hover"
               } disabled:opacity-40`}
               title={
                 isFavorited
@@ -193,7 +193,7 @@ export default function ResourceDetailPage() {
             {resource.tags.map((tag) => (
               <span
                 key={tag}
-                className="text-xs px-2.5 py-1 rounded-md bg-[var(--color-bg)] text-[var(--color-text-secondary)] border border-[var(--color-border-light)]"
+                className="text-xs px-2.5 py-1 rounded-md bg-bg text-text-secondary border border-border-light"
               >
                 {tag}
               </span>
@@ -201,14 +201,14 @@ export default function ResourceDetailPage() {
           </div>
         )}
 
-        <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-border-light)]">
+        <div className="flex items-center gap-3 pt-4 border-t border-border-light">
           <button
             onClick={() => handleVote("positive")}
             disabled={!user || voteLoading}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm transition-colors ${
               myVote === "positive"
                 ? "bg-green-50 border-green-200 text-green-700"
-                : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"
+                : "border-border text-text-secondary hover:bg-bg-hover"
             } disabled:opacity-40`}
           >
             ▲ <span className="font-medium">{resource.positiveVotes}</span>
@@ -219,14 +219,14 @@ export default function ResourceDetailPage() {
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md border text-sm transition-colors ${
               myVote === "negative"
                 ? "bg-red-50 border-red-200 text-red-700"
-                : "border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-bg-hover)]"
+                : "border-border text-text-secondary hover:bg-bg-hover"
             } disabled:opacity-40`}
           >
             ▼ <span className="font-medium">{resource.negativeVotes}</span>
           </button>
           {!user && (
-            <span className="text-xs text-[var(--color-text-muted)]">
-              <Link href="/login" className="text-[var(--color-brand)]">
+            <span className="text-xs text-text-muted">
+              <Link href="/login" className="text-brand">
                 {t("resources.loginToVote")}
               </Link>{" "}
               {t("resources.toVoteAndSave")}
@@ -235,9 +235,9 @@ export default function ResourceDetailPage() {
         </div>
 
         {resource.submittedBy && (
-          <div className="mt-4 pt-3 border-t border-[var(--color-border-light)] flex items-center gap-2 text-sm text-[var(--color-text-muted)]">
+          <div className="mt-4 pt-3 border-t border-border-light flex items-center gap-2 text-sm text-text-muted">
             <span>{t("resources.submittedBy")}</span>
-            <span className="text-[var(--color-text)] font-medium">
+            <span className="text-text font-medium">
               {resource.submittedBy.username}
             </span>
             <span>·</span>

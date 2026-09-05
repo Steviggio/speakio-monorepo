@@ -101,10 +101,10 @@ export default function ProfileSettingsPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-xl font-bold text-[var(--color-text)]">
+        <h1 className="text-xl font-bold text-text">
           {t("settings.profileTitle")}
         </h1>
-        <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+        <p className="text-sm text-text-secondary mt-1">
           {t("settings.profileDesc")}
         </p>
       </div>
@@ -122,7 +122,7 @@ export default function ProfileSettingsPage() {
 
       <Card className="p-6">
         <div className="flex flex-col sm:flex-row gap-5 mb-6 items-start sm:items-center">
-          <div className="w-20 h-20 rounded-full overflow-hidden bg-[var(--color-bg-hover)] border-2 border-[var(--color-border)] shrink-0 relative group">
+          <div className="w-20 h-20 rounded-full overflow-hidden bg-bg-hover border-2 border-border shrink-0 relative group">
             {avatarPreview ? (
               <img
                 src={avatarPreview}
@@ -130,7 +130,7 @@ export default function ProfileSettingsPage() {
                 className="w-full h-full object-cover"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-xl font-bold uppercase text-[var(--color-text-muted)]">
+              <div className="w-full h-full flex items-center justify-center text-xl font-bold uppercase text-text-muted">
                 {user.username?.charAt(0) || user.email?.charAt(0) || "?"}
               </div>
             )}
@@ -149,10 +149,10 @@ export default function ProfileSettingsPage() {
             />
           </div>
           <div>
-            <h3 className="font-medium text-[var(--color-text)] text-sm">
+            <h3 className="font-medium text-text text-sm">
               {t("settings.profilePicture")}
             </h3>
-            <p className="text-xs text-[var(--color-text-muted)] mb-2">
+            <p className="text-xs text-text-muted mb-2">
               {t("settings.uploadHint")}
             </p>
             <Button
@@ -168,12 +168,12 @@ export default function ProfileSettingsPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--color-text)] mb-1.5">
+            <label className="block text-sm font-medium text-text mb-1.5">
               {t("settings.bio")}
             </label>
             <textarea
               {...register("bio")}
-              className="w-full px-3.5 py-2.5 bg-white border border-[var(--color-border)] rounded-lg text-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/30 focus:border-[var(--color-brand)] placeholder:text-[var(--color-text-muted)] min-h-[100px] resize-none"
+              className="w-full px-3.5 py-2.5 bg-white border border-border rounded-lg text-sm text-text focus:outline-none focus:ring-2 focus:ring-brand/30 focus:border-brand placeholder:text-text-muted min-h-[100px] resize-none"
               placeholder={t("settings.bioPlaceholder")}
             />
             {errors.bio && (

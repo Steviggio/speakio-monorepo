@@ -96,16 +96,16 @@ export default function AccountSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-[var(--color-text)]">
+        <h1 className="text-xl font-bold text-text">
           {t("settings.accountTitle")}
         </h1>
-        <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+        <p className="text-sm text-text-secondary mt-1">
           {t("settings.accountDesc")}
         </p>
       </div>
 
       <Card className="p-6">
-        <h2 className="text-base font-semibold text-[var(--color-text)] mb-4">
+        <h2 className="text-base font-semibold text-text mb-4">
           {t("settings.changeEmail")}
         </h2>
         {emailSuccess && (
@@ -119,9 +119,9 @@ export default function AccountSettingsPage() {
           </div>
         )}
         <form onSubmit={handleChangeEmail} className="space-y-3">
-          <div className="text-sm text-[var(--color-text-secondary)] mb-2">
+          <div className="text-sm text-text-secondary mb-2">
             {t("settings.currentEmail")}:{" "}
-            <span className="font-medium text-[var(--color-text)]">
+            <span className="font-medium text-text">
               {user.email}
             </span>
           </div>
@@ -144,7 +144,7 @@ export default function AccountSettingsPage() {
       </Card>
 
       <Card className="p-6">
-        <h2 className="text-base font-semibold text-[var(--color-text)] mb-4">
+        <h2 className="text-base font-semibold text-text mb-4">
           {t("settings.changePassword")}
         </h2>
         {passwordSuccess && (
@@ -202,7 +202,7 @@ export default function AccountSettingsPage() {
         <h2 className="text-base font-semibold text-red-600 mb-1">
           {t("settings.dangerZone")}
         </h2>
-        <p className="text-sm text-[var(--color-text-secondary)] mb-4">
+        <p className="text-sm text-text-secondary mb-4">
           {t("settings.dangerDesc")}
         </p>
         {!showDeleteConfirm ? (
@@ -226,7 +226,7 @@ export default function AccountSettingsPage() {
               value={deleteConfirmText}
               onChange={(e) => setDeleteConfirmText(e.target.value)}
               placeholder={t("settings.deleteConfirmText")}
-              className="w-full h-10 rounded-lg border border-red-200 bg-white px-3 text-sm text-[var(--color-text)] focus:outline-none focus:ring-2 focus:ring-red-300"
+              className="w-full h-10 rounded-lg border border-red-200 bg-white px-3 text-sm text-text focus:outline-none focus:ring-2 focus:ring-red-300"
             />
             <div className="flex items-center gap-2">
               <Button

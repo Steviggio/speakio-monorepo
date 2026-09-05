@@ -45,7 +45,7 @@ function ResetPasswordForm() {
         <p className="text-red-500 text-sm mb-3">{t("auth.invalidToken")}</p>
         <Link
           href="/forgot-password"
-          className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] text-sm"
+          className="text-brand hover:text-brand-hover text-sm"
         >
           {t("auth.requestNewLink")}
         </Link>
@@ -56,10 +56,10 @@ function ResetPasswordForm() {
   return (
     <Card className="p-7">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold tracking-tight text-[var(--color-text)]">
+        <h1 className="text-xl font-bold tracking-tight text-text">
           {t("auth.resetTitle")}
         </h1>
-        <p className="text-sm text-[var(--color-text-muted)] mt-1.5">
+        <p className="text-sm text-text-muted mt-1.5">
           {t("auth.resetDesc")}
         </p>
       </div>
@@ -104,7 +104,7 @@ export default function ResetPasswordPage() {
     <Suspense
       fallback={
         <Card className="p-7">
-          <div className="text-center text-[var(--color-text-muted)]">
+          <div className="text-center text-text-muted">
             {t("common.loading")}
           </div>
         </Card>

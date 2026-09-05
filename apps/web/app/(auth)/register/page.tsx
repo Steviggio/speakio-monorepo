@@ -49,10 +49,10 @@ export default function RegisterPage() {
   return (
     <Card className="p-7">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold tracking-tight text-[var(--color-text)]">
+        <h1 className="text-xl font-bold tracking-tight text-text">
           {t("auth.createAccount")}
         </h1>
-        <p className="text-sm text-[var(--color-text-muted)] mt-1.5">
+        <p className="text-sm text-text-muted mt-1.5">
           {t("auth.joinCommunity")}
         </p>
       </div>
@@ -99,14 +99,14 @@ export default function RegisterPage() {
             type="checkbox"
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
-            className="mt-0.5 w-4 h-4 rounded border-[var(--color-border)] text-[var(--color-brand)] focus:ring-[var(--color-brand)] accent-[var(--color-brand)]"
+            className="mt-0.5 w-4 h-4 rounded border-border text-brand focus:ring-brand accent-brand"
           />
-          <span className="text-xs text-[var(--color-text-secondary)] leading-relaxed">
+          <span className="text-xs text-text-secondary leading-relaxed">
             {consentParts[0]}
             <Link
               href="/privacy"
               target="_blank"
-              className="text-[var(--color-brand)] hover:underline font-medium"
+              className="text-brand hover:underline font-medium"
             >
               {t("auth.consentPrivacy")}
             </Link>
@@ -114,7 +114,7 @@ export default function RegisterPage() {
             <Link
               href="/terms"
               target="_blank"
-              className="text-[var(--color-brand)] hover:underline font-medium"
+              className="text-brand hover:underline font-medium"
             >
               {t("auth.consentTerms")}
             </Link>
@@ -129,11 +129,11 @@ export default function RegisterPage() {
         </div>
       </form>
 
-      <div className="mt-5 flex items-center justify-center space-x-1.5 text-sm text-[var(--color-text-muted)]">
+      <div className="mt-5 flex items-center justify-center space-x-1.5 text-sm text-text-muted">
         <span>{t("auth.alreadyHaveAccount")}</span>
         <Link
           href="/login"
-          className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] font-medium transition-colors"
+          className="text-brand hover:text-brand-hover font-medium transition-colors"
         >
           {t("auth.signIn")}
         </Link>

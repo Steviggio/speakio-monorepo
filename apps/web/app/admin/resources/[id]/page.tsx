@@ -132,8 +132,8 @@ export default function AdminEditResourcePage({
     return (
       <div className="max-w-3xl mx-auto py-12 px-4 flex items-center justify-center">
         <div className="animate-pulse flex flex-col items-center gap-4">
-          <div className="h-8 bg-[var(--color-bg-hover)] w-64 rounded"></div>
-          <div className="h-96 bg-[var(--color-bg-hover)] w-full max-w-2xl rounded-xl"></div>
+          <div className="h-8 bg-bg-hover w-64 rounded"></div>
+          <div className="h-96 bg-bg-hover w-full max-w-2xl rounded-xl"></div>
         </div>
       </div>
     );
@@ -144,7 +144,7 @@ export default function AdminEditResourcePage({
       <div className="mb-6 flex items-center gap-4">
         <Link
           href="/admin/resources"
-          className="p-2 rounded-full hover:bg-[var(--color-bg-hover)] transition-colors text-[var(--color-text-secondary)]"
+          className="p-2 rounded-full hover:bg-bg-hover transition-colors text-text-secondary"
         >
           <svg
             className="w-5 h-5"
@@ -161,17 +161,17 @@ export default function AdminEditResourcePage({
           </svg>
         </Link>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text)]">
+          <h1 className="text-2xl font-bold tracking-tight text-text">
             {t("admin.resources.editResource")}
           </h1>
-          <p className="text-[var(--color-text-secondary)] text-sm mt-1">
+          <p className="text-text-secondary text-sm mt-1">
             {initialData?._id}
           </p>
         </div>
       </div>
 
-      <Card className="border border-[var(--color-border)] shadow-sm">
-        <CardHeader className="border-b border-[var(--color-border-light)] bg-gray-50/50">
+      <Card className="border border-border shadow-sm">
+        <CardHeader className="border-b border-border-light bg-gray-50/50">
           <CardTitle>{t("admin.resources.mainInfo")}</CardTitle>
           <CardDescription>
             {t("admin.resources.editDescription")}
@@ -264,8 +264,8 @@ export default function AdminEditResourcePage({
           </div>
         </CardContent>
 
-        <CardFooter className="border-t border-[var(--color-border-light)] bg-gray-50/50 py-4 flex justify-between items-center">
-          <span className="text-sm text-[var(--color-text-muted)]">
+        <CardFooter className="border-t border-border-light bg-gray-50/50 py-4 flex justify-between items-center">
+          <span className="text-sm text-text-muted">
             {t("resources.submittedBy")} :{" "}
             {initialData?.submittedBy?.username || t("admin.resources.system")}
           </span>
@@ -281,7 +281,7 @@ export default function AdminEditResourcePage({
               type="button"
               onClick={handleSave}
               disabled={!hasChanges() || isSaving}
-              className="bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white"
+              className="bg-brand hover:bg-brand-hover text-white"
             >
               {isSaving
                 ? t("admin.resources.saving")

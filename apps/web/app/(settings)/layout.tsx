@@ -21,7 +21,7 @@ export default function SettingsLayout({
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[var(--color-bg)]">
+    <div className="min-h-screen flex flex-col bg-bg">
       <Navbar />
       <div className="flex-1 max-w-5xl mx-auto w-full py-8 px-4">
         <div className="flex flex-col md:flex-row gap-8">
@@ -35,8 +35,8 @@ export default function SettingsLayout({
                     href={link.href}
                     className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       isActive
-                        ? "bg-[var(--color-bg-hover)] text-[var(--color-text)]"
-                        : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)]"
+                        ? "bg-bg-hover text-text"
+                        : "text-text-secondary hover:text-text hover:bg-bg-hover"
                     }`}
                   >
                     {link.label}

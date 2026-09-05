@@ -70,20 +70,20 @@ export default function AdminResourcesPage() {
     <div className="max-w-7xl mx-auto py-8 px-4">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-[var(--color-text)]">
+          <h1 className="text-3xl font-bold tracking-tight text-text">
             {t("admin.resources.management")}
           </h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">
+          <p className="text-text-secondary mt-1">
             {t("admin.resources.managementDesc")}
           </p>
         </div>
       </div>
 
-      <Card className="mb-6 border border-[var(--color-border)] shadow-sm">
+      <Card className="mb-6 border border-border shadow-sm">
         <CardContent className="p-4 flex flex-col md:flex-row gap-4 items-center">
           <div className="flex-1 w-full relative">
             <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] w-4 h-4"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted w-4 h-4"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -152,35 +152,35 @@ export default function AdminResourcesPage() {
         </CardContent>
       </Card>
 
-      <Card className="border border-[var(--color-border)] shadow-sm overflow-hidden">
+      <Card className="border border-border shadow-sm overflow-hidden">
         {isLoading ? (
           <div className="p-8 space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
               <div key={i} className="animate-pulse flex items-center gap-4">
-                <div className="h-4 bg-[var(--color-bg-hover)] rounded w-1/4"></div>
-                <div className="h-4 bg-[var(--color-bg-hover)] rounded w-1/4"></div>
-                <div className="h-6 bg-[var(--color-bg-hover)] rounded-full w-20"></div>
-                <div className="h-6 bg-[var(--color-bg-hover)] rounded-full w-20"></div>
+                <div className="h-4 bg-bg-hover rounded w-1/4"></div>
+                <div className="h-4 bg-bg-hover rounded w-1/4"></div>
+                <div className="h-6 bg-bg-hover rounded-full w-20"></div>
+                <div className="h-6 bg-bg-hover rounded-full w-20"></div>
               </div>
             ))}
           </div>
         ) : resources.length === 0 ? (
-          <div className="p-12 text-center text-[var(--color-text-muted)]">
+          <div className="p-12 text-center text-text-muted">
             <p>{t("resources.noResources")}</p>
           </div>
         ) : (
-          <div className="divide-y divide-[var(--color-border-light)] max-h-[600px] overflow-y-auto">
+          <div className="divide-y divide-border-light max-h-[600px] overflow-y-auto">
             {resources.map((r) => (
               <Link
                 key={r._id}
                 href={`/admin/resources/${r._id}`}
-                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-[var(--color-bg-hover)] transition-colors gap-4"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-bg-hover transition-colors gap-4"
               >
                 <div className="flex-1 overflow-hidden">
-                  <h3 className="text-sm font-semibold text-[var(--color-text)] truncate">
+                  <h3 className="text-sm font-semibold text-text truncate">
                     {r.title}
                   </h3>
-                  <div className="flex items-center gap-2 mt-1 text-xs text-[var(--color-text-muted)] truncate">
+                  <div className="flex items-center gap-2 mt-1 text-xs text-text-muted truncate">
                     <span>
                       {r.url.replace(/^https?:\/\//, "").split("/")[0]}
                     </span>
@@ -221,7 +221,7 @@ export default function AdminResourcesPage() {
           >
             {t("resources.previous")}
           </Button>
-          <span className="text-sm font-medium text-[var(--color-text-secondary)]">
+          <span className="text-sm font-medium text-text-secondary">
             {t("resources.page")} {page} {t("resources.of")} {totalPages}
           </span>
           <Button

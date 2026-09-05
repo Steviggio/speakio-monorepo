@@ -7,26 +7,26 @@ export default function Footer() {
   const { t } = useTranslation();
 
   return (
-    <footer className="border-t border-[var(--color-border)] bg-white mt-auto">
+    <footer className="border-t border-border bg-white mt-auto">
       <div className="max-w-5xl mx-auto px-4 py-8">
         <div className="grid grid-cols-2 md:grid-cols-5 gap-6 mb-6">
           <div className="col-span-2 md:col-span-1">
-            <span className="text-base font-bold text-[var(--color-text)] tracking-tight">
+            <span className="text-base font-bold text-text tracking-tight">
               speakio
             </span>
-            <p className="text-sm text-[var(--color-text-muted)] mt-2 leading-relaxed">
+            <p className="text-sm text-text-muted mt-2 leading-relaxed">
               {t("footer.tagline")}
             </p>
           </div>
           <div>
-            <h4 className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
               {t("footer.discover")}
             </h4>
-            <ul className="space-y-1.5 text-sm text-[var(--color-text-secondary)]">
+            <ul className="space-y-1.5 text-sm text-text-secondary">
               <li>
                 <Link
                   href="/resources"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("nav.resources")}
                 </Link>
@@ -34,7 +34,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/blog"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("nav.blog")}
                 </Link>
@@ -42,7 +42,7 @@ export default function Footer() {
               {/* <li>
                 <Link
                   href="/roadmaps"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("nav.roadmaps")}
                 </Link>
@@ -50,14 +50,14 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
               {t("footer.account")}
             </h4>
-            <ul className="space-y-1.5 text-sm text-[var(--color-text-secondary)]">
+            <ul className="space-y-1.5 text-sm text-text-secondary">
               <li>
                 <Link
                   href="/dashboard"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("nav.dashboard")}
                 </Link>
@@ -65,7 +65,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/favorites"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("nav.favorites")}
                 </Link>
@@ -73,7 +73,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/settings/profile"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("nav.settings")}
                 </Link>
@@ -81,14 +81,14 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
               {t("footer.create")}
             </h4>
-            <ul className="space-y-1.5 text-sm text-[var(--color-text-secondary)]">
+            <ul className="space-y-1.5 text-sm text-text-secondary">
               <li>
                 <Link
                   href="/write"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("footer.writeArticle")}
                 </Link>
@@ -96,14 +96,14 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-3">
+            <h4 className="text-xs font-semibold text-text-muted uppercase tracking-wider mb-3">
               {t("footer.legal")}
             </h4>
-            <ul className="space-y-1.5 text-sm text-[var(--color-text-secondary)]">
+            <ul className="space-y-1.5 text-sm text-text-secondary">
               <li>
                 <Link
                   href="/privacy"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("footer.privacy")}
                 </Link>
@@ -111,7 +111,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/terms"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("footer.terms")}
                 </Link>
@@ -119,7 +119,7 @@ export default function Footer() {
               <li>
                 <Link
                   href="/legal-notice"
-                  className="hover:text-[var(--color-text)] transition-colors"
+                  className="hover:text-text transition-colors"
                 >
                   {t("footer.legalNotice")}
                 </Link>
@@ -127,24 +127,24 @@ export default function Footer() {
             </ul>
           </div>
         </div>
-        <div className="border-t border-[var(--color-border-light)] pt-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-[var(--color-text-muted)]">
+        <div className="border-t border-border-light pt-5 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-text-muted">
           <span>© {new Date().getFullYear()} Speakio</span>
           <nav className="flex items-center gap-4">
             <Link
               href="/privacy"
-              className="hover:text-[var(--color-text)] transition-colors"
+              className="hover:text-text transition-colors"
             >
               {t("footer.privacy")}
             </Link>
             <Link
               href="/terms"
-              className="hover:text-[var(--color-text)] transition-colors"
+              className="hover:text-text transition-colors"
             >
               {t("footer.terms")}
             </Link>
             <Link
               href="/legal-notice"
-              className="hover:text-[var(--color-text)] transition-colors"
+              className="hover:text-text transition-colors"
             >
               {t("footer.legalNotice")}
             </Link>

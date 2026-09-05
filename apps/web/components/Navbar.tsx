@@ -35,10 +35,10 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-[var(--color-border)]">
+    <nav className="sticky top-0 z-50 bg-white border-b border-border">
       <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold text-[var(--color-text)] tracking-tight">
+          <span className="text-xl font-bold text-text tracking-tight">
             speakio
           </span>
         </Link>
@@ -52,8 +52,8 @@ export default function Navbar() {
                 href={link.href}
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-[var(--color-bg-hover)] text-[var(--color-text)]"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)]"
+                    ? "bg-bg-hover text-text"
+                    : "text-text-secondary hover:text-text hover:bg-bg-hover"
                 }`}
               >
                 {t(link.labelKey)}
@@ -69,8 +69,8 @@ export default function Navbar() {
                 href="/write"
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   pathname === "/write"
-                    ? "bg-[var(--color-bg-hover)] text-[var(--color-text)]"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)]"
+                    ? "bg-bg-hover text-text"
+                    : "text-text-secondary hover:text-text hover:bg-bg-hover"
                 }`}
               >
                 {t("nav.write")}
@@ -80,22 +80,22 @@ export default function Navbar() {
                 href="/dashboard"
                 className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
                   pathname === "/dashboard"
-                    ? "bg-[var(--color-bg-hover)] text-[var(--color-text)]"
-                    : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)]"
+                    ? "bg-bg-hover text-text"
+                    : "text-text-secondary hover:text-text hover:bg-bg-hover"
                 }`}
               >
                 {t("nav.dashboard")}
               </Link>
 
               <div
-                className="relative pl-3 ml-1 border-l border-[var(--color-border)]"
+                className="relative pl-3 ml-1 border-l border-border"
                 ref={dropdownRef}
               >
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center gap-1.5 hover:opacity-80 transition-opacity"
                 >
-                  <div className="w-7 h-7 rounded-full bg-[var(--color-bg-hover)] flex items-center justify-center text-xs text-[var(--color-text-secondary)] font-semibold">
+                  <div className="w-7 h-7 rounded-full bg-bg-hover flex items-center justify-center text-xs text-text-secondary font-semibold">
                     {user.username?.[0]?.toUpperCase() || "?"}
                   </div>
                   <svg
@@ -103,7 +103,7 @@ export default function Navbar() {
                     height="12"
                     viewBox="0 0 12 12"
                     fill="none"
-                    className={`text-[var(--color-text-muted)] transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
+                    className={`text-text-muted transition-transform ${dropdownOpen ? "rotate-180" : ""}`}
                   >
                     <path
                       d="M3 4.5L6 7.5L9 4.5"
@@ -116,12 +116,12 @@ export default function Navbar() {
                 </button>
 
                 {dropdownOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-[var(--color-border)] rounded-lg shadow-lg py-1 z-50">
-                    <div className="px-3 py-2 border-b border-[var(--color-border-light)]">
-                      <p className="text-sm font-medium text-[var(--color-text)] truncate">
+                  <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-border rounded-lg shadow-lg py-1 z-50">
+                    <div className="px-3 py-2 border-b border-border-light">
+                      <p className="text-sm font-medium text-text truncate">
                         {user.username}
                       </p>
-                      <p className="text-xs text-[var(--color-text-muted)] truncate">
+                      <p className="text-xs text-text-muted truncate">
                         {user.email}
                       </p>
                     </div>
@@ -129,7 +129,7 @@ export default function Navbar() {
                     <Link
                       href={`/profile/${(user as any)._id}`}
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)] transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:text-text hover:bg-bg-hover transition-colors"
                     >
                       <svg
                         width="14"
@@ -158,7 +158,7 @@ export default function Navbar() {
                       <Link
                         href="/admin/resources"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--color-brand)] hover:opacity-80 transition-colors bg-[var(--color-brand)]/5"
+                        className="flex items-center gap-2 px-3 py-2 text-sm text-brand hover:opacity-80 transition-colors bg-brand/5"
                       >
                         <svg
                           width="14"
@@ -178,7 +178,7 @@ export default function Navbar() {
                     <Link
                       href="/settings/profile"
                       onClick={() => setDropdownOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)] transition-colors"
+                      className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:text-text hover:bg-bg-hover transition-colors"
                     >
                       <svg
                         width="14"
@@ -203,7 +203,7 @@ export default function Navbar() {
                       {t("nav.settings")}
                     </Link>
 
-                    <div className="border-t border-[var(--color-border-light)] mt-1 pt-1">
+                    <div className="border-t border-border-light mt-1 pt-1">
                       <button
                         onClick={() => {
                           logout();
@@ -236,13 +236,13 @@ export default function Navbar() {
             <>
               <Link
                 href="/login"
-                className="px-3 py-1.5 text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
+                className="px-3 py-1.5 text-sm text-text-secondary hover:text-text transition-colors"
               >
                 {t("nav.login")}
               </Link>
               <Link
                 href="/register"
-                className="px-4 py-1.5 bg-[var(--color-brand)] hover:bg-[var(--color-brand-hover)] text-white text-sm font-medium rounded-lg transition-colors"
+                className="px-4 py-1.5 bg-brand hover:bg-brand-hover text-white text-sm font-medium rounded-lg transition-colors"
               >
                 {t("nav.signup")}
               </Link>
@@ -252,7 +252,7 @@ export default function Navbar() {
 
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="md:hidden p-2 text-[var(--color-text-secondary)] hover:text-[var(--color-text)] transition-colors"
+          className="md:hidden p-2 text-text-secondary hover:text-text transition-colors"
           aria-label="Toggle menu"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
@@ -276,7 +276,7 @@ export default function Navbar() {
       </div>
 
       {mobileOpen && (
-        <div className="md:hidden border-t border-[var(--color-border)] bg-white px-4 pb-4 pt-2">
+        <div className="md:hidden border-t border-border bg-white px-4 pb-4 pt-2">
           <div className="flex flex-col gap-0.5">
             {navLinks.map((link) => {
               const isActive = pathname?.startsWith(link.href);
@@ -287,35 +287,35 @@ export default function Navbar() {
                   onClick={() => setMobileOpen(false)}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-[var(--color-bg-hover)] text-[var(--color-text)]"
-                      : "text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
+                      ? "bg-bg-hover text-text"
+                      : "text-text-secondary hover:text-text"
                   }`}
                 >
                   {t(link.labelKey)}
                 </Link>
               );
             })}
-            <div className="border-t border-[var(--color-border-light)] mt-2 pt-2">
+            <div className="border-t border-border-light mt-2 pt-2">
               {user ? (
                 <>
                   <Link
                     href="/write"
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 rounded-md text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
+                    className="block px-3 py-2 rounded-md text-sm text-text-secondary hover:text-text"
                   >
                     {t("nav.write")}
                   </Link>
                   <Link
                     href="/dashboard"
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 rounded-md text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
+                    className="block px-3 py-2 rounded-md text-sm text-text-secondary hover:text-text"
                   >
                     {t("nav.dashboard")}
                   </Link>
                   <Link
                     href={`/profile/${(user as any)._id}`}
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 rounded-md text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
+                    className="block px-3 py-2 rounded-md text-sm text-text-secondary hover:text-text"
                   >
                     {t("nav.myProfile")}
                   </Link>
@@ -323,7 +323,7 @@ export default function Navbar() {
                     <Link
                       href="/admin/resources"
                       onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 rounded-md text-sm text-[var(--color-brand)] font-medium bg-[var(--color-brand)]/5"
+                      className="block px-3 py-2 rounded-md text-sm text-brand font-medium bg-brand/5"
                     >
                       Gestion des ressources
                     </Link>
@@ -331,7 +331,7 @@ export default function Navbar() {
                   <Link
                     href="/settings/profile"
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 rounded-md text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text)]"
+                    className="block px-3 py-2 rounded-md text-sm text-text-secondary hover:text-text"
                   >
                     {t("nav.settings")}
                   </Link>
@@ -350,14 +350,14 @@ export default function Navbar() {
                   <Link
                     href="/login"
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 text-sm text-[var(--color-text-secondary)]"
+                    className="block px-3 py-2 text-sm text-text-secondary"
                   >
                     {t("nav.login")}
                   </Link>
                   <Link
                     href="/register"
                     onClick={() => setMobileOpen(false)}
-                    className="block px-3 py-2 text-sm text-[var(--color-brand)] font-medium"
+                    className="block px-3 py-2 text-sm text-brand font-medium"
                   >
                     {t("nav.signup")}
                   </Link>

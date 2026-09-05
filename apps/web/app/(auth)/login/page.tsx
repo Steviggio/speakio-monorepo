@@ -41,10 +41,10 @@ export default function LoginPage() {
   return (
     <Card className="p-7">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold tracking-tight text-[var(--color-text)]">
+        <h1 className="text-xl font-bold tracking-tight text-text">
           {t("auth.welcomeBack")}
         </h1>
-        <p className="text-sm text-[var(--color-text-muted)] mt-1.5">
+        <p className="text-sm text-text-muted mt-1.5">
           {t("auth.signInToAccount")}
         </p>
       </div>
@@ -79,7 +79,7 @@ export default function LoginPage() {
           <div className="flex justify-end -mt-4 relative z-20">
             <Link
               href="/forgot-password"
-              className="text-xs font-medium text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] transition-colors"
+              className="text-xs font-medium text-brand hover:text-brand-hover transition-colors"
             >
               {t("auth.forgotPassword")}
             </Link>
@@ -93,11 +93,11 @@ export default function LoginPage() {
         </div>
       </form>
 
-      <div className="mt-5 flex items-center justify-center space-x-1.5 text-sm text-[var(--color-text-muted)]">
+      <div className="mt-5 flex items-center justify-center space-x-1.5 text-sm text-text-muted">
         <span>{t("auth.noAccount")}</span>
         <Link
           href="/register"
-          className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] font-medium transition-colors"
+          className="text-brand hover:text-brand-hover font-medium transition-colors"
         >
           {t("auth.signup")}
         </Link>

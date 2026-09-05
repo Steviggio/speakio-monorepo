@@ -50,10 +50,10 @@ export default function PreferencesSettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-[var(--color-text)]">
+        <h1 className="text-xl font-bold text-text">
           {t("settings.preferencesTitle")}
         </h1>
-        <p className="text-sm text-[var(--color-text-secondary)] mt-1">
+        <p className="text-sm text-text-secondary mt-1">
           {t("settings.preferencesDesc")}
         </p>
       </div>
@@ -65,18 +65,18 @@ export default function PreferencesSettingsPage() {
       )}
 
       <Card className="p-6">
-        <h2 className="text-base font-semibold text-[var(--color-text)] mb-4">
+        <h2 className="text-base font-semibold text-text mb-4">
           {t("settings.display")}
         </h2>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-[var(--color-text)] mb-1.5">
+            <label className="block text-sm font-medium text-text mb-1.5">
               {t("settings.interfaceLanguage")}
             </label>
             <select
               value={interfaceLang}
               onChange={(e) => setInterfaceLang(e.target.value as "en" | "fr")}
-              className="w-full max-w-xs h-10 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/30 appearance-none"
+              className="w-full max-w-xs h-10 rounded-lg border border-border bg-white px-3 text-sm text-text-secondary focus:outline-none focus:ring-2 focus:ring-brand/30 appearance-none"
             >
               {interfaceLanguages.map((lang) => (
                 <option key={lang.code} value={lang.code}>
@@ -84,19 +84,19 @@ export default function PreferencesSettingsPage() {
                 </option>
               ))}
             </select>
-            <p className="text-xs text-[var(--color-text-muted)] mt-1">
+            <p className="text-xs text-text-muted mt-1">
               {t("settings.interfaceLanguageDesc")}
             </p>
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-[var(--color-text)] mb-1.5">
+            <label className="block text-sm font-medium text-text mb-1.5">
               {t("settings.resourcesPerPage")}
             </label>
             <select
               value={resourcesPerPage}
               onChange={(e) => setResourcesPerPage(Number(e.target.value))}
-              className="w-full max-w-xs h-10 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/30 appearance-none"
+              className="w-full max-w-xs h-10 rounded-lg border border-border bg-white px-3 text-sm text-text-secondary focus:outline-none focus:ring-2 focus:ring-brand/30 appearance-none"
             >
               {resourcesPerPageOptions.map((n) => (
                 <option key={n} value={n}>
@@ -109,21 +109,21 @@ export default function PreferencesSettingsPage() {
       </Card>
 
       <Card className="p-6">
-        <h2 className="text-base font-semibold text-[var(--color-text)] mb-4">
+        <h2 className="text-base font-semibold text-text mb-4">
           {t("settings.notifications")}
         </h2>
         <div className="flex items-center justify-between py-2">
           <div>
-            <p className="text-sm font-medium text-[var(--color-text)]">
+            <p className="text-sm font-medium text-text">
               {t("settings.emailNotifications")}
             </p>
-            <p className="text-xs text-[var(--color-text-muted)]">
+            <p className="text-xs text-text-muted">
               {t("settings.emailNotificationsDesc")}
             </p>
           </div>
           <button
             onClick={() => setEmailNotifications(!emailNotifications)}
-            className={`relative w-10 h-6 rounded-full transition-colors ${emailNotifications ? "bg-[var(--color-brand)]" : "bg-[var(--color-border)]"}`}
+            className={`relative w-10 h-6 rounded-full transition-colors ${emailNotifications ? "bg-brand" : "bg-border"}`}
           >
             <span
               className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${emailNotifications ? "translate-x-4" : "translate-x-0"}`}

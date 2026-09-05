@@ -50,11 +50,11 @@ export default function DashboardPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-[var(--color-text)] tracking-tight">
+        <h1 className="text-2xl font-bold text-text tracking-tight">
           {t("dashboard.welcomeBack")}
           {user?.username ? `, ${user.username}` : ""}
         </h1>
-        <p className="text-[var(--color-text-secondary)] mt-1">
+        <p className="text-text-secondary mt-1">
           {t("dashboard.overview")}
         </p>
       </div>
@@ -64,7 +64,7 @@ export default function DashboardPage() {
           {
             label: t("dashboard.roadmaps"),
             value: stats?.totalRoadmaps ?? "—",
-            color: "text-[var(--color-brand)]",
+            color: "text-brand",
           },
           {
             label: t("dashboard.progress"),
@@ -74,7 +74,7 @@ export default function DashboardPage() {
           {
             label: t("dashboard.articles"),
             value: postCount,
-            color: "text-[var(--color-text)]",
+            color: "text-text",
           },
           {
             label: t("dashboard.favorites"),
@@ -84,10 +84,10 @@ export default function DashboardPage() {
         ].map((stat) => (
           <div
             key={stat.label}
-            className="rounded-lg border border-[var(--color-border)] bg-white p-4 text-center shadow-sm"
+            className="rounded-lg border border-border bg-white p-4 text-center shadow-sm"
           >
             <p className={`text-2xl font-bold ${stat.color}`}>{stat.value}</p>
-            <p className="text-xs text-[var(--color-text-muted)] mt-1">
+            <p className="text-xs text-text-muted mt-1">
               {stat.label}
             </p>
           </div>
@@ -95,18 +95,18 @@ export default function DashboardPage() {
       </div>
 
       {stats && stats.totalSteps > 0 && (
-        <div className="rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-sm mb-8">
+        <div className="rounded-lg border border-border bg-white p-5 shadow-sm mb-8">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-sm font-semibold text-[var(--color-text)]">
+            <h3 className="text-sm font-semibold text-text">
               {t("dashboard.learningProgress")}
             </h3>
-            <span className="text-xs text-[var(--color-text-muted)]">
+            <span className="text-xs text-text-muted">
               {stats.completedSteps}/{stats.totalSteps} {t("dashboard.steps")}
             </span>
           </div>
-          <div className="h-2 bg-[var(--color-bg)] rounded-full overflow-hidden">
+          <div className="h-2 bg-bg rounded-full overflow-hidden">
             <div
-              className="h-full bg-[var(--color-brand)] rounded-full transition-all duration-700"
+              className="h-full bg-brand rounded-full transition-all duration-700"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -149,12 +149,12 @@ export default function DashboardPage() {
           <Link
             key={link.href}
             href={link.href}
-            className="group rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+            className="group rounded-lg border border-border bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
           >
-            <h3 className="text-sm font-semibold text-[var(--color-text)] group-hover:text-[var(--color-brand)] transition-colors mb-1">
+            <h3 className="text-sm font-semibold text-text group-hover:text-brand transition-colors mb-1">
               {link.title}
             </h3>
-            <p className="text-sm text-[var(--color-text-muted)]">
+            <p className="text-sm text-text-muted">
               {link.desc}
             </p>
           </Link>

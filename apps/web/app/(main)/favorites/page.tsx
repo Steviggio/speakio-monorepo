@@ -58,8 +58,8 @@ export default function FavoritesPage() {
   if (!user)
     return (
       <div className="max-w-4xl mx-auto py-16 px-4 text-center">
-        <p className="text-[var(--color-text-muted)]">
-          <Link href="/login" className="text-[var(--color-brand)]">
+        <p className="text-text-muted">
+          <Link href="/login" className="text-brand">
             {t("nav.login")}
           </Link>{" "}
           {t("favorites.loginToSee").replace("Log in", "")}
@@ -69,10 +69,10 @@ export default function FavoritesPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
-      <h1 className="text-2xl font-bold text-[var(--color-text)] tracking-tight mb-1">
+      <h1 className="text-2xl font-bold text-text tracking-tight mb-1">
         {t("favorites.title")}
       </h1>
-      <p className="text-[var(--color-text-secondary)] mb-6">
+      <p className="text-text-secondary mb-6">
         {t("favorites.subtitle")}
       </p>
 
@@ -81,21 +81,21 @@ export default function FavoritesPage() {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="animate-pulse rounded-lg border border-[var(--color-border)] bg-white p-5"
+              className="animate-pulse rounded-lg border border-border bg-white p-5"
             >
-              <div className="h-4 bg-[var(--color-bg-hover)] rounded w-3/4 mb-3" />
-              <div className="h-3 bg-[var(--color-bg-hover)] rounded w-full" />
+              <div className="h-4 bg-bg-hover rounded w-3/4 mb-3" />
+              <div className="h-3 bg-bg-hover rounded w-full" />
             </div>
           ))}
         </div>
       ) : favorites.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-[var(--color-text-muted)] mb-3">
+          <p className="text-text-muted mb-3">
             {t("favorites.noFavorites")}
           </p>
           <Link
             href="/resources"
-            className="text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] text-sm font-medium"
+            className="text-brand hover:text-brand-hover text-sm font-medium"
           >
             {t("favorites.browseResources")}
           </Link>
@@ -105,32 +105,32 @@ export default function FavoritesPage() {
           {favorites.map((resource) => (
             <div
               key={resource._id}
-              className="rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-sm group"
+              className="rounded-lg border border-border bg-white p-5 shadow-sm group"
             >
               <div className="flex items-start justify-between mb-2">
                 <Link
                   href={`/resources/${resource._id}`}
-                  className="hover:text-[var(--color-brand)] transition-colors"
+                  className="hover:text-brand transition-colors"
                 >
-                  <div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider mb-1">
+                  <div className="text-xs text-text-muted uppercase tracking-wider mb-1">
                     {t(`resources.types.${resource.type}`) || resource.type}
                   </div>
-                  <h3 className="text-base font-semibold text-[var(--color-text)] group-hover:text-[var(--color-brand)] transition-colors">
+                  <h3 className="text-base font-semibold text-text group-hover:text-brand transition-colors">
                     {resource.title}
                   </h3>
                 </Link>
                 <button
                   onClick={() => handleRemove(resource._id)}
-                  className="text-xs text-[var(--color-text-muted)] hover:text-red-500 transition-colors px-1"
+                  className="text-xs text-text-muted hover:text-red-500 transition-colors px-1"
                   title={t("favorites.remove")}
                 >
                   ✕
                 </button>
               </div>
-              <p className="text-sm text-[var(--color-text-secondary)] line-clamp-2 mb-3">
+              <p className="text-sm text-text-secondary line-clamp-2 mb-3">
                 {resource.description}
               </p>
-              <div className="flex items-center gap-3 text-xs text-[var(--color-text-muted)]">
+              <div className="flex items-center gap-3 text-xs text-text-muted">
                 <span>▲ {resource.positiveVotes}</span>
                 <span>▼ {resource.negativeVotes}</span>
                 <span className="uppercase ml-auto">{resource.language}</span>

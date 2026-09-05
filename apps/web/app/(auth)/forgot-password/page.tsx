@@ -34,10 +34,10 @@ export default function ForgotPasswordPage() {
   return (
     <Card className="p-7">
       <div className="text-center mb-6">
-        <h1 className="text-xl font-bold tracking-tight text-[var(--color-text)]">
+        <h1 className="text-xl font-bold tracking-tight text-text">
           {t("auth.forgotTitle")}
         </h1>
-        <p className="text-sm text-[var(--color-text-muted)] mt-1.5">
+        <p className="text-sm text-text-muted mt-1.5">
           {t("auth.forgotDesc")}
         </p>
       </div>
@@ -53,7 +53,7 @@ export default function ForgotPasswordPage() {
             <p>{success}</p>
             <Link
               href="/login"
-              className="text-center text-[var(--color-brand)] font-medium hover:text-[var(--color-brand-hover)]"
+              className="text-center text-brand font-medium hover:text-brand-hover"
             >
               {t("auth.backToLogin")}
             </Link>
@@ -78,7 +78,7 @@ export default function ForgotPasswordPage() {
             <div className="mt-4 flex items-center justify-center text-sm">
               <Link
                 href="/login"
-                className="text-[var(--color-text-muted)] hover:text-[var(--color-text)] transition-colors"
+                className="text-text-muted hover:text-text transition-colors"
               >
                 {t("auth.backToLogin")}
               </Link>

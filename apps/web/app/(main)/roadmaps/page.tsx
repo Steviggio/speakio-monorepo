@@ -94,10 +94,10 @@ export default function RoadmapsPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="animate-pulse rounded-lg border border-[var(--color-border)] bg-white p-5"
+              className="animate-pulse rounded-lg border border-border bg-white p-5"
             >
-              <div className="h-4 bg-[var(--color-bg-hover)] rounded w-1/2 mb-3" />
-              <div className="h-2 bg-[var(--color-bg-hover)] rounded w-full" />
+              <div className="h-4 bg-bg-hover rounded w-1/2 mb-3" />
+              <div className="h-2 bg-bg-hover rounded w-full" />
             </div>
           ))}
         </div>
@@ -107,8 +107,8 @@ export default function RoadmapsPage() {
   if (!user)
     return (
       <div className="max-w-4xl mx-auto py-16 px-4 text-center">
-        <p className="text-[var(--color-text-muted)]">
-          <Link href="/login" className="text-[var(--color-brand)]">
+        <p className="text-text-muted">
+          <Link href="/login" className="text-brand">
             {t("common.login")}
           </Link>{" "}
           {t("roadmaps.loginToManage")}
@@ -120,10 +120,10 @@ export default function RoadmapsPage() {
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[var(--color-text)] tracking-tight">
+          <h1 className="text-2xl font-bold text-text tracking-tight">
             {t("roadmaps.title")}
           </h1>
-          <p className="text-[var(--color-text-secondary)] mt-1">
+          <p className="text-text-secondary mt-1">
             {t("roadmaps.subtitle")}
           </p>
         </div>
@@ -133,8 +133,8 @@ export default function RoadmapsPage() {
       </div>
 
       {showCreate && (
-        <div className="rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-sm mb-6">
-          <h3 className="text-sm font-semibold text-[var(--color-text)] mb-3">
+        <div className="rounded-lg border border-border bg-white p-5 shadow-sm mb-6">
+          <h3 className="text-sm font-semibold text-text mb-3">
             {t("roadmaps.createRoadmap")}
           </h3>
           <div className="space-y-3">
@@ -160,7 +160,7 @@ export default function RoadmapsPage() {
                 name="language"
                 value={newLang}
                 onChange={(e) => setNewLang(e.target.value)}
-                className="h-10 rounded-lg border border-[var(--color-border)] bg-white px-3 text-sm text-[var(--color-text-secondary)] focus:outline-none focus:ring-2 focus:ring-[var(--color-brand)]/30 appearance-none"
+                className="h-10 rounded-lg border border-border bg-white px-3 text-sm text-text-secondary focus:outline-none focus:ring-2 focus:ring-brand/30 appearance-none"
               >
                 <option value="en">English</option>
                 <option value="fr">Français</option>
@@ -183,15 +183,15 @@ export default function RoadmapsPage() {
           {[1, 2, 3].map((i) => (
             <div
               key={i}
-              className="animate-pulse rounded-lg border border-[var(--color-border)] bg-white p-5"
+              className="animate-pulse rounded-lg border border-border bg-white p-5"
             >
-              <div className="h-4 bg-[var(--color-bg-hover)] rounded w-1/2 mb-3" />
-              <div className="h-2 bg-[var(--color-bg-hover)] rounded w-full" />
+              <div className="h-4 bg-bg-hover rounded w-1/2 mb-3" />
+              <div className="h-2 bg-bg-hover rounded w-full" />
             </div>
           ))}
         </div>
       ) : roadmaps.length === 0 ? (
-        <p className="text-center text-[var(--color-text-muted)] py-12">
+        <p className="text-center text-text-muted py-12">
           {t("roadmaps.noRoadmaps")}
         </p>
       ) : (
@@ -201,18 +201,18 @@ export default function RoadmapsPage() {
             return (
               <Link
                 href={`/roadmaps/${roadmap._id}`}
-                className="hover:text-[var(--color-brand)] transition-colors"
+                className="hover:text-brand transition-colors"
               >
                 <div
                   key={roadmap._id}
-                  className="rounded-lg border border-[var(--color-border)] bg-white p-5 shadow-sm group"
+                  className="rounded-lg border border-border bg-white p-5 shadow-sm group"
                 >
                   <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-base font-semibold text-[var(--color-text)] group-hover:text-[var(--color-brand)]">
+                    <h3 className="text-base font-semibold text-text group-hover:text-brand">
                       {roadmap.title}
                     </h3>
                     {roadmap.description && (
-                      <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
+                      <p className="text-sm text-text-muted mt-0.5">
                         {roadmap.description}
                       </p>
                     )}
@@ -226,21 +226,21 @@ export default function RoadmapsPage() {
                     </Button>
                   </div>
                   <div className="mt-3">
-                    <div className="flex items-center justify-between text-xs text-[var(--color-text-muted)] mb-1">
+                    <div className="flex items-center justify-between text-xs text-text-muted mb-1">
                       <span>
                         {roadmap.steps.filter((s) => s.completed).length}/
                         {roadmap.steps.length} {t("roadmaps.stepsCompleted")}
                       </span>
                       <span>{progress}%</span>
                     </div>
-                    <div className="h-1.5 bg-[var(--color-bg)] rounded-full overflow-hidden">
+                    <div className="h-1.5 bg-bg rounded-full overflow-hidden">
                       <div
-                        className="h-full bg-[var(--color-brand)] rounded-full transition-all duration-500"
+                        className="h-full bg-brand rounded-full transition-all duration-500"
                         style={{ width: `${progress}%` }}
                       />
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 mt-2 text-xs text-[var(--color-text-muted)]">
+                  <div className="flex items-center gap-2 mt-2 text-xs text-text-muted">
                     <span className="uppercase">{roadmap.language}</span>
                     <span>
                       · Updated{" "}
