@@ -30,7 +30,7 @@ import { Vote, VoteSchema } from '../schemas/vote.schema';
       imports: [NestConfigModule],
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('jwt.secret'),
-        signOptions: { expiresIn: '15m' },
+        signOptions: { expiresIn: '7d' },
       }),
       inject: [ConfigService],
     }),
