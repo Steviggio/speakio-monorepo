@@ -1,14 +1,14 @@
 <h1 align="center">
-  🚀 Speakio Template (Turborepo)
+  🚀 Speakio
 </h1>
 
 <p align="center">
-  A production-ready full-stack Monorepo template powered by Next.js, NestJS, MongoDB, and Turborepo.
+  A production-ready full-stack application (Resources & Blog) powered by Next.js, NestJS, MongoDB, and Turborepo.
 </p>
 
 <p align="center">
-  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-14-black?logo=next.js&style=flat-square" />
-  <img alt="NestJS" src="https://img.shields.io/badge/NestJS-10-ea2845?logo=nestjs&style=flat-square" />
+  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black?logo=next.js&style=flat-square" />
+  <img alt="NestJS" src="https://img.shields.io/badge/NestJS-11-ea2845?logo=nestjs&style=flat-square" />
   <img alt="Turborepo" src="https://img.shields.io/badge/Turborepo-2-ef4444?logo=turborepo&style=flat-square" />
   <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-7-47A248?logo=mongodb&style=flat-square" />
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&style=flat-square" />
@@ -30,11 +30,11 @@ This repository uses a **Monorepo** architecture managed by [Turborepo](https://
 ## ✨ Features
 
 - **End-to-End Type Safety**: Share core domain models between Next.js and NestJS seamlessly via `/packages/types`.
+- **Platform Features**: Interactive Resources catalog and Blog section. (Roadmaps feature is currently in development).
 - **Ultra-Fast Builds**: Leveraging Turborepo's smart caching and parallel execution.
-- **Dockerized Environment**: Ready-to-go `docker/docker-compose.yml` for zero-configuration database spin-up.
-- **Authentication**: Pre-configured JWT access and refresh token strategy + integration points for Google OAuth.
+- **Dockerized Environment**: Ready-to-go `docker/docker-compose.yml` with Docker Compose Watch for live development.
+- **Authentication**: Pre-configured JWT access token strategy with RBAC, endpoint throttling, and Google OAuth integration.
 - **Modern UI**: Polished Next.js frontend with Tailwind CSS, supporting internationalization (i18n).
-- **MCP Integrations**: Includes scripts to leverage Model Context Protocol (Playwright, GitHub, MongoDB) for AI-driven assistance out-of-the-box.
 
 ## 🚀 Getting Started
 
@@ -51,8 +51,8 @@ Make sure you have installed the following on your machine:
 Clone the repository and install the dependencies:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/speakio-template.git
-cd speakio-template
+git clone https://github.com/Steviggio/speakio-monorepo.git
+cd speakio-monorepo
 npm install
 ```
 
@@ -68,26 +68,26 @@ cp apps/web/.env.example apps/web/.env
 
 _(Make sure to define `MONGO_URI`, `JWT_SECRET`, etc. in your backend `.env` file!)_
 
-### 4. Start Local Infrastructure (Docker)
+### 4. Start the Application (Live Development)
 
-To run the local MongoDB database and Nginx proxy, rely on Docker Compose:
-
-```bash
-docker-compose -f docker/docker-compose.yml up -d
-```
-
-_Note: Make sure your local MongoDB instance is not already running on port 27017 or 27018 to avoid collisions._
-
-### 5. Run the Application
-
-You can start both the frontend and the backend simultaneously using Turborepo from the root directory:
+The easiest way to start the entire stack (Database, API, Frontend, Nginx) with live reloading is to use Docker Compose Watch:
 
 ```bash
-npm run dev
+docker compose -f docker/docker-compose.yml up --watch --build
 ```
 
 - **Frontend (Next.js)**: [http://localhost:3000](http://localhost:3000)
 - **Backend (NestJS API)**: [http://localhost:3001/api](http://localhost:3001/api)
+
+_Note: Make sure your local MongoDB instance is not already running on port 27017 or 27018 to avoid collisions._
+
+Alternatively, you can run the application locally using Turborepo from the root directory:
+```bash
+# Start MongoDB via Docker first
+docker compose -f docker/docker-compose.yml up mongo -d
+# Run apps locally
+npm run dev
+```
 
 ## 🛠 Available Scripts
 
