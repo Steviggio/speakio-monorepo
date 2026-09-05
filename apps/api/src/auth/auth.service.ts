@@ -7,6 +7,7 @@ import * as bcrypt from 'bcryptjs';
 import * as crypto from 'crypto';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { UserDocument } from '../schemas/user.schema';
 
 @Injectable()
 export class AuthService {
@@ -17,9 +18,12 @@ export class AuthService {
     @InjectModel('Comment') private commentModel: Model<any>,
     @InjectModel('Roadmap') private roadmapModel: Model<any>,
     @InjectModel('Vote') private voteModel: Model<any>,
-  ) {}
+  ) { }
 
-  async validateUser(email: string, pass: string): Promise<any> {
+  async validateUser(
+    email: string,
+    pass: string,
+  ): Promise<Omit<UserDocument, 'passwordHash'> | null> {
     const user = await this.usersService.findByEmail(email);
     if (
       user &&
@@ -33,7 +37,7 @@ export class AuthService {
     return null;
   }
 
-  login(user: any) {
+  login(user: Record<string, any>) {
     const payload = { email: user.email, sub: user._id, role: user.role };
     return {
       access_token: this.jwtService.sign(payload),
@@ -41,7 +45,11 @@ export class AuthService {
     };
   }
 
-  async register(registerDto: any) {
+  async register(registerDto: {
+    email: string;
+    username: string;
+    password: string;
+  }) {
     const { email, username, password } = registerDto;
     const existingUser = await this.usersService.findByEmail(email);
     if (existingUser) {
@@ -92,6 +100,10 @@ export class AuthService {
         locale: 'en',
         learningLanguages: [],
       });
+    }
+
+    if (!user) {
+      throw new UnauthorizedException('Failed to create or retrieve user');
     }
 
     return this.login(user);
@@ -165,7 +177,7 @@ export class AuthService {
       const filePath = path.join(process.cwd(), user.avatarUrl);
       try {
         await fs.unlink(filePath);
-      } catch {}
+      } catch { }
     }
 
     await this.commentModel.updateMany(
