@@ -31,7 +31,8 @@ services:
   api:
     build:
       context: ..
-      dockerfile: apps/api/Dockerfile
+      # Dockerfile de développement : conserve ts-node et les devDependencies
+      dockerfile: apps/api/Dockerfile.dev
     container_name: speakio-api
     restart: unless-stopped
     ports:
@@ -55,11 +56,27 @@ services:
     networks:
       - backend
       - frontend
+    develop:
+      watch:
+        # Synchronisation directe du code NestJS
+        - action: sync
+          path: ../apps/api/src
+          target: /app/apps/api/src
+          ignore:
+            - node_modules/
+        # Rebuild complet lors de l'ajout/suppression d'un package npm
+        - action: rebuild
+          path: ../apps/api/package.json
+        # Redémarrage si la configuration TypeScript change
+        - action: sync+restart
+          path: ../apps/api/tsconfig.json
+          target: /app/apps/api/tsconfig.json
 
   web:
     build:
       context: ..
-      dockerfile: apps/web/Dockerfile
+      # Dockerfile de développement avec support HMR / Fast Refresh Next.js
+      dockerfile: apps/web/Dockerfile.dev
     container_name: speakio-web
     restart: unless-stopped
     ports:
@@ -74,13 +91,28 @@ services:
     deploy:
       resources:
         limits:
-          memory: 512M
+          memory: 2G
         reservations:
-          memory: 128M
+          memory: 512M
     depends_on:
       - api
     networks:
       - frontend
+    develop:
+      watch:
+        # Synchronisation du code applicatif pour le Fast Refresh de Next.js
+        - action: sync
+          path: ../apps/web/app
+          target: /app/apps/web/app
+          ignore:
+            - node_modules/
+        # Synchronisation des assets statiques (images, fonts)
+        - action: sync
+          path: ../apps/web/public
+          target: /app/apps/web/public
+        # Rebuild complet lors de l'ajout/suppression d'un package npm
+        - action: rebuild
+          path: ../apps/web/package.json
 
   nginx:
     image: nginx:alpine
@@ -103,6 +135,11 @@ services:
       - frontend
       - monitoring
       - analytics
+    develop:
+      watch:
+        - action: sync+restart
+          path: ../nginx/nginx.conf
+          target: /etc/nginx/nginx.conf
 
 
   prometheus:
