@@ -1,3 +1,4 @@
+import { randomUUID } from 'crypto';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 
@@ -10,6 +11,9 @@ export class VocabularyItem {
 }
 
 export class RoadmapSubStep {
+  @Prop({ default: () => randomUUID() })
+  id: string;
+
   @Prop({ required: true })
   title: string;
 
@@ -30,6 +34,9 @@ export class RoadmapSubStep {
 }
 
 export class RoadmapStep {
+  @Prop({ default: () => randomUUID() })
+  id: string;
+
   @Prop({ required: true })
   title: string;
 

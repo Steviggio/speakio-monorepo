@@ -29,9 +29,12 @@ export const apiCreateRoadmap = async (data: any) => {
   return unwrapApiData<any>(response.data);
 };
 
-export const apiToggleStep = async (roadmapId: string, stepIndex: number) => {
+export const apiToggleStep = async (
+  roadmapId: string,
+  stepIdOrIndex: string | number,
+) => {
   const response = await apiClient.patch(
-    `/roadmaps/${roadmapId}/steps/${stepIndex}/toggle`,
+    `/roadmaps/${roadmapId}/steps/${stepIdOrIndex}/toggle`,
   );
   return unwrapApiData<any>(response.data);
 };
@@ -51,7 +54,7 @@ export const apiAddStep = async (
 
 export const apiUpdateStep = async (
   roadmapId: string,
-  stepIndex: number,
+  stepIdOrIndex: string | number,
   data: {
     title?: string;
     description?: string;
@@ -60,7 +63,7 @@ export const apiUpdateStep = async (
   },
 ) => {
   const response = await apiClient.patch(
-    `/roadmaps/${roadmapId}/steps/${stepIndex}`,
+    `/roadmaps/${roadmapId}/steps/${stepIdOrIndex}`,
     data,
   );
   return unwrapApiData<any>(response.data);
@@ -68,7 +71,7 @@ export const apiUpdateStep = async (
 
 export const apiAddSubStep = async (
   roadmapId: string,
-  stepIndex: number,
+  stepIdOrIndex: string | number,
   data: {
     title: string;
     description?: string;
@@ -77,7 +80,7 @@ export const apiAddSubStep = async (
   },
 ) => {
   const response = await apiClient.post(
-    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps`,
+    `/roadmaps/${roadmapId}/steps/${stepIdOrIndex}/substeps`,
     data,
   );
   return unwrapApiData<any>(response.data);
@@ -85,19 +88,19 @@ export const apiAddSubStep = async (
 
 export const apiToggleSubStep = async (
   roadmapId: string,
-  stepIndex: number,
-  subStepIndex: number,
+  stepIdOrIndex: string | number,
+  subStepIdOrIndex: string | number,
 ) => {
   const response = await apiClient.patch(
-    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}/toggle`,
+    `/roadmaps/${roadmapId}/steps/${stepIdOrIndex}/substeps/${subStepIdOrIndex}/toggle`,
   );
   return unwrapApiData<any>(response.data);
 };
 
 export const apiUpdateSubStep = async (
   roadmapId: string,
-  stepIndex: number,
-  subStepIndex: number,
+  stepIdOrIndex: string | number,
+  subStepIdOrIndex: string | number,
   data: {
     title?: string;
     description?: string;
@@ -106,7 +109,7 @@ export const apiUpdateSubStep = async (
   },
 ) => {
   const response = await apiClient.patch(
-    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}`,
+    `/roadmaps/${roadmapId}/steps/${stepIdOrIndex}/substeps/${subStepIdOrIndex}`,
     data,
   );
   return unwrapApiData<any>(response.data);
@@ -114,22 +117,22 @@ export const apiUpdateSubStep = async (
 
 export const apiRemoveSubStep = async (
   roadmapId: string,
-  stepIndex: number,
-  subStepIndex: number,
+  stepIdOrIndex: string | number,
+  subStepIdOrIndex: string | number,
 ) => {
   const response = await apiClient.delete(
-    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}`,
+    `/roadmaps/${roadmapId}/steps/${stepIdOrIndex}/substeps/${subStepIdOrIndex}`,
   );
   return unwrapApiData<any>(response.data);
 };
 
 export const apiUpdateStepVocabularies = async (
   roadmapId: string,
-  stepIndex: number,
+  stepIdOrIndex: string | number,
   vocabularies: any[],
 ) => {
   const response = await apiClient.post(
-    `/roadmaps/${roadmapId}/steps/${stepIndex}/vocabularies`,
+    `/roadmaps/${roadmapId}/steps/${stepIdOrIndex}/vocabularies`,
     { vocabularies },
   );
   return unwrapApiData<any>(response.data);
@@ -137,12 +140,12 @@ export const apiUpdateStepVocabularies = async (
 
 export const apiUpdateSubStepVocabularies = async (
   roadmapId: string,
-  stepIndex: number,
-  subStepIndex: number,
+  stepIdOrIndex: string | number,
+  subStepIdOrIndex: string | number,
   vocabularies: any[],
 ) => {
   const response = await apiClient.post(
-    `/roadmaps/${roadmapId}/steps/${stepIndex}/substeps/${subStepIndex}/vocabularies`,
+    `/roadmaps/${roadmapId}/steps/${stepIdOrIndex}/substeps/${subStepIdOrIndex}/vocabularies`,
     { vocabularies },
   );
   return unwrapApiData<any>(response.data);

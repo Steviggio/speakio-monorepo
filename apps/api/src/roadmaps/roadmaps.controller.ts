@@ -72,7 +72,7 @@ export class RoadmapsController {
   ) {
     return this.roadmapsService.updateStep(
       id,
-      parseInt(stepIndex, 10),
+      stepIndex,
       req.user.userId,
       updateDto,
     );
@@ -85,11 +85,7 @@ export class RoadmapsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Param('stepIndex') stepIndex: string,
   ) {
-    return this.roadmapsService.toggleStep(
-      id,
-      parseInt(stepIndex, 10),
-      req.user.userId,
-    );
+    return this.roadmapsService.toggleStep(id, stepIndex, req.user.userId);
   }
 
   @Post(':id/steps')
@@ -112,7 +108,7 @@ export class RoadmapsController {
   ) {
     return this.roadmapsService.addSubStep(
       id,
-      parseInt(stepIndex, 10),
+      stepIndex,
       body,
       req.user.userId,
     );
@@ -129,8 +125,8 @@ export class RoadmapsController {
   ) {
     return this.roadmapsService.updateSubStep(
       id,
-      parseInt(stepIndex, 10),
-      parseInt(subStepIndex, 10),
+      stepIndex,
+      subStepIndex,
       req.user.userId,
       updateDto,
     );
@@ -146,8 +142,8 @@ export class RoadmapsController {
   ) {
     return this.roadmapsService.removeSubStep(
       id,
-      parseInt(stepIndex, 10),
-      parseInt(subStepIndex, 10),
+      stepIndex,
+      subStepIndex,
       req.user.userId,
     );
   }
@@ -162,8 +158,8 @@ export class RoadmapsController {
   ) {
     return this.roadmapsService.toggleSubStep(
       id,
-      parseInt(stepIndex, 10),
-      parseInt(subStepIndex, 10),
+      stepIndex,
+      subStepIndex,
       req.user.userId,
     );
   }
@@ -180,7 +176,7 @@ export class RoadmapsController {
       id,
       req.user.userId,
       body,
-      parseInt(stepIndex, 10),
+      stepIndex,
     );
   }
 
@@ -197,8 +193,8 @@ export class RoadmapsController {
       id,
       req.user.userId,
       body,
-      parseInt(stepIndex, 10),
-      parseInt(subStepIndex, 10),
+      stepIndex,
+      subStepIndex,
     );
   }
 

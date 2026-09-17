@@ -10,7 +10,8 @@ NestJS backend application that serves as the primary API, handling business log
 
 ## Exported Surface / Public Seams
 - REST API Controllers (endpoints for the frontend).
-- Core Services (e.g., `AuthService`, `ResourceQualityService`).
+- Core Modules & Pipelines (e.g., `AuthService`, `ResourceCurationPipeline`, `RoadmapsModule`).
+- Roadmaps Domain Aggregate & Adapters (e.g., `RoadmapsService`, `AnkiCsvExportAdapter`).
 - Authentication mechanisms (Passport strategies, JWT).
 
 ## Verification Gates

@@ -5,9 +5,13 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Roadmap, RoadmapDocument } from '../schemas/roadmap.schema';
+import {
+  Roadmap,
+  RoadmapDocument,
+  RoadmapStep,
+  RoadmapSubStep,
+} from '../schemas/roadmap.schema';
 import { CreateRoadmapDto } from './dto/create-roadmap.dto';
-import { CreateAnkiExportDto } from './dto/anki-export.dto';
 import {
   AddStepDto,
   AddSubStepDto,
@@ -16,12 +20,78 @@ import {
 import { UpdateRoadmapDto } from './dto/update-roadmap.dto';
 import { UpdateStepDto } from './dto/update-step.dto';
 import { UpdateSubStepDto } from './dto/update-substep.dto';
+import { AnkiCsvExportAdapter } from './adapters/anki-csv-export.adapter';
 
 @Injectable()
 export class RoadmapsService {
   constructor(
     @InjectModel(Roadmap.name) private roadmapModel: Model<RoadmapDocument>,
+    private ankiExportAdapter: AnkiCsvExportAdapter,
   ) {}
+
+  /**
+   * Helper to find a step in a roadmap by UUID/string ID or numeric index.
+   */
+  findStep(
+    roadmap: RoadmapDocument,
+    stepIdOrIndex: string | number,
+  ): { step: RoadmapStep; index: number } {
+    if (roadmap.steps && roadmap.steps.length > 0) {
+      if (
+        typeof stepIdOrIndex === 'number' ||
+        /^\d+$/.test(String(stepIdOrIndex))
+      ) {
+        const index =
+          typeof stepIdOrIndex === 'number'
+            ? stepIdOrIndex
+            : parseInt(stepIdOrIndex, 10);
+        if (index >= 0 && index < roadmap.steps.length) {
+          return { step: roadmap.steps[index], index };
+        }
+      }
+
+      const idStr = String(stepIdOrIndex);
+      const index = roadmap.steps.findIndex(
+        (s) => s.id === idStr || (s as any)._id?.toString() === idStr,
+      );
+      if (index !== -1) {
+        return { step: roadmap.steps[index], index };
+      }
+    }
+    throw new NotFoundException('Step not found');
+  }
+
+  /**
+   * Helper to find a substep in a step by UUID/string ID or numeric index.
+   */
+  findSubStep(
+    step: RoadmapStep,
+    subStepIdOrIndex: string | number,
+  ): { subStep: RoadmapSubStep; index: number } {
+    if (step.subSteps && step.subSteps.length > 0) {
+      if (
+        typeof subStepIdOrIndex === 'number' ||
+        /^\d+$/.test(String(subStepIdOrIndex))
+      ) {
+        const index =
+          typeof subStepIdOrIndex === 'number'
+            ? subStepIdOrIndex
+            : parseInt(subStepIdOrIndex, 10);
+        if (index >= 0 && index < step.subSteps.length) {
+          return { subStep: step.subSteps[index], index };
+        }
+      }
+
+      const idStr = String(subStepIdOrIndex);
+      const index = step.subSteps.findIndex(
+        (sub) => sub.id === idStr || (sub as any)._id?.toString() === idStr,
+      );
+      if (index !== -1) {
+        return { subStep: step.subSteps[index], index };
+      }
+    }
+    throw new NotFoundException('SubStep not found');
+  }
 
   async create(
     createDto: CreateRoadmapDto,
@@ -77,7 +147,7 @@ export class RoadmapsService {
 
   async updateStep(
     roadmapId: string,
-    stepIndex: number,
+    stepIdOrIndex: string | number,
     userId: string,
     updateDto: UpdateStepDto,
   ): Promise<RoadmapDocument> {
@@ -87,11 +157,8 @@ export class RoadmapsService {
     if (roadmap.owner.toString() !== userId)
       throw new ForbiddenException('Not authorized');
 
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) {
-      throw new NotFoundException('Step not found');
-    }
+    const { step } = this.findStep(roadmap, stepIdOrIndex);
 
-    const step = roadmap.steps[stepIndex];
     if (updateDto.title !== undefined) step.title = updateDto.title;
     if (updateDto.description !== undefined)
       step.description = updateDto.description;
@@ -105,6 +172,13 @@ export class RoadmapsService {
     if (updateDto.completed !== undefined) {
       step.completed = updateDto.completed;
       step.completedAt = step.completed ? new Date() : undefined;
+      // Cascade to substeps
+      if (step.subSteps && step.subSteps.length > 0) {
+        for (const sub of step.subSteps) {
+          sub.completed = step.completed;
+          sub.completedAt = step.completed ? new Date() : undefined;
+        }
+      }
     }
 
     roadmap.markModified('steps');
@@ -114,7 +188,7 @@ export class RoadmapsService {
 
   async toggleStep(
     id: string,
-    stepIndex: number,
+    stepIdOrIndex: string | number,
     userId: string,
   ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
@@ -122,13 +196,21 @@ export class RoadmapsService {
     if (roadmap.owner.toString() !== userId) {
       throw new ForbiddenException('Not authorized');
     }
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length) {
-      throw new NotFoundException('Step not found');
+
+    const { step } = this.findStep(roadmap, stepIdOrIndex);
+
+    const nextCompleted = !step.completed;
+    step.completed = nextCompleted;
+    step.completedAt = nextCompleted ? new Date() : undefined;
+
+    // Invariant Cascade: Toggling/completing a parent step updates all child substeps to match
+    if (step.subSteps && step.subSteps.length > 0) {
+      for (const sub of step.subSteps) {
+        sub.completed = nextCompleted;
+        sub.completedAt = nextCompleted ? new Date() : undefined;
+      }
     }
 
-    const step = roadmap.steps[stepIndex];
-    step.completed = !step.completed;
-    step.completedAt = step.completed ? new Date() : undefined;
     roadmap.markModified('steps');
     await roadmap.save();
     return roadmap.populate('owner', 'username avatarUrl');
@@ -161,7 +243,7 @@ export class RoadmapsService {
 
   async addSubStep(
     id: string,
-    stepIndex: number,
+    stepIdOrIndex: string | number,
     dto: AddSubStepDto,
     userId: string,
   ): Promise<RoadmapDocument> {
@@ -169,17 +251,23 @@ export class RoadmapsService {
     if (!roadmap) throw new NotFoundException('Roadmap not found');
     if (roadmap.owner.toString() !== userId)
       throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
-      throw new NotFoundException('Step not found');
 
-    roadmap.steps[stepIndex].subSteps = roadmap.steps[stepIndex].subSteps || [];
-    roadmap.steps[stepIndex].subSteps.push({
+    const { step } = this.findStep(roadmap, stepIdOrIndex);
+
+    step.subSteps = step.subSteps || [];
+    step.subSteps.push({
       title: dto.title,
       description: dto.description,
       deadline: dto.deadline ? new Date(dto.deadline) : undefined,
       vocabularies: dto.vocabularies || [],
       completed: false,
     } as any);
+
+    // If step was completed and now has a non-completed substep, maintain invariant
+    if (step.completed) {
+      step.completed = false;
+      step.completedAt = undefined;
+    }
 
     roadmap.markModified('steps');
     await roadmap.save();
@@ -188,8 +276,8 @@ export class RoadmapsService {
 
   async updateSubStep(
     id: string,
-    stepIndex: number,
-    subStepIndex: number,
+    stepIdOrIndex: string | number,
+    subStepIdOrIndex: string | number,
     userId: string,
     updateDto: UpdateSubStepDto,
   ): Promise<RoadmapDocument> {
@@ -197,19 +285,10 @@ export class RoadmapsService {
     if (!roadmap) throw new NotFoundException('Roadmap not found');
     if (roadmap.owner.toString() !== userId)
       throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
-      throw new NotFoundException('Step not found');
 
-    const step = roadmap.steps[stepIndex];
-    if (
-      !step.subSteps ||
-      subStepIndex < 0 ||
-      subStepIndex >= step.subSteps.length
-    ) {
-      throw new NotFoundException('SubStep not found');
-    }
+    const { step } = this.findStep(roadmap, stepIdOrIndex);
+    const { subStep } = this.findSubStep(step, subStepIdOrIndex);
 
-    const subStep = step.subSteps[subStepIndex];
     if (updateDto.title !== undefined) subStep.title = updateDto.title;
     if (updateDto.description !== undefined)
       subStep.description = updateDto.description;
@@ -223,6 +302,18 @@ export class RoadmapsService {
     if (updateDto.completed !== undefined) {
       subStep.completed = updateDto.completed;
       subStep.completedAt = subStep.completed ? new Date() : undefined;
+
+      // Invariant: When all substeps of a step are completed, parent step is marked completed
+      if (step.subSteps && step.subSteps.length > 0) {
+        const allCompleted = step.subSteps.every((s) => s.completed);
+        if (allCompleted && !step.completed) {
+          step.completed = true;
+          step.completedAt = new Date();
+        } else if (!allCompleted && step.completed) {
+          step.completed = false;
+          step.completedAt = undefined;
+        }
+      }
     }
 
     roadmap.markModified('steps');
@@ -232,27 +323,28 @@ export class RoadmapsService {
 
   async removeSubStep(
     id: string,
-    stepIndex: number,
-    subStepIndex: number,
+    stepIdOrIndex: string | number,
+    subStepIdOrIndex: string | number,
     userId: string,
   ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
     if (roadmap.owner.toString() !== userId)
       throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
-      throw new NotFoundException('Step not found');
 
-    const step = roadmap.steps[stepIndex];
-    if (
-      !step.subSteps ||
-      subStepIndex < 0 ||
-      subStepIndex >= step.subSteps.length
-    ) {
-      throw new NotFoundException('SubStep not found');
+    const { step } = this.findStep(roadmap, stepIdOrIndex);
+    const { index: subIndex } = this.findSubStep(step, subStepIdOrIndex);
+
+    step.subSteps.splice(subIndex, 1);
+
+    // Invariant check if remaining substeps are all completed
+    if (step.subSteps.length > 0) {
+      const allCompleted = step.subSteps.every((s) => s.completed);
+      if (allCompleted && !step.completed) {
+        step.completed = true;
+        step.completedAt = new Date();
+      }
     }
-
-    step.subSteps.splice(subStepIndex, 1);
 
     roadmap.markModified('steps');
     await roadmap.save();
@@ -261,29 +353,35 @@ export class RoadmapsService {
 
   async toggleSubStep(
     id: string,
-    stepIndex: number,
-    subStepIndex: number,
+    stepIdOrIndex: string | number,
+    subStepIdOrIndex: string | number,
     userId: string,
   ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
     if (roadmap.owner.toString() !== userId)
       throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
-      throw new NotFoundException('Step not found');
 
-    const step = roadmap.steps[stepIndex];
-    if (
-      !step.subSteps ||
-      subStepIndex < 0 ||
-      subStepIndex >= step.subSteps.length
-    ) {
-      throw new NotFoundException('SubStep not found');
+    const { step } = this.findStep(roadmap, stepIdOrIndex);
+    const { subStep } = this.findSubStep(step, subStepIdOrIndex);
+
+    const nextCompleted = !subStep.completed;
+    subStep.completed = nextCompleted;
+    subStep.completedAt = nextCompleted ? new Date() : undefined;
+
+    // Invariant check:
+    // When all substeps of a step are completed, parent step is marked completed.
+    // If any substep is uncompleted, parent step should be uncompleted.
+    if (step.subSteps && step.subSteps.length > 0) {
+      const allCompleted = step.subSteps.every((s) => s.completed);
+      if (allCompleted && !step.completed) {
+        step.completed = true;
+        step.completedAt = new Date();
+      } else if (!allCompleted && step.completed) {
+        step.completed = false;
+        step.completedAt = undefined;
+      }
     }
-
-    const subStep = step.subSteps[subStepIndex];
-    subStep.completed = !subStep.completed;
-    subStep.completedAt = subStep.completed ? new Date() : undefined;
 
     roadmap.markModified('steps');
     await roadmap.save();
@@ -294,28 +392,25 @@ export class RoadmapsService {
     id: string,
     userId: string,
     dto: UpdateVocabularyDto,
-    stepIndex: number,
-    subStepIndex?: number,
+    stepIdOrIndex: string | number,
+    subStepIdOrIndex?: string | number,
   ): Promise<RoadmapDocument> {
     const roadmap = await this.roadmapModel.findById(id).exec();
     if (!roadmap) throw new NotFoundException('Roadmap not found');
     if (roadmap.owner.toString() !== userId)
       throw new ForbiddenException('Not authorized');
-    if (stepIndex < 0 || stepIndex >= roadmap.steps.length)
-      throw new NotFoundException('Step not found');
 
-    if (subStepIndex !== undefined) {
-      const step = roadmap.steps[stepIndex];
-      if (
-        !step.subSteps ||
-        subStepIndex < 0 ||
-        subStepIndex >= step.subSteps.length
-      ) {
-        throw new NotFoundException('SubStep not found');
-      }
-      step.subSteps[subStepIndex].vocabularies = dto.vocabularies;
+    const { step } = this.findStep(roadmap, stepIdOrIndex);
+
+    if (
+      subStepIdOrIndex !== undefined &&
+      subStepIdOrIndex !== null &&
+      subStepIdOrIndex !== ''
+    ) {
+      const { subStep } = this.findSubStep(step, subStepIdOrIndex);
+      subStep.vocabularies = dto.vocabularies;
     } else {
-      roadmap.steps[stepIndex].vocabularies = dto.vocabularies;
+      step.vocabularies = dto.vocabularies;
     }
 
     roadmap.markModified('steps');
@@ -350,26 +445,6 @@ export class RoadmapsService {
     if (roadmap.owner.toString() !== userId)
       throw new ForbiddenException('Not authorized');
 
-    const allVocabs: { front: string; back: string }[] = [];
-
-    for (const step of roadmap.steps) {
-      if (step.vocabularies && step.vocabularies.length > 0) {
-        allVocabs.push(...step.vocabularies);
-      }
-      if (step.subSteps) {
-        for (const sub of step.subSteps) {
-          if (sub.vocabularies && sub.vocabularies.length > 0) {
-            allVocabs.push(...sub.vocabularies);
-          }
-        }
-      }
-    }
-
-    return allVocabs
-      .map((card) => {
-        const escapeCsvString = (str: string) => `"${str.replace(/"/g, '""')}"`;
-        return `${escapeCsvString(card.front)},${escapeCsvString(card.back)}`;
-      })
-      .join('\n');
+    return this.ankiExportAdapter.export(roadmap);
   }
 }
