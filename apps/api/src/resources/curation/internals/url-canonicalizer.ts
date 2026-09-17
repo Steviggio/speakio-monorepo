@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { DOMAIN_RULES } from '../config/domain-rules';
+import { DOMAIN_RULES } from '../../config/domain-rules';
 
-type NormalizedUrlMeta = {
+export interface NormalizedUrlResult {
   canonicalUrl: string;
   sourcePlatform: {
     domain: string;
@@ -9,11 +8,14 @@ type NormalizedUrlMeta = {
     baseUrl: string;
     label: string;
   };
-};
+}
 
-@Injectable()
-export class ResourceNormalizerService {
-  normalizeUrl(rawUrl: string): NormalizedUrlMeta {
+export class UrlCanonicalizer {
+  canonicalize(rawUrl: string): NormalizedUrlResult {
+    if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim()) {
+      throw new Error('Invalid URL: URL cannot be empty');
+    }
+
     const canonicalUrl = this.buildCanonicalUrl(rawUrl);
     const url = new URL(canonicalUrl);
 
@@ -39,7 +41,13 @@ export class ResourceNormalizerService {
   }
 
   buildCanonicalUrl(rawUrl: string): string {
-    const url = new URL(rawUrl.trim());
+    const trimmed = rawUrl.trim();
+    let url: URL;
+    try {
+      url = new URL(trimmed);
+    } catch {
+      throw new Error(`Invalid URL: "${rawUrl}" could not be parsed`);
+    }
 
     url.protocol = 'https:';
 

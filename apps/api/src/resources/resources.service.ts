@@ -7,17 +7,15 @@ import { ImportResourcesDto } from './dto/import-resources.dto';
 import { QueryResourcesDto } from './dto/query-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
 import { ResourceImportService } from './services/resource-import.service';
-import { ResourceInferenceService } from './services/resource-inference.service';
-import { ResourceNormalizerService } from './services/resource-normalizer.service';
 import { ResourceRelatedService } from './services/resource-related.service';
+import { ResourceCurationPipeline } from './curation/resource-curation.pipeline';
 
 @Injectable()
 export class ResourcesService {
   constructor(
     @InjectModel(Resource.name)
     private readonly resourceModel: Model<ResourceDocument>,
-    private readonly normalizer: ResourceNormalizerService,
-    private readonly inference: ResourceInferenceService,
+    private readonly curationPipeline: ResourceCurationPipeline,
     private readonly importService: ResourceImportService,
     private readonly relatedService: ResourceRelatedService,
   ) {}
@@ -26,41 +24,41 @@ export class ResourcesService {
     createDto: CreateResourceDto,
     userId?: string | null,
   ): Promise<ResourceDocument> {
-    const normalized = this.normalizer.normalizeUrl(createDto.url);
+    const curated = this.curationPipeline.curate({
+      url: createDto.url,
+      title: createDto.title,
+      description: createDto.description,
+      type: createDto.type,
+      language: createDto.language,
+      pricing: createDto.pricing,
+      tags: createDto.tags,
+      levels: createDto.levels,
+      formats: createDto.formats,
+      publisher: createDto.publisher,
+      series: createDto.series,
+      status: createDto.status,
+      isActive: createDto.isActive,
+      metadata: {
+        origin: createDto.sourceMetadata?.origin ?? 'MANUAL',
+        source: 'manual',
+        rawFileName: createDto.sourceMetadata?.rawFileName,
+        importBatchId: createDto.sourceMetadata?.importBatchId,
+        submittedBy: userId ?? null,
+      },
+    });
 
     const existing = await this.resourceModel
-      .findOne({ canonicalUrl: normalized.canonicalUrl })
+      .findOne({ canonicalUrl: curated.canonicalUrl })
       .exec();
 
     if (existing) {
       return existing;
     }
 
-    const publisher =
-      createDto.publisher ??
-      this.inference.inferPublisher(
-        createDto.title,
-        createDto.description,
-        createDto.url,
-      );
-
-    const series =
-      createDto.series ??
-      this.inference.inferSeries(createDto.title, createDto.description);
-
     const resource = new this.resourceModel({
-      ...createDto,
-      tags: createDto.tags ?? [],
-      canonicalUrl: normalized.canonicalUrl,
-      sourcePlatform: createDto.sourcePlatform ?? normalized.sourcePlatform,
-      publisher,
-      series,
-      status: createDto.status ?? 'REVIEW',
-      isActive: createDto.isActive ?? true,
-      sourceMetadata: createDto.sourceMetadata ?? {
-        origin: 'MANUAL',
-      },
+      ...curated,
       submittedBy: userId ?? null,
+      thumbnailUrl: createDto.thumbnailUrl ?? curated.thumbnailUrl,
     });
 
     return resource.save();
@@ -235,43 +233,68 @@ export class ResourcesService {
       throw new NotFoundException('Resource not found');
     }
 
+    const mergedUrl = updateDto.url ?? resource.url;
+    const mergedTitle = updateDto.title ?? resource.title;
+    const mergedDescription = updateDto.description ?? resource.description;
+    const mergedType = updateDto.type ?? resource.type;
+    const mergedLanguage = updateDto.language ?? resource.language;
+    const mergedPricing = updateDto.pricing ?? resource.pricing;
+    const mergedTags = updateDto.tags ?? resource.tags;
+    const mergedLevels = updateDto.levels ?? resource.levels;
+    const mergedFormats = updateDto.formats ?? resource.formats;
+    const mergedPublisher =
+      updateDto.publisher !== undefined
+        ? updateDto.publisher
+        : resource.publisher;
+    const mergedSeries =
+      updateDto.series !== undefined ? updateDto.series : resource.series;
+    const mergedStatus = updateDto.status ?? resource.status;
+    const mergedIsActive = updateDto.isActive ?? resource.isActive;
+
+    const curated = this.curationPipeline.curate({
+      url: mergedUrl,
+      title: mergedTitle,
+      description: mergedDescription,
+      type: mergedType,
+      language: mergedLanguage,
+      pricing: mergedPricing,
+      tags: mergedTags,
+      levels: mergedLevels,
+      formats: mergedFormats,
+      publisher: mergedPublisher,
+      series: mergedSeries,
+      status: mergedStatus,
+      isActive: mergedIsActive,
+      metadata: {
+        origin:
+          updateDto.sourceMetadata?.origin ??
+          resource.sourceMetadata?.origin ??
+          'MANUAL',
+        rawFileName:
+          updateDto.sourceMetadata?.rawFileName ??
+          resource.sourceMetadata?.rawFileName,
+        importBatchId:
+          updateDto.sourceMetadata?.importBatchId ??
+          resource.sourceMetadata?.importBatchId,
+      },
+    });
+
     Object.assign(resource, updateDto);
 
-    if (resource.url) {
-      const normalized = this.normalizer.normalizeUrl(resource.url);
-
-      resource.canonicalUrl = normalized.canonicalUrl;
-
-      if (!updateDto.sourcePlatform) {
-        resource.sourcePlatform = normalized.sourcePlatform as any;
-      }
+    resource.canonicalUrl = curated.canonicalUrl;
+    if (!updateDto.sourcePlatform) {
+      resource.sourcePlatform = curated.sourcePlatform as any;
     }
-
+    resource.publisher = curated.publisher as any;
+    resource.series = curated.series as any;
+    resource.quality = curated.quality as any;
+    if (!updateDto.status) {
+      resource.status = curated.status as any;
+    }
     if (!resource.sourceMetadata) {
       resource.sourceMetadata = {
         origin: 'MANUAL',
       } as any;
-    }
-
-    if (
-      !updateDto.publisher &&
-      (!resource.publisher?.slug || !resource.publisher?.name)
-    ) {
-      resource.publisher = this.inference.inferPublisher(
-        resource.title,
-        resource.description,
-        resource.url,
-      ) as any;
-    }
-
-    if (
-      !updateDto.series &&
-      (!resource.series?.slug || !resource.series?.name)
-    ) {
-      resource.series = this.inference.inferSeries(
-        resource.title,
-        resource.description,
-      ) as any;
     }
 
     return resource.save();

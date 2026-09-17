@@ -1,34 +1,47 @@
-import { Injectable } from '@nestjs/common';
 import type { ResourceType, ResourceFormat, ResourceLevel } from '@repo/types';
 
-@Injectable()
-export class ResourceClassificationService {
+export interface ClassificationResult {
+  type: ResourceType;
+  formats: ResourceFormat[];
+  levels: ResourceLevel[];
+}
+
+export class ClassifierEngine {
   classify(input: {
-    rawType: string;
+    rawType?: string;
     url: string;
     title: string;
     description: string;
-  }): {
-    type: ResourceType;
-    formats: ResourceFormat[];
-    levels: ResourceLevel[];
-  } {
+    formats?: ResourceFormat[];
+    levels?: ResourceLevel[];
+  }): ClassificationResult {
     const type = this.inferResourceType(input);
+
+    const formats =
+      input.formats && input.formats.length > 0
+        ? input.formats
+        : this.mapFormats(type);
+
+    const levels =
+      input.levels && input.levels.length > 0
+        ? input.levels
+        : this.inferLevels(input.title, input.description);
 
     return {
       type,
-      formats: this.mapFormats(type),
-      levels: this.inferLevels(input.title, input.description),
+      formats,
+      levels,
     };
   }
 
-  private inferResourceType(input: {
-    rawType: string;
+  inferResourceType(input: {
+    rawType?: string;
     url: string;
     title: string;
     description: string;
   }): ResourceType {
-    const { rawType, url, title, description } = input;
+    const rawType = (input.rawType || '').toLowerCase();
+    const { url, title, description } = input;
     const haystack = `${title} ${description} ${url}`.toLowerCase();
 
     if (rawType.includes('app')) return 'APP';
@@ -75,14 +88,14 @@ export class ResourceClassificationService {
     return 'WEBSITE';
   }
 
-  private mapFormats(type: ResourceType): ResourceFormat[] {
+  mapFormats(type: ResourceType): ResourceFormat[] {
     if (type === 'VIDEO') return ['VIDEO'];
     if (type === 'AUDIO') return ['AUDIO'];
     if (type === 'APP') return ['MOBILE', 'INTERACTIVE'];
     return ['TEXT'];
   }
 
-  private inferLevels(title: string, description: string): ResourceLevel[] {
+  inferLevels(title: string, description: string): ResourceLevel[] {
     const haystack = `${title} ${description}`.toLowerCase();
     const levels: ResourceLevel[] = [];
 

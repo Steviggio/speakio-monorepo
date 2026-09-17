@@ -9,12 +9,8 @@ import { ResourcesAdminController } from './resources-admin.controller';
 import { ResourcesController } from './resources.controller';
 import { ResourcesService } from './resources.service';
 import { ResourceImportService } from './services/resource-import.service';
-import { ResourceInferenceService } from './services/resource-inference.service';
-import { ResourceNormalizerService } from './services/resource-normalizer.service';
 import { ResourceRelatedService } from './services/resource-related.service';
-import { ResourceContentNormalizationService } from './services/resource-content-normalization.service';
-import { ResourceClassificationService } from './services/resource-classification.service';
-import { ResourceQualityService } from './services/resource-quality.service';
+import { ResourceCurationPipeline } from './curation/resource-curation.pipeline';
 
 @Module({
   imports: [
@@ -26,14 +22,10 @@ import { ResourceQualityService } from './services/resource-quality.service';
   controllers: [ResourcesController, ResourcesAdminController],
   providers: [
     ResourcesService,
-    ResourceNormalizerService,
-    ResourceInferenceService,
     ResourceImportService,
     ResourceRelatedService,
-    ResourceContentNormalizationService,
-    ResourceClassificationService,
-    ResourceQualityService,
+    ResourceCurationPipeline,
   ],
-  exports: [ResourcesService],
+  exports: [ResourcesService, ResourceCurationPipeline],
 })
 export class ResourcesModule {}

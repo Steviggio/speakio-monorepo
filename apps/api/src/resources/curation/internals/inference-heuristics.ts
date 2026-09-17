@@ -1,9 +1,21 @@
-import { Injectable } from '@nestjs/common';
-import { DOMAIN_RULES } from '../config/domain-rules';
+import { DOMAIN_RULES } from '../../config/domain-rules';
 
-@Injectable()
-export class ResourceInferenceService {
-  inferPublisher(title: string, description: string, url: string) {
+export interface InferredPublisher {
+  slug: string;
+  name: string;
+}
+
+export interface InferredSeries {
+  slug: string;
+  name: string;
+}
+
+export class InferenceHeuristics {
+  inferPublisher(
+    title: string,
+    description: string,
+    url: string,
+  ): InferredPublisher | null {
     const normalizedHost = this.extractHost(url);
 
     const matchedRule = DOMAIN_RULES.find((rule) =>
@@ -71,7 +83,7 @@ export class ResourceInferenceService {
     return null;
   }
 
-  inferSeries(title: string, description: string) {
+  inferSeries(title: string, description: string): InferredSeries | null {
     const haystack = `${title} ${description}`.toLowerCase();
 
     const exactSeries = [

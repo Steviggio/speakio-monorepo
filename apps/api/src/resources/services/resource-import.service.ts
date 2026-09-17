@@ -6,13 +6,8 @@ import {
   ResourceImportBatch,
   ResourceImportBatchDocument,
 } from '../../schemas/resource-import-batch.schema';
-import { mapImportedResourceToDocument } from '../mappers/resource-import.mapper';
 import { ImportResourcesDto } from '../dto/import-resources.dto';
-import { ResourceInferenceService } from './resource-inference.service';
-import { ResourceNormalizerService } from './resource-normalizer.service';
-import { ResourceContentNormalizationService } from './resource-content-normalization.service';
-import { ResourceClassificationService } from './resource-classification.service';
-import { ResourceQualityService } from './resource-quality.service';
+import { ResourceCurationPipeline } from '../curation/resource-curation.pipeline';
 
 @Injectable()
 export class ResourceImportService {
@@ -21,11 +16,7 @@ export class ResourceImportService {
     private readonly resourceModel: Model<ResourceDocument>,
     @InjectModel(ResourceImportBatch.name)
     private readonly importBatchModel: Model<ResourceImportBatchDocument>,
-    private readonly urlNormalizer: ResourceNormalizerService,
-    private readonly contentNormalization: ResourceContentNormalizationService,
-    private readonly classification: ResourceClassificationService,
-    private readonly quality: ResourceQualityService,
-    private readonly inference: ResourceInferenceService,
+    private readonly curationPipeline: ResourceCurationPipeline,
   ) {}
 
   async importBatch(dto: ImportResourcesDto, importedBy: string) {
@@ -51,80 +42,59 @@ export class ResourceImportService {
           throw new Error('Missing url');
         }
 
-        const normalizedUrl = this.urlNormalizer.normalizeUrl(raw.url);
-
-        const normalized = this.contentNormalization.normalize(
-          {
-            title: raw.title,
-            description: raw.description,
-            language: raw.language,
-            pricing: raw.pricing,
-          },
-          dto.language,
-        );
-
-        const classification = this.classification.classify({
-          rawType: raw.type,
-          url: raw.url,
-          title: normalized.title,
-          description: normalized.description,
-        });
-
-        const inferredPublisher = this.inference.inferPublisher(
-          normalized.title,
-          normalized.description,
-          raw.url,
-        );
-
-        const inferredSeries = this.inference.inferSeries(
-          normalized.title,
-          normalized.description,
-        );
-
-        const quality = this.quality.compute({
-          raw: {
-            description: raw.description,
-          },
-          normalized: {
-            title: normalized.title,
-            description: normalized.description,
-            type: classification.type,
-            language: normalized.language,
-          },
-          sourcePlatformExists: Boolean(normalizedUrl.sourcePlatform),
-          inferredPublisherExists: Boolean(inferredPublisher),
-          inferredSeriesExists: Boolean(inferredSeries),
-        });
-
         const existingInfo = await this.resourceModel
-          .findOne({ canonicalUrl: normalizedUrl.canonicalUrl })
-          .select('status isActive')
+          .findOne({
+            $or: [
+              { url: raw.url },
+              // In case canonicalUrl matches
+              { canonicalUrl: raw.url },
+            ],
+          })
+          .select('status isActive canonicalUrl')
           .lean()
           .exec();
 
-        const payload = mapImportedResourceToDocument({
-          dto,
-          raw,
-          normalized,
-          normalizedUrl,
-          classification,
-          inferredPublisher,
-          inferredSeries,
-          quality,
-          importBatchId: batch._id.toString(),
-          existingStatus: existingInfo?.status as string | undefined,
-          existingIsActive: existingInfo?.isActive as boolean | undefined,
+        const curated = this.curationPipeline.curate({
+          url: raw.url,
+          title: raw.title,
+          description: raw.description,
+          type: raw.type,
+          language: raw.language || dto.language,
+          pricing: raw.pricing,
+          tags: raw.tags,
+          metadata: {
+            origin: 'SCRAPING',
+            source: dto.source ?? 'playwright',
+            importBatchId: batch._id.toString(),
+            rawFileName: dto.fileName,
+          },
+          existing: existingInfo
+            ? {
+                status: existingInfo.status,
+                isActive: existingInfo.isActive,
+              }
+            : undefined,
         });
+
+        // Also check if canonicalUrl exists if the original query didn't find by raw url
+        let existingDoc = existingInfo;
+        if (!existingDoc) {
+          existingDoc = await this.resourceModel
+            .findOne({ canonicalUrl: curated.canonicalUrl })
+            .select('status isActive')
+            .lean()
+            .exec();
+        }
 
         const updateResult = await this.resourceModel
           .findOneAndUpdate(
-            { canonicalUrl: payload.canonicalUrl },
-            { $set: payload },
+            { canonicalUrl: curated.canonicalUrl },
+            { $set: curated },
             { upsert: true, new: false },
           )
           .exec();
 
-        if (updateResult) {
+        if (updateResult || existingDoc) {
           batch.stats.updated += 1;
         } else {
           batch.stats.created += 1;

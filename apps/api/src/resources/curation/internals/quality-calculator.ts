@@ -1,19 +1,24 @@
-import { Injectable } from '@nestjs/common';
+export interface QualityEvaluationResult {
+  score: number;
+  descriptionScore: number;
+  flags: string[];
+  reviewReasons: string[];
+  isPublishable: boolean;
+  normalizationStatus: string;
+  descriptionSource: string;
+}
 
-@Injectable()
-export class ResourceQualityService {
-  compute(input: {
-    raw: { description: string };
-    normalized: {
-      title: string;
-      description: string;
-      type: string;
-      language: string;
-    };
+export class QualityCalculator {
+  evaluate(input: {
+    rawDescription?: string;
+    normalizedTitle: string;
+    normalizedDescription: string;
+    normalizedType?: string;
+    normalizedLanguage?: string;
     sourcePlatformExists: boolean;
-    inferredPublisherExists: boolean;
-    inferredSeriesExists: boolean;
-  }) {
+    publisherExists: boolean;
+    seriesExists: boolean;
+  }): QualityEvaluationResult {
     const flags: string[] = [];
     const reviewReasons: string[] = [];
 
@@ -27,29 +32,29 @@ export class ResourceQualityService {
     }
 
     if (
-      !input.normalized.title ||
-      input.normalized.title === 'Untitled resource'
+      !input.normalizedTitle ||
+      input.normalizedTitle === 'Untitled resource'
     ) {
       flags.push('MISSING_TITLE');
     } else {
       score += 10;
     }
 
-    if (!input.raw.description) {
+    if (!input.rawDescription) {
       flags.push('MISSING_DESCRIPTION');
       reviewReasons.push('NEEDS_EDITORIAL_REWRITE');
     }
 
-    if (input.normalized.description === 'No description available.') {
+    if (input.normalizedDescription === 'No description available.') {
       flags.push('DESCRIPTION_FALLBACK');
       descriptionScore += 5;
       score += 5;
-    } else if (input.normalized.description.length < 30) {
+    } else if (input.normalizedDescription.length < 30) {
       flags.push('DESCRIPTION_TOO_SHORT');
       reviewReasons.push('LOW_SCORE');
       descriptionScore += 20;
       score += 10;
-    } else if (input.normalized.description.length < 80) {
+    } else if (input.normalizedDescription.length < 80) {
       descriptionScore += 45;
       score += 20;
     } else {
@@ -59,7 +64,7 @@ export class ResourceQualityService {
 
     if (
       ['news.', 'tv.', 'radio.', 'exercises.', 'exercise.'].includes(
-        input.normalized.description.toLowerCase(),
+        input.normalizedDescription.toLowerCase(),
       )
     ) {
       flags.push('GENERIC_DESCRIPTION');
@@ -68,11 +73,12 @@ export class ResourceQualityService {
       score -= 10;
     }
 
-    if (input.normalized.type) score += 10;
-    if (input.normalized.language && input.normalized.language !== 'multi')
+    if (input.normalizedType) score += 10;
+    if (input.normalizedLanguage && input.normalizedLanguage !== 'multi') {
       score += 10;
-    if (input.inferredPublisherExists) score += 5;
-    if (input.inferredSeriesExists) score += 5;
+    }
+    if (input.publisherExists) score += 5;
+    if (input.seriesExists) score += 5;
 
     score = Math.max(0, Math.min(100, score));
     descriptionScore = Math.max(0, Math.min(100, descriptionScore));
@@ -94,7 +100,7 @@ export class ResourceQualityService {
       reviewReasons,
       isPublishable,
       normalizationStatus: isPublishable ? 'PUBLISHED' : 'NORMALIZED',
-      descriptionSource: input.raw.description ? 'SCRAPED' : 'MANUAL',
+      descriptionSource: input.rawDescription ? 'SCRAPED' : 'MANUAL',
     };
   }
 }
