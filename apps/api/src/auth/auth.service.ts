@@ -18,7 +18,7 @@ export class AuthService {
     @InjectModel('Comment') private commentModel: Model<any>,
     @InjectModel('Roadmap') private roadmapModel: Model<any>,
     @InjectModel('Vote') private voteModel: Model<any>,
-  ) { }
+  ) {}
 
   async validateUser(
     email: string,
@@ -177,7 +177,9 @@ export class AuthService {
       const filePath = path.join(process.cwd(), user.avatarUrl);
       try {
         await fs.unlink(filePath);
-      } catch { }
+      } catch {
+        // Ignore errors if avatar file does not exist
+      }
     }
 
     await this.commentModel.updateMany(
