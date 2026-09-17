@@ -38,6 +38,11 @@ import {
 } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
+import {
+  RoadmapViewSwitcher,
+  type RoadmapViewMode,
+} from "@/components/roadmap/mindmap/RoadmapViewSwitcher";
+import { RoadmapMindmapCanvas } from "@/components/roadmap/mindmap/RoadmapMindmapCanvas";
 
 interface VocabularyItem {
   front: string;
@@ -77,6 +82,7 @@ export default function RoadmapDetailPage() {
   const { user, isLoading: authLoading } = useAuth();
   const { t } = useTranslation();
   const [roadmap, setRoadmap] = useState<RoadmapDetail | null>(null);
+  const [currentView, setCurrentView] = useState<RoadmapViewMode>("checklist");
   const [isLoading, setIsLoading] = useState(true);
   const [isExporting, setIsExporting] = useState(false);
   const [newStepTitle, setNewStepTitle] = useState("");
@@ -326,7 +332,11 @@ export default function RoadmapDetailPage() {
       : `il y a ${diffDays} jour${diffDays > 1 ? "s" : ""}`;
 
   return (
-    <div className="max-w-3xl mx-auto py-8 px-4">
+    <div
+      className={`mx-auto py-8 px-4 transition-all ${
+        currentView === "mindmap" ? "max-w-7xl" : "max-w-3xl"
+      }`}
+    >
       <Link
         href="/roadmaps"
         className="text-sm text-text-muted hover:text-text transition-colors mb-6 inline-block"
@@ -399,36 +409,42 @@ export default function RoadmapDetailPage() {
               </div>
             )}
           </div>
-          {roadmap.steps.length > 0 && (
-            <button
-              onClick={handleExportAnki}
-              disabled={isExporting}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#eeeaff] text-[#6941C6] hover:bg-[#e4dcfc] text-sm font-medium rounded-lg transition-colors border border-[#d6cbfa] disabled:opacity-50"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className={isExporting ? "animate-spin" : ""}
+          <div className="flex items-center gap-3">
+            <RoadmapViewSwitcher
+              currentView={currentView}
+              onViewChange={setCurrentView}
+            />
+            {roadmap.steps.length > 0 && (
+              <button
+                onClick={handleExportAnki}
+                disabled={isExporting}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-[#eeeaff] text-[#6941C6] hover:bg-[#e4dcfc] text-sm font-medium rounded-lg transition-colors border border-[#d6cbfa] disabled:opacity-50"
               >
-                {isExporting ? (
-                  <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                ) : (
-                  <>
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </>
-                )}
-              </svg>
-              {isExporting ? "Exporting..." : "Export to Anki"}
-            </button>
-          )}
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={isExporting ? "animate-spin" : ""}
+                >
+                  {isExporting ? (
+                    <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                  ) : (
+                    <>
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </>
+                  )}
+                </svg>
+                {isExporting ? "Exporting..." : "Export to Anki"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -447,7 +463,13 @@ export default function RoadmapDetailPage() {
         </div>
       </div>
 
-      <div className="space-y-3 mb-6">
+      {currentView === "mindmap" ? (
+        <div className="mb-6">
+          <RoadmapMindmapCanvas roadmap={roadmap} />
+        </div>
+      ) : (
+        <>
+          <div className="space-y-3 mb-6">
         {roadmap.steps.map((step, stepIndex) => {
           const isExpanded = expandedSteps.has(stepIndex);
           const isTogglingStep =
@@ -869,28 +891,30 @@ export default function RoadmapDetailPage() {
         })}
       </div>
 
-      {isOwner && (
-        <div className="flex gap-2">
-          <div className="flex-1">
-            <Input
-              id="new-step"
-              name="step"
-              type="text"
-              value={newStepTitle}
-              onChange={(e) => setNewStepTitle(e.target.value)}
-              placeholder={t("roadmaps.stepTitle")}
-              onKeyDown={(e) => e.key === "Enter" && handleAddStep()}
-              className="h-10"
-            />
-          </div>
-          <button
-            onClick={handleAddStep}
-            disabled={!newStepTitle.trim()}
-            className="px-4 py-2 bg-brand hover:bg-brand-hover text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40"
-          >
-            {t("roadmaps.addStep")}
-          </button>
-        </div>
+          {isOwner && (
+            <div className="flex gap-2">
+              <div className="flex-1">
+                <Input
+                  id="new-step"
+                  name="step"
+                  type="text"
+                  value={newStepTitle}
+                  onChange={(e) => setNewStepTitle(e.target.value)}
+                  placeholder={t("roadmaps.stepTitle")}
+                  onKeyDown={(e) => e.key === "Enter" && handleAddStep()}
+                  className="h-10"
+                />
+              </div>
+              <button
+                onClick={handleAddStep}
+                disabled={!newStepTitle.trim()}
+                className="px-4 py-2 bg-brand hover:bg-brand-hover text-white text-sm font-medium rounded-lg transition-colors disabled:opacity-40"
+              >
+                {t("roadmaps.addStep")}
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
